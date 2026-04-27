@@ -1,5 +1,28 @@
 // O formulário agora envia dados para o servidor (backend) para proteger as chaves.
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Navegação de Abas ---
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.content-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const target = item.getAttribute('data-target');
+            
+            // Ativar aba
+            navItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            // Ativar seção
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(target).classList.add('active');
+
+            // Carregar dados específicos se necessário
+            if (target === 'section-clientes') loadClients();
+            if (target === 'section-config') loadAIConfigs();
+        });
+    });
+
+    // --- Lógica do Formulário (Existente + Ajustes) ---
     const form = document.getElementById('summit-form');
     const steps = document.querySelectorAll('.form-step');
     const nextBtn = document.getElementById('next-btn');
@@ -121,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Feedback visual de carregamento
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
+        submitBtn.textContent = 'Gerando Diagnóstico de IA...';
 
         try {
             const response = await fetch('/submit', {
@@ -133,10 +156,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) throw new Error('Erro na resposta do servidor');
+            
+            const result = await response.json();
 
-            // Sucesso
+            // Sucesso: Esconder formulário e mostrar resultados
             formCard.style.display = 'none';
             successView.style.display = 'block';
+            
+            // Inserir o diagnóstico da IA na tela
+            const aiBox = document.querySelector('.future-ai-box');
+            if (aiBox && result.diagnostico) {
+                aiBox.innerHTML = `
+                    <p style="color: #1e3a8a; font-weight: 700; margin-bottom: 12px;">✨ Diagnóstico Estratégico Gerado</p>
+                    <div style="line-height: 1.6; color: #374151; white-space: pre-line;">
+                        ${result.diagnostico}
+                    </div>
+                `;
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (error) {
@@ -144,6 +181,67 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Houve um erro ao enviar seus dados. Verifique a configuração do Supabase no script.js.');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Enviar Respostas';
+        }
+    });
+
+    // --- Gerenciamento de Clientes ---
+    async function loadClients() {
+        const tbody = document.getElementById('clients-table-body');
+        tbody.innerHTML = '<tr><td colspan="4">Carregando...</td></tr>';
+
+        try {
+            const res = await fetch('/clients');
+            const clients = await res.json();
+            
+            tbody.innerHTML = '';
+            clients.forEach(c => {
+                const row = `
+                    <tr>
+                        <td>${c.nome}</td>
+                        <td>${c.email}</td>
+                        <td>${new Date(c.created_at).toLocaleDateString()}</td>
+                        <td><button class="btn btn-secondary" onclick="alert('Ver diagnóstico: ' + \`${c.diagnostico_final ? 'Gerado' : 'Não disponível'}\`)">Ver</button></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar clientes.</td></tr>';
+        }
+    }
+
+    // --- Gerenciamento de IA ---
+    async function loadAIConfigs() {
+        try {
+            const res = await fetch('/ai-config');
+            const configs = await res.json();
+            
+            configs.forEach(c => {
+                const el = document.getElementById(`prompt-${c.id}`);
+                if (el) el.value = c.prompt;
+            });
+        } catch (e) {
+            console.error('Erro ao carregar configurações de IA');
+        }
+    }
+
+    document.getElementById('ai-prompts-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = [
+            { id: 'agente1', prompt: document.getElementById('prompt-agente1').value },
+            { id: 'agente2', prompt: document.getElementById('prompt-agente2').value },
+            { id: 'agente3', prompt: document.getElementById('prompt-agente3').value }
+        ];
+
+        try {
+            const res = await fetch('/ai-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompts: data })
+            });
+            if (res.ok) alert('Configurações salvas com sucesso!');
+        } catch (e) {
+            alert('Erro ao salvar configurações.');
         }
     });
 });

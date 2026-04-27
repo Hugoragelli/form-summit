@@ -11,9 +11,25 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon"></div>
+                <h2>NutriPanel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-target="section-form">📝 Formulário</li>
+                    <li class="nav-item" data-target="section-clientes">👥 Clientes</li>
+                    <li class="nav-item" data-target="section-config">⚙️ Configurações IA</li>
+                </ul>
+            </nav>
+        </aside>
+
         <!-- Main Content -->
         <main class="main-content">
-            <section class="form-section">
+            <!-- Section: Formulário (Já existente) -->
+            <section id="section-form" class="content-section active">
                 <div class="content-wrapper">
                     <div class="form-card">
                         <div class="card-header">
@@ -277,6 +293,56 @@
                             <p>✨ <strong>Espaço Reservado para Análise de IA</strong></p>
                             <p>Em breve, você verá aqui um resumo gerado pela nossa inteligência artificial com base nas suas respostas.</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Clientes -->
+            <section id="section-clientes" class="content-section">
+                <div class="content-wrapper">
+                    <div class="form-card">
+                        <h2>Lista de Clientes</h2>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                               <thead>
+                                   <tr>
+                                       <th>Nome</th>
+                                       <th>Email</th>
+                                       <th>Data</th>
+                                       <th>Ações</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="clients-table-body">
+                                   <!-- Preenchido via JS -->
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Configurações IA -->
+            <section id="section-config" class="content-section">
+                <div class="content-wrapper">
+                    <div class="form-card">
+                        <h2>Configurações dos Agentes de IA</h2>
+                        <p class="current-date">Edite os prompts que os agentes utilizam para gerar o diagnóstico.</p>
+                        
+                        <form id="ai-prompts-form">
+                            <div class="input-group">
+                                <label>Agente 1: Analiza o Paciente (P1-P7)</label>
+                                <textarea id="prompt-agente1" name="agente1"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Agente 2: Analiza o Profissional (P8-P13)</label>
+                                <textarea id="prompt-agente2" name="agente2"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Agente 3: Consolidador Estratégico</label>
+                                <textarea id="prompt-agente3" name="agente3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                        </form>
                     </div>
                 </div>
             </section>
