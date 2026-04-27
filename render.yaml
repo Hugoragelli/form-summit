@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: form-summit
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SUPABASE_URL
+        sync: false # Você preencherá no painel do Render
+      - key: SUPABASE_ANON_KEY
+        sync: false # Você preencherá no painel do Render
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false # Recomendado para o servidor
+      - key: PORT
+        value: 3000

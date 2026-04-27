@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Posicionamento - Business Compass</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="form-section">
+                <div class="content-wrapper">
+                    <div class="form-card">
+                        <div class="card-header">
+                            <h1>Formulário de Diagnóstico</h1>
+                            <p class="current-date">segunda-feira, 27 de abril</p>
+                            
+                            <!-- Progress Bar -->
+                            <div class="progress-wrapper">
+                                <div class="progress-text">Progresso: <span id="progress-percent">0%</span></div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" id="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="summit-form">
+                            <!-- Step 1: Personal Info -->
+                            <div class="form-step active" data-step="1">
+                                <h3>1. Dados de Identificação</h3>
+                                <div class="input-group">
+                                    <label for="nome">Nome Completo</label>
+                                    <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label for="telefone">Telefone / WhatsApp</label>
+                                        <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="email">E-mail Profissional</label>
+                                        <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Patient Profile -->
+                            <div class="form-step" data-step="2">
+                                <h3>2. O Paciente Atual</h3>
+                                <div class="input-group">
+                                    <label>P1. Quem é o paciente que mais aparece hoje no seu consultório?</label>
+                                    <small>Descreva um paciente real recente. Inclua: idade, profissão, fase da vida, contexto familiar. Foque no específico.</small>
+                                    <textarea name="p1_paciente_recente" placeholder="Ex: Maria, 34 anos, advogada, mãe de 2 crianças, busca emagrecimento após a segunda gestação..."></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P2. Esse é o tipo de paciente que você quer atrair?</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label"><input type="radio" name="p2_atrair_paciente" value="Sim"> Sim</label>
+                                        <label class="radio-label"><input type="radio" name="p2_atrair_paciente" value="Não"> Não</label>
+                                    </div>
+                                </div>
+                                <div class="input-group conditional" id="group-p2_1" style="display:none;">
+                                    <label>P2.1 Quem você quer atrair — e o que muda em relação ao atual?</label>
+                                    <small>Foque no estilo de vida, prioridades e comportamento.</small>
+                                    <textarea name="p2_1_quem_quer_atrair" placeholder="Descreva o perfil ideal..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Decision -->
+                            <div class="form-step" data-step="3">
+                                <h3>3. Comportamento de Compra</h3>
+                                <div class="input-group">
+                                    <label>P3. Como esse paciente costuma tomar decisão?</label>
+                                    
+                                    <div class="sub-question">
+                                        <p>(a) O que pesa mais pra ele?</p>
+                                        <div class="radio-grid">
+                                            <label class="radio-label"><input type="radio" name="p3a_peso_decisao" value="Preço"> Preço</label>
+                                            <label class="radio-label"><input type="radio" name="p3a_peso_decisao" value="Valor percebido"> Valor percebido</label>
+                                            <label class="radio-label"><input type="radio" name="p3a_peso_decisao" value="Não tenho clareza"> Não tenho clareza</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="sub-question">
+                                        <p>(b) Quanto ele costuma investir por mês em nutrição/saúde?</p>
+                                        <div class="radio-grid">
+                                            <label class="radio-label"><input type="radio" name="p3b_investimento_mensal" value="Até R$300"> Até R$300</label>
+                                            <label class="radio-label"><input type="radio" name="p3b_investimento_mensal" value="R$300–700"> R$300–700</label>
+                                            <label class="radio-label"><input type="radio" name="p3b_investimento_mensal" value="R$700–1.500"> R$700–1.500</label>
+                                            <label class="radio-label"><input type="radio" name="p3b_investimento_mensal" value="R$1.500+"> R$1.500+</label>
+                                            <label class="radio-label"><input type="radio" name="p3b_investimento_mensal" value="Não sei"> Não sei</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="sub-question">
+                                        <p>(c) Ritmo de decisão</p>
+                                        <div class="radio-grid">
+                                            <label class="radio-label"><input type="radio" name="p3c_ritmo_decisao" value="Decide rápido quando vê valor"> Decide rápido quando vê valor</label>
+                                            <label class="radio-label"><input type="radio" name="p3c_ritmo_decisao" value="Compara bastante"> Compara bastante</label>
+                                            <label class="radio-label"><input type="radio" name="p3c_ritmo_decisao" value="Depende do momento"> Depende do momento</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Channels -->
+                            <div class="form-step" data-step="4">
+                                <h3>4. Aquisição de Pacientes</h3>
+                                <div class="input-group">
+                                    <label>P4. Por onde esse paciente chega até você?</label>
+                                    <div class="checkbox-grid">
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Indicação"> Indicação</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Instagram"> Instagram</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Google"> Google</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Convênio"> Convênio</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Eventos"> Eventos</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Site-blog"> Site-blog</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p4_canais_chegada" value="Outro"> Outro</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>P4.1 Qual é o canal principal hoje?</label>
+                                    <div class="radio-grid" id="main-channel-options">
+                                        <!-- Will be populated dynamic or static -->
+                                        <label class="radio-label"><input type="radio" name="p4_1_canal_principal" value="Indicação"> Indicação</label>
+                                        <label class="radio-label"><input type="radio" name="p4_1_canal_principal" value="Instagram"> Instagram</label>
+                                        <label class="radio-label"><input type="radio" name="p4_1_canal_principal" value="Google"> Google</label>
+                                        <label class="radio-label"><input type="radio" name="p4_1_canal_principal" value="Convênio"> Convênio</label>
+                                        <label class="radio-label"><input type="radio" name="p4_1_canal_principal" value="Outro"> Outro</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 5: Routine & Barreiras -->
+                            <div class="form-step" data-step="5">
+                                <h3>5. Estilo de Vida e Adesão</h3>
+                                <div class="input-group">
+                                    <label>P5. Como é a rotina alimentar desse paciente?</label>
+                                    <small>Ex: "almoça fora todo dia", "pula café da manhã", como são os fins de semana.</small>
+                                    <textarea name="p5_rotina_alimentar"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P6. Como ele lida com o plano alimentar?</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label"><input type="radio" name="p6_lide_plano" value="Abandona rápido"> Abandona rápido</label>
+                                        <label class="radio-label"><input type="radio" name="p6_lide_plano" value="Oscila bastante"> Oscila bastante</label>
+                                        <label class="radio-label"><input type="radio" name="p6_lide_plano" value="Segue bem"> Segue bem</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>P6.1 Por que você acredita que ele tem esse nível?</label>
+                                    <textarea name="p6_1_motivo_nivel"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P6.2 Em que situações ele mais "quebra"?</label>
+                                    <textarea name="p6_2_situacoes_quebra"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P6.3 Quais barreiras mais atrapalham?</label>
+                                    <div class="checkbox-grid">
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Tempo"> Tempo</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Dinheiro"> Dinheiro</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Falta de apoio em casa"> Falta de apoio em casa</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Ambiente de trabalho"> Ambiente de trabalho</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Falta de conhecimento técnico"> Falta de conhecimento técnico</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p6_3_barreiras" value="Outra"> Outra</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 6: Motivation -->
+                            <div class="form-step" data-step="6">
+                                <h3>6. Motivação e Histórico</h3>
+                                <div class="input-group">
+                                    <label>P7. O que fez esse paciente procurar ajuda agora?</label>
+                                    <div class="checkbox-grid">
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Exame alterado"> Exame alterado</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Evento próximo"> Evento próximo</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Recomendação médica"> Recomendação médica</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Incômodo com corpo-imagem"> Incômodo com corpo-imagem</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Pressão familiar"> Pressão familiar</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Diagnóstico de doença"> Diagnóstico de doença</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Cansaço-baixa energia"> Cansaço-baixa energia</label>
+                                        <label class="checkbox-label"><input type="checkbox" name="p7_motivo_procura" value="Outro"> Outro</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>P7.1 Quer detalhar esse momento? (opcional)</label>
+                                    <textarea name="p7_1_detalhe_momento"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P8. O que ele já tentou antes que não funcionou?</label>
+                                    <small>Por que ele acredita que não deu certo?</small>
+                                    <textarea name="p8_tentativas_anteriores"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Step 7: Differential -->
+                            <div class="form-step" data-step="7">
+                                <h3>7. Seu Diferencial e Comunicação</h3>
+                                <div class="input-group">
+                                    <label>P9. Quais frases esse paciente costuma dizer na primeira consulta?</label>
+                                    <small>Cite falas reais. O que incomoda + o que ele quer mudar.</small>
+                                    <textarea name="p9_frases_comuns" placeholder='"Não aguento mais me olhar no espelho", "Preciso de algo prático"...'></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P10. Qual é a principal mudança que ele percebe ao trabalhar com você?</label>
+                                    <textarea name="p10_principal_mudanca" placeholder='Ex: "Volta a se reconhecer no espelho"...'></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <label>P11. O que você faz com esse paciente que outros nutris não fazem?</label>
+                                    <small>Cite 2-3 coisas concretas.</small>
+                                    <textarea name="p11_diferencial"></textarea>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>P12. Estilo de Comunicação</label>
+                                        <div class="checkbox-grid">
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Formal"> Formal</label>
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Informal"> Informal</label>
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Técnico"> Técnico</label>
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Coloquial"> Coloquial</label>
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Direto"> Direto</label>
+                                            <label class="checkbox-label"><input type="checkbox" name="p12_estilo_comunicacao" value="Cuidadoso-rodeado"> Cuidadoso-rodeado</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>P12.1 Como você responde a ele?</label>
+                                        <select name="p12_1_forma_resposta">
+                                            <option value="">Selecione...</option>
+                                            <option value="Espelho o jeito dele">Espelho o jeito dele</option>
+                                            <option value="Tom de autoridade">Tom de autoridade</option>
+                                            <option value="Tom de parceiro">Tom de parceiro</option>
+                                            <option value="Tom acolhedor">Tom acolhedor</option>
+                                            <option value="Outro">Outro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 8: Exclusion -->
+                            <div class="form-step" data-step="8">
+                                <h3>8. Filtro e Envio</h3>
+                                <div class="input-group">
+                                    <label>P13. (Opcional) Quem você NÃO quer mais atender?</label>
+                                    <small>Refletir sobre quem evitar afina o posicionamento.</small>
+                                    <textarea name="p13_quem_nao_quer_atender"></textarea>
+                                </div>
+                                <div class="submit-agreement">
+                                    <p>Ao enviar, seus dados serão processados para análise de posicionamento.</p>
+                                </div>
+                            </div>
+
+                            <!-- Navigation Buttons -->
+                            <div class="form-navigation">
+                                <button type="button" id="prev-btn" class="btn btn-secondary" disabled>Anterior</button>
+                                <button type="button" id="next-btn" class="btn btn-primary">Próximo</button>
+                                <button type="submit" id="submit-btn" class="btn btn-success" style="display:none;">Enviar Respostas</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Success Message (Hidden) -->
+                    <div id="success-view" class="success-card" style="display:none;">
+                        <div class="success-icon">✓</div>
+                        <h2>Dados Enviados com Sucesso!</h2>
+                        <p>Obrigado por completar o diagnóstico. Em breve traremos a análise estratécia para o seu perfil.</p>
+                        <button onclick="window.location.reload()" class="btn btn-outline">Preencher Novamente</button>
+                        
+                        <!-- Future AI Section placeholder -->
+                        <div class="future-ai-box">
+                            <p>✨ <strong>Espaço Reservado para Análise de IA</strong></p>
+                            <p>Em breve, você verá aqui um resumo gerado pela nossa inteligência artificial com base nas suas respostas.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
