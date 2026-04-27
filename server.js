@@ -12,9 +12,14 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
 );
 
-// Middleware para entender JSON
+// Middleware para entender JSON e servir arquivos estáticos
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname)));
+
+// Rota principal - serve o formulário explicitamente
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'index.html'));
+});
 
 // Rota para receber os dados do formulário
 app.post('/submit', async (req, res) => {
@@ -31,10 +36,11 @@ app.post('/submit', async (req, res) => {
     }
 });
 
+// Outras rotas (fallback)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
