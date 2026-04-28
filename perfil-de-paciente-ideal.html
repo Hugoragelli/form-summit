@@ -222,7 +222,7 @@ a { text-decoration: none; color: inherit; }
           <div class="page-actions">
             <button class="btn btn-tertiary">Histórico</button>
             <button class="btn btn-secondary">Exportar PDF</button>
-            <a href="index.html" class="btn btn-primary">Regerar</a>
+            <button class="btn btn-primary" id="btn-regerar" onclick="regerarPPI()">Regerar</button>
           </div>
         </div>
 
@@ -543,6 +543,37 @@ a { text-decoration: none; color: inherit; }
         set('ppi-anti-recusa', ppi.anti_ppi.frase_de_recusa_recomendada);
     }
 })();
+
+async function regerarPPI() {
+    const id = localStorage.getItem('ppi_submission_id');
+    if (!id) {
+        alert('Nenhuma submissão encontrada. Preencha o formulário novamente.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const btn = document.getElementById('btn-regerar');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Gerando...';
+
+    try {
+        const response = await fetch(`/regenerate/${id}`, { method: 'POST' });
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.error || 'Erro no servidor');
+
+        localStorage.setItem('ppi_current', JSON.stringify(result.ppi));
+        localStorage.setItem('ppi_date', new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }));
+
+        // Recarrega a página para hidratar com o novo PPI
+        window.location.reload();
+    } catch (err) {
+        alert('Erro ao regerar: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
+}
 </script>
 
 </body>

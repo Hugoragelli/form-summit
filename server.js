@@ -317,18 +317,58 @@ app.post('/submit', async (req, res) => {
     try {
         const ppiJson = await generatePPI(req.body);
 
-        const { error } = await supabase
+        const { data: inserted, error } = await supabase
             .from('form_submissions')
             .insert([{
                 ...req.body,
                 diagnostico_final: JSON.stringify(ppiJson)
-            }]);
+            }])
+            .select('id')
+            .single();
 
         if (error) console.warn('[submit] Supabase insert warning:', error.message);
 
-        res.json({ message: 'OK', ppi: ppiJson });
+        res.json({ message: 'OK', ppi: ppiJson, id: inserted?.id });
     } catch (err) {
         console.error('[submit] Erro:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================================
+// ROTA: POST /regenerate/:id
+// Busca os dados do formulário já salvo e gera um novo PPI
+// ============================================================
+app.post('/regenerate/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data: submission, error: fetchError } = await supabase
+            .from('form_submissions')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (fetchError || !submission) {
+            return res.status(404).json({ error: 'Submissão não encontrada.' });
+        }
+
+        // Extrai apenas os campos do formulário, exclui metadados e saídas de IA
+        const { id: _id, created_at, diagnostico_final, analise_paciente, analise_profissional, ...formData } = submission;
+
+        const ppiJson = await generatePPI(formData);
+
+        const { error: updateError } = await supabase
+            .from('form_submissions')
+            .update({ diagnostico_final: JSON.stringify(ppiJson) })
+            .eq('id', id);
+
+        if (updateError) console.warn('[regenerate] Supabase update warning:', updateError.message);
+
+        console.log('[regenerate] PPI regenerado para id:', id);
+        res.json({ ppi: ppiJson });
+    } catch (err) {
+        console.error('[regenerate] Erro:', err.message);
         res.status(500).json({ error: err.message });
     }
 });

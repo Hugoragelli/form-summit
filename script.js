@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('ppi_current', JSON.stringify(result.ppi));
                 localStorage.setItem('ppi_nutri_nome', data.nome || '');
                 localStorage.setItem('ppi_date', new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }));
+                if (result.id) localStorage.setItem('ppi_submission_id', result.id);
                 showSuccessView(result.ppi, data.nome);
             }
         } catch (err) {
