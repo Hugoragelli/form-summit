@@ -17,7 +17,14 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-const DEFAULT_PPI_PROMPT = `Você é um gerador de **Perfil de Paciente Ideal (PPI)** descritivo. Recebe o formulário de 13 perguntas que um nutricionista respondeu sobre o paciente que ele atende e quer atender, e devolve um único PPI em JSON estruturado.
+// Prompt de emergência — usado APENAS se o banco estiver inacessível.
+// A fonte de verdade é a tabela ai_settings (id = 'ppi_prompt').
+const EMERGENCY_PROMPT = `Você é um gerador de Perfil de Paciente Ideal (PPI). Retorne um JSON com os campos: resumo, quem_e, como_pensa, eixo_de_dor, eixo_de_transformacao, anti_ppi. Form: {{form_respostas}}`;
+
+// ============================================================
+// BOOTSTRAP — sobe o prompt padrão no banco se ainda não existir
+// ============================================================
+const SEED_PROMPT = `Você é um gerador de **Perfil de Paciente Ideal (PPI)** descritivo. Recebe o formulário de 13 perguntas que um nutricionista respondeu sobre o paciente que ele atende e quer atender, e devolve um único PPI em JSON estruturado.
 
 # 1. O que é PPI (e o que não é)
 
@@ -59,9 +66,9 @@ PPI é o **perfil-alvo estrutural**, não a foto de um indivíduo. Use:
 - **Plurais e categorias amplas** ("profissionais em cargo de gestão corporativa", não "gerente de marketing em multinacional").
 - **Padrões de núcleo familiar** ("casados com 1-2 filhos OU sem filhos por escolha", não "casado com dois filhos pequenos").
 
-Detalhes individuais (profissão exata, idade exata, número de filhos exato) ficam pra **Persona**, não PPI. Mesmo quando P2 = "Sim" (paciente atual = paciente desejado), abstraia o P1 antes de descrever o PPI. Aplica-se a resumo e a todos os campos de quem_e.
+Detalhes individuais ficam pra **Persona**, não PPI. Mesmo quando P2 = "Sim", abstraia o P1 antes de descrever o PPI.
 
-**Predominância + variação:** quando o sinal do form indicar tendência mas não exclusividade, declare a predominância e cite a variação. Use o padrão "Predominantemente X, com variações em Y".
+**Predominância + variação:** use o padrão "Predominantemente X, com variações em Y".
 
 **Preservar tensão e contradição:** PPI deve manter as **fricções e contradições** que o form revela — não suavizar pra parecer coerente.
 
@@ -80,13 +87,17 @@ Enum fechado, escolha exatamente um:
 
 Parta da resposta P10. Pergunte "por quê?" descendo 4-5 camadas. Pare quando chegar numa palavra de **emoção, identidade ou dignidade** — não numa métrica.
 
-**Hard rule:** resultado_emocional_raiz é **EMOÇÃO**, nunca métrica. Aceita: liberdade, presença, confiança, pertencimento, dignidade, controle, autoestima, leveza, segurança, reconhecimento. Rejeita: emagrecer X kg, ter energia, ser saudável, melhorar exames.
+**Hard rule:** resultado_emocional_raiz é **EMOÇÃO**, nunca métrica.
+- Aceita: liberdade, presença, confiança, pertencimento, dignidade, controle, autoestima, leveza, segurança, reconhecimento.
+- Rejeita: emagrecer X kg, ter energia, ser saudável, melhorar exames.
 
 **Teste de profundidade:** se sua resposta for "voltar a sentir [X]", desça mais uma camada. A raiz costuma estar no medo de perder identidade.
 
 ## 3.3. Customer Language Mirror — para frase_eixo, manifestações e objecoes_internas
 
 Use o vocabulário literal das respostas P5/P6/P9 do nutri sobre o paciente. Não traduza pra termo técnico.
+
+**Teste de aspas:** qualquer trecho que poderia estar entre aspas DEVE preservar a forma literal.
 
 **Voz da frase_eixo:** descrição em **3ª pessoa**. manifestacoes_concretas e objecoes_internas admitem 1ª pessoa do paciente.
 
@@ -98,17 +109,17 @@ São **comportamentos observáveis que apontam pra dor ou alimentam o padrão pr
 
 Não é "paciente difícil em geral". É quem **drena tempo, não gera resultado, não renova contrato e não indica**.
 
-**Hard rule — mentalidade > comportamento:** anti-PPI deve descrever **mentalidade/perfil estrutural oposto**, não comportamento ruim transversal.
+**Hard rule — mentalidade > comportamento:** descreva **mentalidade/perfil estrutural oposto**, não comportamento ruim transversal.
 
 **Hard rule:** anti_ppi.caracteristicas mínimo 3 itens, nunca vazio.
 
 ## 3.6. Princípio de não-invenção
 
-Onde o formulário não fornecer sinal suficiente, prefira ser **conservador** (faixa mais ampla, descrição mais genérica) a inventar detalhe específico.
+Onde o formulário não fornecer sinal suficiente, prefira ser **conservador** a inventar detalhe específico.
 
 ## 3.7. Objeções internas — para objecoes_internas
 
-São **dúvidas e medos que o paciente tem sobre se vale a pena ou se vai dar certo** — narrativa interna dele, não objeção comercial. Devolva 2 a 4 itens em forma de fala literal ou paráfrase próxima.
+São **dúvidas e medos que o paciente tem sobre se vale a pena ou se vai dar certo** — narrativa interna dele, não objeção comercial. Devolva 2 a 4 itens em forma de fala literal.
 
 # 4. Procedimento de raciocínio
 
@@ -116,7 +127,7 @@ Antes de gerar o JSON, raciocine internamente nesta ordem:
 
 1. Releia o formulário completo. Anote sinais úteis por pergunta.
 2. Resolva o conflito P1 vs P2.1: se P2 = "Não", o PPI é o aspiracional de P2.1.
-3. Abstraia o indivíduo em perfil estrutural — faixas, plurais, categorias amplas.
+3. Abstraia o indivíduo em perfil estrutural — faixas, plurais, categorias amplas. Preserve contradições.
 4. Classifique nivel_consciencia_predominante (Schwartz).
 5. Aplique 5 Porquês ao P10 → resultado_emocional_raiz. Desça até identidade/medo.
 6. Extraia objecoes_internas de P6.1, P7, P8, P9 — vocabulário literal.
@@ -173,6 +184,49 @@ Form do nutri:
 
 Agora gere o JSON do PPI.`;
 
+// ============================================================
+// bootstrapDatabase — executa uma vez ao iniciar o servidor.
+// Insere o prompt padrão se a linha ppi_prompt não existir.
+// NÃO sobrescreve caso o usuário já tenha editado via interface.
+// ============================================================
+async function bootstrapDatabase() {
+    try {
+        const { data, error } = await supabase
+            .from('ai_settings')
+            .select('id')
+            .eq('id', 'ppi_prompt')
+            .single();
+
+        if (error && error.code !== 'PGRST116') {
+            // PGRST116 = "0 rows" (tabela existe mas não tem o registro)
+            // Qualquer outro erro = tabela provavelmente não existe ainda
+            console.warn('[DB] Tabela ai_settings não encontrada. Execute supabase_schema.sql no dashboard Supabase.');
+            console.warn('[DB] Enquanto isso, o prompt embutido de emergência será usado.');
+            return;
+        }
+
+        if (!data) {
+            // Tabela existe mas sem o registro — insere o seed
+            const { error: insertError } = await supabase
+                .from('ai_settings')
+                .insert({ id: 'ppi_prompt', prompt: SEED_PROMPT });
+
+            if (insertError) {
+                console.warn('[DB] Falha ao inserir prompt seed:', insertError.message);
+            } else {
+                console.log('[DB] Prompt PPI seed inserido com sucesso.');
+            }
+        } else {
+            console.log('[DB] Prompt PPI encontrado no banco — OK.');
+        }
+    } catch (err) {
+        console.warn('[DB] Erro no bootstrap:', err.message);
+    }
+}
+
+// ============================================================
+// ROTA: GET /clients
+// ============================================================
 app.get('/clients', async (req, res) => {
     try {
         const { data, error } = await supabase
@@ -181,34 +235,68 @@ app.get('/clients', async (req, res) => {
             .order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data);
-    } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-app.get('/ai-config', async (req, res) => {
-    try {
-        const { data } = await supabase.from('ai_settings').select('prompt').eq('id', 'ppi_prompt').single();
-        res.json({ prompt: data?.prompt || DEFAULT_PPI_PROMPT });
     } catch (e) {
-        res.json({ prompt: DEFAULT_PPI_PROMPT });
+        res.status(500).json({ error: e.message });
     }
 });
 
+// ============================================================
+// ROTA: GET /ai-config  — retorna prompt do banco
+// ============================================================
+app.get('/ai-config', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('ai_settings')
+            .select('prompt')
+            .eq('id', 'ppi_prompt')
+            .single();
+
+        if (error) throw error;
+        res.json({ prompt: data.prompt, source: 'database' });
+    } catch (e) {
+        console.warn('[ai-config GET] Banco indisponível, retornando prompt de emergência:', e.message);
+        res.json({ prompt: EMERGENCY_PROMPT, source: 'fallback' });
+    }
+});
+
+// ============================================================
+// ROTA: POST /ai-config  — salva prompt editado no banco
+// ============================================================
 app.post('/ai-config', async (req, res) => {
     try {
         const { prompt } = req.body;
-        await supabase.from('ai_settings').upsert({ id: 'ppi_prompt', prompt });
+        if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Prompt vazio.' });
+
+        const { error } = await supabase
+            .from('ai_settings')
+            .upsert({ id: 'ppi_prompt', prompt: prompt.trim(), updated_at: new Date().toISOString() });
+
+        if (error) throw error;
+        console.log('[ai-config POST] Prompt atualizado no banco.');
         res.json({ message: 'OK' });
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// ============================================================
+// generatePPI — lê prompt do banco, jamais do código
+// ============================================================
 async function generatePPI(formData) {
-    let template = DEFAULT_PPI_PROMPT;
-    try {
-        const { data } = await supabase.from('ai_settings').select('prompt').eq('id', 'ppi_prompt').single();
-        if (data?.prompt) template = data.prompt;
-    } catch (_) {}
+    // 1. Busca o prompt no banco (fonte primária)
+    const { data, error } = await supabase
+        .from('ai_settings')
+        .select('prompt')
+        .eq('id', 'ppi_prompt')
+        .single();
 
-    const fullPrompt = template.replace('{{form_respostas}}', JSON.stringify(formData, null, 2));
+    if (error || !data?.prompt) {
+        console.warn('[generatePPI] Prompt não encontrado no banco. Verifique a tabela ai_settings.');
+        throw new Error('Prompt do agente PPI não configurado no banco. Execute supabase_schema.sql e reinicie o servidor.');
+    }
+
+    const fullPrompt = data.prompt.replace('{{form_respostas}}', JSON.stringify(formData, null, 2));
+    console.log('[generatePPI] Prompt lido do banco — enviando para OpenAI...');
 
     const response = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -217,29 +305,44 @@ async function generatePPI(formData) {
         response_format: { type: 'json_object' }
     });
 
-    return JSON.parse(response.choices[0].message.content);
+    const ppi = JSON.parse(response.choices[0].message.content);
+    console.log('[generatePPI] PPI gerado com sucesso.');
+    return ppi;
 }
 
+// ============================================================
+// ROTA: POST /submit
+// ============================================================
 app.post('/submit', async (req, res) => {
     try {
         const ppiJson = await generatePPI(req.body);
 
-        const { error } = await supabase.from('form_submissions').insert([{
-            ...req.body,
-            diagnostico_final: JSON.stringify(ppiJson)
-        }]);
+        const { error } = await supabase
+            .from('form_submissions')
+            .insert([{
+                ...req.body,
+                diagnostico_final: JSON.stringify(ppiJson)
+            }]);
 
-        if (error) console.warn('Supabase insert warning:', error.message);
+        if (error) console.warn('[submit] Supabase insert warning:', error.message);
 
         res.json({ message: 'OK', ppi: ppiJson });
-    } catch (error) {
-        console.error('Erro no servidor:', error);
-        res.status(500).json({ error: error.message });
+    } catch (err) {
+        console.error('[submit] Erro:', err.message);
+        res.status(500).json({ error: err.message });
     }
 });
 
+// Fallback SPA
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+// ============================================================
+// START
+// ============================================================
+app.listen(PORT, async () => {
+    console.log(`\nServidor rodando em http://localhost:${PORT}`);
+    console.log('[DB] Verificando banco de dados...');
+    await bootstrapDatabase();
+});
