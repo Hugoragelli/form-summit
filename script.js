@@ -229,18 +229,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             allClients.forEach((c, index) => {
-                const hasPPI = !!c.diagnostico_final;
+                const raw = c.diagnostico_final;
+                const isNewFormat = raw && raw.trimStart().startsWith('{');
+                let actionCell;
+                if (isNewFormat) {
+                    actionCell = `<button class="btn btn-secondary btn-sm" onclick="viewClientPPI(${index})">Ver PPI</button>`;
+                } else if (raw) {
+                    actionCell = `<span style="color:var(--text-soft);font-size:12px" title="Gerado com sistema anterior — abrir no novo visualizador não é possível">Formato legado</span>`;
+                } else {
+                    actionCell = `<span style="color:var(--text-soft);font-size:12px">Sem PPI</span>`;
+                }
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:500">${c.nome || '—'}</td>
                         <td style="color:var(--text-muted)">${c.email || '—'}</td>
                         <td style="color:var(--text-muted)">${c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—'}</td>
-                        <td>
-                            ${hasPPI
-                                ? `<button class="btn btn-secondary btn-sm" onclick="viewClientPPI(${index})">Ver PPI</button>`
-                                : `<span style="color:var(--text-soft);font-size:12px">Sem PPI</span>`
-                            }
-                        </td>
+                        <td>${actionCell}</td>
                     </tr>
                 `;
             });
