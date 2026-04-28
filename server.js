@@ -299,7 +299,7 @@ async function generatePPI(formData) {
     console.log('[generatePPI] Prompt lido do banco — enviando para OpenAI...');
 
     const response = await openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: 'gpt-5.1',
         temperature: 0.4,
         messages: [{ role: 'user', content: fullPrompt }],
         response_format: { type: 'json_object' }
