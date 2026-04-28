@@ -545,19 +545,25 @@ a { text-decoration: none; color: inherit; }
 })();
 
 async function regerarPPI() {
-    const id = localStorage.getItem('ppi_submission_id');
-    if (!id) {
-        alert('Nenhuma submissão encontrada. Preencha o formulário novamente.');
-        window.location.href = 'index.html';
-        return;
-    }
-
     const btn = document.getElementById('btn-regerar');
     const originalText = btn.textContent;
     btn.disabled = true;
-    btn.textContent = 'Gerando...';
+    btn.textContent = 'Buscando dados...';
 
     try {
+        let id = localStorage.getItem('ppi_submission_id');
+
+        if (!id) {
+            // Fallback: busca a submissão mais recente do banco
+            const latestRes = await fetch('/latest-submission');
+            const latest = await latestRes.json();
+            if (!latestRes.ok) throw new Error(latest.error || 'Nenhuma submissão encontrada.');
+            id = latest.id;
+            localStorage.setItem('ppi_submission_id', id);
+        }
+
+        btn.textContent = 'Gerando...';
+
         const response = await fetch(`/regenerate/${id}`, { method: 'POST' });
         const result = await response.json();
 

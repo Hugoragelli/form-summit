@@ -336,6 +336,26 @@ app.post('/submit', async (req, res) => {
 });
 
 // ============================================================
+// ROTA: GET /latest-submission
+// Retorna o id da submissão mais recente no banco
+// ============================================================
+app.get('/latest-submission', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('form_submissions')
+            .select('id, nome, created_at')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (error || !data) return res.status(404).json({ error: 'Nenhuma submissão encontrada.' });
+        res.json(data);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// ============================================================
 // ROTA: POST /regenerate/:id
 // Busca os dados do formulário já salvo e gera um novo PPI
 // ============================================================
