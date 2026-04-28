@@ -1,35 +1,59 @@
-// O formulário agora envia dados para o servidor (backend) para proteger as chaves.
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Navegação de Abas ---
-    const navItems = document.querySelectorAll('.nav-item');
+
+    // --- Navegação de Abas (sidebar) ---
+    const navItems = document.querySelectorAll('.bc-sidebar-item[data-target]');
     const sections = document.querySelectorAll('.content-section');
+    const topbarCrumbs = document.getElementById('topbar-crumbs');
+
+    const sectionLabels = {
+        'section-form': { section: 'Operação', label: 'Formulário' },
+        'section-clientes': { section: 'Operação', label: 'Clientes' },
+        'section-config': { section: 'Configurações', label: 'Agente IA' }
+    };
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
+
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
+
             sections.forEach(s => s.classList.remove('active'));
             document.getElementById(target).classList.add('active');
 
+            const meta = sectionLabels[target];
+            if (meta && topbarCrumbs) {
+                topbarCrumbs.innerHTML = `${meta.section} · <strong>${meta.label}</strong>`;
+            }
+
             if (target === 'section-clientes') loadClients();
-            if (target === 'section-config') loadAIConfigs();
+            if (target === 'section-config') loadAIConfig();
         });
     });
 
-    // --- Lógica do Formulário ---
+    // --- Lógica do Formulário multi-step ---
     const form = document.getElementById('summit-form');
     const steps = document.querySelectorAll('.form-step');
     const nextBtn = document.getElementById('next-btn');
     const prevBtn = document.getElementById('prev-btn');
     const submitBtn = document.getElementById('submit-btn');
-    const progressFill = document.getElementById('progress-fill');
-    const progressPercent = document.getElementById('progress-percent');
+    const formCard = document.getElementById('form-card');
     const successView = document.getElementById('success-view');
-    const formCard = document.querySelector('.form-card');
+    const stepLabel = document.getElementById('step-label');
+    const progressNum = document.getElementById('progress-num');
+    const progressSteps = document.getElementById('progress-steps');
 
     let currentStep = 1;
     const totalSteps = steps.length;
+
+    // Build progress dots
+    if (progressSteps) {
+        for (let i = 0; i < totalSteps; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'progress-step' + (i === 0 ? ' active' : '');
+            progressSteps.appendChild(dot);
+        }
+    }
 
     updateProgress();
 
@@ -38,10 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentStep < totalSteps) {
                 currentStep++;
                 showStep(currentStep);
-                updateProgress();
             }
         } else {
-            alert('Por favor, preencha todos os campos obrigatórios desta etapa.');
+            highlightInvalidFields(currentStep);
         }
     });
 
@@ -49,70 +72,73 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentStep > 1) {
             currentStep--;
             showStep(currentStep);
-            updateProgress();
         }
     });
 
-    function showStep(stepNumber) {
-        steps.forEach(step => step.classList.remove('active'));
-        document.querySelector(`.form-step[data-step="${stepNumber}"]`).classList.add('active');
-        prevBtn.disabled = (stepNumber === 1);
-        if (stepNumber === totalSteps) {
-            nextBtn.style.display = 'none';
-            submitBtn.style.display = 'block';
-        } else {
-            nextBtn.style.display = 'block';
-            submitBtn.style.display = 'none';
-        }
-        formCard.scrollIntoView({ behavior: 'smooth' });
+    function showStep(n) {
+        steps.forEach(s => s.classList.remove('active'));
+        document.querySelector(`.form-step[data-step="${n}"]`).classList.add('active');
+        prevBtn.disabled = (n === 1);
+        nextBtn.style.display = (n === totalSteps) ? 'none' : 'inline-flex';
+        submitBtn.style.display = (n === totalSteps) ? 'inline-flex' : 'none';
+        updateProgress();
+        formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function updateProgress() {
-        const percent = ((currentStep - 1) / (totalSteps - 1)) * 100;
-        progressFill.style.width = `${percent}%`;
-        progressPercent.textContent = `${Math.round(percent)}%`;
+        if (stepLabel) stepLabel.textContent = `${currentStep} de ${totalSteps}`;
+        if (progressNum) progressNum.textContent = currentStep;
+        document.querySelectorAll('.progress-step').forEach((dot, i) => {
+            dot.className = 'progress-step' + (i < currentStep ? ' active' : '');
+        });
     }
 
     function validateStep(step) {
         const activeStep = document.querySelector(`.form-step[data-step="${step}"]`);
-        const inputs = activeStep.querySelectorAll('input[required], select[required], textarea[required]');
-        let isValid = true;
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                input.style.borderColor = '#ef4444';
-                isValid = false;
-            } else {
-                input.style.borderColor = '#e5e7eb';
-            }
-        });
-        return isValid;
+        const required = activeStep.querySelectorAll('input[required], select[required], textarea[required]');
+        return Array.from(required).every(el => el.value.trim() !== '');
     }
 
-    // Lógica Condicional
+    function highlightInvalidFields(step) {
+        const activeStep = document.querySelector(`.form-step[data-step="${step}"]`);
+        const required = activeStep.querySelectorAll('input[required], select[required], textarea[required]');
+        required.forEach(el => {
+            if (!el.value.trim()) {
+                el.style.borderColor = '#EF4444';
+                el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+            }
+        });
+    }
+
+    // Lógica condicional P2.1
     const p2Radios = document.querySelectorAll('input[name="p2_atrair_paciente"]');
     const p2_1Group = document.getElementById('group-p2_1');
     p2Radios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            p2_1Group.style.display = (e.target.value === 'Não') ? 'block' : 'none';
+        radio.addEventListener('change', e => {
+            if (p2_1Group) p2_1Group.style.display = (e.target.value === 'Não') ? 'block' : 'none';
         });
     });
 
-    // Submissão
-    form.addEventListener('submit', async (e) => {
+    // Submissão do formulário
+    form.addEventListener('submit', async e => {
         e.preventDefault();
-        const formData = new FormData(form);
-        const data = {};
-        const multiValueFields = ['p4_canais_chegada', 'p6_3_barreiras', 'p7_motivo_procura', 'p12_estilo_comunicacao'];
-        
-        Array.from(formData.entries()).forEach(([key, value]) => {
-            if (multiValueFields.includes(key)) {
-                if (!data[key]) data[key] = [];
-                data[key].push(value);
-            } else { data[key] = value; }
-        });
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Gerando Diagnóstico de IA...';
+        submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg> Gerando PPI...`;
+        submitBtn.style.background = '#374151';
+
+        const formData = new FormData(form);
+        const data = {};
+        const multi = ['p4_canais_chegada', 'p6_3_barreiras', 'p7_motivo_procura', 'p12_estilo_comunicacao'];
+
+        Array.from(formData.entries()).forEach(([key, value]) => {
+            if (multi.includes(key)) {
+                if (!data[key]) data[key] = [];
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        });
 
         try {
             const response = await fetch('/submit', {
@@ -124,97 +150,154 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Erro no servidor');
             const result = await response.json();
 
-            formCard.style.display = 'none';
-            successView.style.display = 'block';
-            
-            const aiBox = document.querySelector('.future-ai-box');
-            if (aiBox && result.diagnostico) {
-                aiBox.innerHTML = `
-                    <p style="color: #1e3a8a; font-weight: 700; margin-bottom: 12px;">✨ Diagnóstico Gerado</p>
-                    <div style="white-space: pre-line;">${result.diagnostico}</div>
-                `;
+            if (result.ppi) {
+                localStorage.setItem('ppi_current', JSON.stringify(result.ppi));
+                localStorage.setItem('ppi_nutri_nome', data.nome || '');
+                localStorage.setItem('ppi_date', new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }));
+                showSuccessView(result.ppi, data.nome);
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            alert('Erro ao processar diagnóstico.');
+        } catch (err) {
+            alert('Erro ao gerar diagnóstico: ' + err.message);
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Enviar Respostas';
+            submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg> Gerar PPI`;
+            submitBtn.style.background = '';
         }
     });
 
-    // --- Clientes e Modal ---
+    function showSuccessView(ppi, nome) {
+        formCard.style.display = 'none';
+        successView.style.display = 'block';
+
+        const dateEl = document.getElementById('success-date');
+        if (dateEl) dateEl.textContent = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        const resumoEl = document.getElementById('success-resumo');
+        if (resumoEl && ppi.resumo) resumoEl.textContent = ppi.resumo;
+
+        const quemEl = document.getElementById('success-quem');
+        if (quemEl && ppi.quem_e) {
+            quemEl.textContent = `${ppi.quem_e.faixa_etaria} · ${ppi.quem_e.genero_predominante} · ${ppi.quem_e.estrato_e_profissao}`;
+        }
+
+        const dorEl = document.getElementById('success-dor');
+        if (dorEl && ppi.eixo_de_dor) dorEl.textContent = ppi.eixo_de_dor.frase_eixo;
+
+        const emocaoEl = document.getElementById('success-emocao');
+        if (emocaoEl && ppi.eixo_de_transformacao) emocaoEl.textContent = ppi.eixo_de_transformacao.resultado_emocional_raiz;
+
+        const nivelEl = document.getElementById('success-nivel');
+        if (nivelEl && ppi.como_pensa) {
+            const labels = {
+                inconsciente: 'Inconsciente',
+                dor_consciente: 'Dor consciente',
+                solucao_consciente: 'Solução consciente',
+                produto_consciente: 'Produto consciente',
+                mais_consciente: 'Mais consciente',
+                insuficiente: 'Insuficiente'
+            };
+            nivelEl.textContent = labels[ppi.como_pensa.nivel_consciencia_predominante] || ppi.como_pensa.nivel_consciencia_predominante;
+        }
+
+        successView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    window.resetForm = () => {
+        form.reset();
+        currentStep = 1;
+        formCard.style.display = 'block';
+        successView.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg> Gerar PPI`;
+        submitBtn.style.background = '';
+        showStep(1);
+    };
+
+    // --- Clientes ---
     let allClients = [];
 
     async function loadClients() {
         const tbody = document.getElementById('clients-table-body');
-        tbody.innerHTML = '<tr><td colspan="4">Carregando...</td></tr>';
+        const countEl = document.getElementById('clients-count');
+        tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:24px">Carregando...</td></tr>';
         try {
             const res = await fetch('/clients');
             allClients = await res.json();
+            if (countEl) countEl.innerHTML = `<strong>${allClients.length}</strong> ${allClients.length === 1 ? 'resposta' : 'respostas'}`;
             tbody.innerHTML = '';
+            if (allClients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:24px">Nenhum cliente ainda.</td></tr>';
+                return;
+            }
             allClients.forEach((c, index) => {
+                const hasPPI = !!c.diagnostico_final;
                 tbody.innerHTML += `
                     <tr>
-                        <td>${c.nome}</td>
-                        <td>${c.email}</td>
-                        <td>${new Date(c.created_at).toLocaleDateString()}</td>
-                        <td><button class="btn btn-secondary btn-sm" onclick="openClientModal(${index})">Ver</button></td>
+                        <td style="font-weight:500">${c.nome || '—'}</td>
+                        <td style="color:var(--text-muted)">${c.email || '—'}</td>
+                        <td style="color:var(--text-muted)">${c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—'}</td>
+                        <td>
+                            ${hasPPI
+                                ? `<button class="btn btn-secondary btn-sm" onclick="viewClientPPI(${index})">Ver PPI</button>`
+                                : `<span style="color:var(--text-soft);font-size:12px">Sem PPI</span>`
+                            }
+                        </td>
                     </tr>
                 `;
             });
-        } catch (e) { tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar.</td></tr>'; }
+        } catch (err) {
+            tbody.innerHTML = '<tr><td colspan="4" style="color:var(--critical);text-align:center;padding:24px">Erro ao carregar clientes.</td></tr>';
+        }
     }
 
-    window.openClientModal = (index) => {
+    window.viewClientPPI = (index) => {
         const client = allClients[index];
-        const modal = document.getElementById('diagnostico-modal');
-        const modalBody = document.getElementById('modal-corpo');
-        const modalTitle = document.getElementById('modal-cliente-nome');
-
-        modalTitle.textContent = `Diagnóstico: ${client.nome}`;
-        modalBody.innerHTML = client.diagnostico_final 
-            ? `<div>${client.diagnostico_final}</div>` 
-            : '<p>Diagnóstico ainda não gerado para este cliente.</p>';
-        
-        modal.style.display = 'block';
+        if (!client.diagnostico_final) return;
+        try {
+            const ppi = JSON.parse(client.diagnostico_final);
+            localStorage.setItem('ppi_current', JSON.stringify(ppi));
+            localStorage.setItem('ppi_nutri_nome', client.nome || '');
+            localStorage.setItem('ppi_date', client.created_at
+                ? new Date(client.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' })
+                : '');
+            window.location.href = 'perfil-de-paciente-ideal.html';
+        } catch (_) {
+            alert('Erro ao carregar PPI deste cliente.');
+        }
     };
 
-    document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('diagnostico-modal').style.display = 'none';
-        });
-    });
-
-    window.onclick = (event) => {
-        const modal = document.getElementById('diagnostico-modal');
-        if (event.target == modal) modal.style.display = 'none';
-    };
-
-    // --- IA Config ---
-    async function loadAIConfigs() {
+    // --- Config IA ---
+    async function loadAIConfig() {
+        const el = document.getElementById('prompt-ppi');
+        if (!el) return;
         try {
             const res = await fetch('/ai-config');
-            (await res.json()).forEach(c => {
-                const el = document.getElementById(`prompt-${c.id}`);
-                if (el) el.value = c.prompt;
-            });
-        } catch (e) { console.error('Erro ao carregar IA'); }
+            const data = await res.json();
+            el.value = data.prompt || '';
+        } catch (_) {
+            el.value = '';
+        }
     }
 
-    document.getElementById('ai-prompts-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const data = [
-            { id: 'agente1', prompt: document.getElementById('prompt-agente1').value },
-            { id: 'agente2', prompt: document.getElementById('prompt-agente2').value },
-            { id: 'agente3', prompt: document.getElementById('prompt-agente3').value }
-        ];
+    window.saveAIConfig = async () => {
+        const el = document.getElementById('prompt-ppi');
+        const btn = document.getElementById('save-config-btn');
+        if (!el) return;
+        const orig = btn.textContent;
+        btn.textContent = 'Salvando...';
+        btn.disabled = true;
         try {
             const res = await fetch('/ai-config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompts: data })
+                body: JSON.stringify({ prompt: el.value })
             });
-            if (res.ok) alert('Configurações salvas!');
-        } catch (e) { alert('Erro ao salvar.'); }
-    });
+            if (res.ok) {
+                btn.textContent = 'Salvo!';
+                setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+            } else throw new Error();
+        } catch (_) {
+            btn.textContent = 'Erro ao salvar';
+            btn.disabled = false;
+        }
+    };
 });

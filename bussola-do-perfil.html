@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Bússola do Perfil — interior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-soft: #F5F5F5;
+  --sidebar-bg: #FAFAF9;
+  --sidebar-active: #FFFFFF;
+  --text: #0A0A0A;
+  --text-medium: #404040;
+  --text-muted: #737373;
+  --text-soft: #A3A3A3;
+  --border: #E7E5E0;
+  --border-strong: #D4D4D4;
+  --critical: #B91C1C;
+  --critical-bg: #FEE2E2;
+  --partial: #B45309;
+  --partial-bg: #FEF3C7;
+  --aligned: #15803D;
+  --aligned-bg: #DCFCE7;
+  --strength: #6D28D9;
+  --strength-bg: #EDE9FE;
+  --primary: #2563EB;
+  --primary-soft: #EFF6FF;
+  --nsf-dark: #0A0A0A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ============================================
+   BC CHROME
+   ============================================ */
+.bc-app { display: grid; grid-template-columns: 200px 1fr; min-height: 100vh; }
+
+/* Sidebar */
+.bc-sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 14px 10px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.bc-sidebar-brand { padding: 4px 10px 16px; display: flex; align-items: center; gap: 8px; }
+.bc-sidebar-brand-mark { width: 24px; height: 24px; background: var(--nsf-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 800; }
+.bc-sidebar-brand-text { font-weight: 700; font-size: 13px; letter-spacing: -0.01em; }
+.bc-sidebar-section { color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5px; font-weight: 700; padding: 12px 10px 4px; }
+.bc-sidebar-item { padding: 7px 10px; color: var(--text-medium); display: flex; align-items: center; gap: 9px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 120ms ease; }
+.bc-sidebar-item:hover { background: rgba(0,0,0,0.04); }
+.bc-sidebar-item.active { background: var(--sidebar-active); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+.bc-sidebar-icon { width: 14px; height: 14px; opacity: 0.6; }
+.bc-sidebar-item.active .bc-sidebar-icon { opacity: 1; }
+.bc-sidebar-user { position: absolute; bottom: 14px; left: 10px; right: 10px; padding: 8px 10px; border-top: 1px solid var(--border); padding-top: 14px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.bc-sidebar-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--text-medium); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+/* Topbar */
+.bc-content-wrap { display: flex; flex-direction: column; min-width: 0; }
+.bc-topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+.bc-topbar-crumbs { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.bc-topbar-crumbs strong { color: var(--text); font-weight: 600; }
+.bc-topbar-search { flex: 1; max-width: 320px; margin: 0 24px; position: relative; }
+.bc-topbar-search input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface-soft); color: var(--text); }
+.bc-topbar-search::before { content: '⌕'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+.bc-topbar-actions { display: flex; gap: 6px; align-items: center; }
+.bc-topbar-btn { padding: 6px 10px; font-size: 12px; color: var(--text-medium); border-radius: 6px; cursor: pointer; }
+
+/* Page banner (NSF Sprint Summit style) */
+.bc-banner { background: var(--nsf-dark); color: white; padding: 10px 32px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.bc-banner-text { font-weight: 500; }
+.bc-banner-text em { color: #FCD34D; font-style: normal; }
+
+/* ============================================
+   PAGE — BÚSSOLA DO PERFIL
+   ============================================ */
+.page { padding: 24px 32px 80px; max-width: 100%; }
+.page-inner { max-width: 800px; margin: 0 auto; }
+
+/* Page header */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.page-eyebrow { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px; }
+.page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.15; }
+.page-meta { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.page-meta strong { color: var(--text-medium); font-weight: 600; }
+.page-actions { display: flex; gap: 8px; }
+.btn { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 120ms ease; }
+.btn-primary { background: var(--text); color: white; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-tertiary { color: var(--text-medium); background: transparent; }
+
+/* Status banner */
+.status-banner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 28px; }
+.status-score { display: flex; align-items: baseline; gap: 4px; }
+.status-score-num { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+.status-score-total { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+.status-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 2px; font-weight: 700; }
+.status-bar { flex: 1; }
+.status-pills { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.pill.crit { background: var(--critical-bg); color: var(--critical); }
+.pill.crit::before { background: var(--critical); }
+.pill.par { background: var(--partial-bg); color: var(--partial); }
+.pill.par::before { background: var(--partial); }
+.pill.al { background: var(--aligned-bg); color: var(--aligned); }
+.pill.al::before { background: var(--aligned); }
+.pill.str { background: var(--strength-bg); color: var(--strength); }
+.pill.str::before { background: var(--strength); }
+.status-bar-text { font-size: 12.5px; color: var(--text-muted); }
+
+/* Section heading */
+.section-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin: 36px 0 14px; }
+
+/* Resumo executivo */
+.exec { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.exec-bullets { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.exec-bullet { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.exec-bullet:last-child { border-bottom: 0; }
+.exec-bullet-num { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-soft); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-medium); flex-shrink: 0; }
+.exec-bullet-text { font-size: 13.5px; line-height: 1.55; color: var(--text); }
+.exec-bullet-text strong { font-weight: 700; }
+.exec-radar { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.exec-radar-h { font-size: 12px; font-weight: 700; color: var(--text-medium); margin-bottom: 6px; }
+.exec-radar-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+.exec-radar canvas { width: 100% !important; height: 220px !important; }
+.exec-radar-legend { display: flex; gap: 12px; justify-content: center; margin-top: 8px; font-size: 11px; }
+.exec-radar-leg { display: flex; align-items: center; gap: 4px; color: var(--text-muted); }
+.exec-radar-leg::before { content: ''; width: 10px; height: 2px; }
+.exec-radar-leg.ideal::before { background: var(--text-soft); }
+.exec-radar-leg.atual::before { background: var(--primary); }
+
+/* Dimension card */
+.dim { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px 24px; margin-bottom: 14px; }
+.dim-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.dim-num { font-size: 11px; color: var(--text-soft); font-weight: 700; letter-spacing: 0.05em; }
+.dim-name { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.dim-headline { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 14px; color: var(--text); }
+.dim-headline em { color: var(--critical); font-style: normal; font-weight: 700; }
+
+/* Side-by-side */
+.dim-side { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+.dim-side-col { padding: 14px 16px; }
+.dim-side-col + .dim-side-col { border-left: 1px solid var(--border); }
+.dim-side-col.atual { background: #FEF7F7; }
+.dim-side-col.sugerido { background: #F4FAF6; }
+.dim-side-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+.dim-side-col.atual .dim-side-label { color: var(--critical); }
+.dim-side-col.sugerido .dim-side-label { color: var(--aligned); }
+.dim-side-text { font-size: 13px; line-height: 1.5; color: var(--text); }
+
+/* Chart inside dim */
+.dim-chart { background: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px 12px; margin-bottom: 14px; }
+.dim-chart-h { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.dim-chart canvas { width: 100% !important; max-height: 180px !important; }
+
+/* Stacked bar (custom) */
+.stacked-bar-wrap { margin-bottom: 14px; }
+.stacked-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; font-size: 12px; }
+.stacked-bar-row .label { width: 130px; color: var(--text-medium); font-size: 12px; }
+.stacked-bar-row .track { flex: 1; height: 22px; background: var(--surface-soft); border-radius: 4px; position: relative; overflow: hidden; display: flex; }
+.stacked-bar-row .actual-fill { height: 100%; }
+.stacked-bar-row .ideal-marker { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); border-radius: 1px; }
+.stacked-bar-row .pct { width: 64px; text-align: right; font-size: 11px; color: var(--text-medium); font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* Scorecard ABC */
+.scorecard { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.scorecard-letter { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+.scorecard-letter.a { background: var(--aligned-bg); color: var(--aligned); }
+.scorecard-letter.b { background: var(--partial-bg); color: var(--partial); }
+.scorecard-letter.c { background: var(--critical-bg); color: var(--critical); }
+.scorecard-text { font-size: 12px; color: var(--text-medium); }
+
+/* Quote */
+.dim-quote { padding: 12px 16px; background: var(--surface-soft); border-left: 3px solid var(--text-medium); border-radius: 0 6px 6px 0; margin-bottom: 14px; font-size: 13px; color: var(--text); font-style: italic; }
+.dim-quote::before { content: '"'; color: var(--text-soft); }
+.dim-quote::after { content: '"'; color: var(--text-soft); }
+
+/* Sugestão */
+.dim-sug { background: var(--primary-soft); border: 1px solid #DBEAFE; border-radius: 8px; padding: 14px 16px; }
+.dim-sug-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.dim-sug-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+.dim-sug-text strong { font-weight: 700; }
+.dim-sug-example { display: block; margin-top: 10px; padding: 10px 12px; background: white; border: 1px solid #DBEAFE; border-radius: 6px; font-style: italic; font-size: 12.5px; color: var(--text-medium); }
+
+/* Funil simples (CTA) */
+.funnel-wrap { margin-bottom: 14px; }
+.funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+.funnel-stage { width: 130px; font-size: 12px; color: var(--text-medium); }
+.funnel-bar { height: 18px; border-radius: 3px; background: var(--primary); }
+.funnel-pct { font-size: 11px; color: var(--text-medium); font-variant-numeric: tabular-nums; font-weight: 600; min-width: 40px; }
+
+/* Heatmap (cadência) */
+.heatmap { display: grid; grid-template-columns: 28px repeat(24, 1fr); gap: 2px; font-size: 9px; margin-bottom: 14px; }
+.heatmap .day-label { color: var(--text-muted); padding: 4px 4px 0; font-weight: 600; }
+.heatmap .cell { aspect-ratio: 1; border-radius: 1px; background: var(--surface-soft); }
+.heatmap .cell.l1 { background: #DBEAFE; }
+.heatmap .cell.l2 { background: #93C5FD; }
+.heatmap .cell.l3 { background: var(--primary); }
+.heatmap .cell.l4 { background: #1E3A8A; }
+.heatmap-axis { display: grid; grid-template-columns: 28px repeat(24, 1fr); font-size: 8.5px; color: var(--text-soft); margin-top: 4px; padding: 0 0 0 0; }
+.heatmap-axis div:first-child { grid-column: span 1; }
+.heatmap-axis span { text-align: center; }
+
+/* Plano de ação */
+.plano { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.plano-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; }
+.plano-col-h { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.plano-col-h-text { font-weight: 700; font-size: 13px; }
+.plano-col.crit .plano-col-h-text { color: var(--critical); }
+.plano-col.med .plano-col-h-text { color: var(--partial); }
+.plano-col.pol .plano-col-h-text { color: var(--text-medium); }
+.plano-col-h-count { font-size: 11px; color: var(--text-soft); font-weight: 600; }
+.plano-col-when { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+.plano-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.plano-item:last-child { border-bottom: 0; }
+.plano-item-title { font-weight: 600; font-size: 13px; line-height: 1.35; margin-bottom: 4px; }
+.plano-item-why { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px; }
+.plano-item-action { font-size: 11px; color: var(--primary); font-weight: 600; cursor: pointer; }
+.plano-item-action::after { content: ' →'; }
+
+/* Tarefa banner */
+.tarefa-info { font-size: 12px; color: var(--text-muted); margin-top: 10px; padding: 12px 14px; background: var(--surface-soft); border-radius: 6px; display: flex; align-items: center; gap: 8px; }
+.tarefa-info::before { content: 'ⓘ'; color: var(--primary); font-size: 14px; }
+
+/* Footer (related modules) */
+.related { margin-top: 36px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+.related-h { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.related-actions { display: flex; gap: 10px; }
+.related-link { padding: 6px 12px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; color: var(--text); cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="bc-app">
+
+  <!-- ============== SIDEBAR BC ============== -->
+  <aside class="bc-sidebar">
+    <div class="bc-sidebar-brand">
+      <div class="bc-sidebar-brand-mark">BC</div>
+      <div class="bc-sidebar-brand-text">Business Compass</div>
+    </div>
+
+    <div class="bc-sidebar-section">Operação</div>
+    <div class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>Dashboard</div>
+    <div class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 7h12"/></svg>Carteira</div>
+    <div class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg>Onboarding</div>
+    <div class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M3 7l5 3 5-3"/></svg>Atendimentos</div>
+
+    <div class="bc-sidebar-section">Estratégia</div>
+    <a href="perfil-de-paciente-ideal.html" class="bc-sidebar-item" style="text-decoration:none;color:inherit"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>Perfil de Paciente Ideal</a>
+    <a href="3-personas.html" class="bc-sidebar-item" style="text-decoration:none;color:inherit"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
+    <a href="bussola-do-perfil.html" class="bc-sidebar-item active" style="text-decoration:none;color:inherit"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
+
+    <div class="bc-sidebar-section">Configurações</div>
+    <div class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Acessos</div>
+
+    <div class="bc-sidebar-user">
+      <div class="bc-sidebar-avatar">JD</div>
+      <div>Daniel Dias<br><span style="color:var(--text-soft);font-size:11px">@nutridanieldias</span></div>
+    </div>
+  </aside>
+
+  <!-- ============== CONTENT ============== -->
+  <div class="bc-content-wrap">
+
+    <!-- Topbar -->
+    <header class="bc-topbar">
+      <div class="bc-topbar-crumbs">Estratégia · <strong>Bússola do Perfil</strong></div>
+      <div class="bc-topbar-search"><input placeholder="Buscar..."/></div>
+      <div class="bc-topbar-actions">
+        <span class="bc-topbar-btn">🔔</span>
+        <span class="bc-topbar-btn">DD</span>
+      </div>
+    </header>
+
+    <!-- NSF banner -->
+    <div class="bc-banner">
+      <div class="bc-banner-text">Qual ponteiro <em>move o seu resultado?</em></div>
+      <div style="font-size:11px;color:#A3A3A3">Sprint Summit NSF</div>
+    </div>
+
+    <!-- ============================================ PAGE -->
+    <div class="page">
+      <div class="page-inner">
+
+        <!-- Page header -->
+        <div class="page-header">
+          <div>
+            <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
+            <h1 class="page-title">Bússola do Perfil</h1>
+            <div class="page-meta">@nutridanieldias · Última análise: <strong>15 abr 2026</strong> · <span style="color:var(--text-soft)">Versão 3</span></div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-tertiary">Histórico</button>
+            <button class="btn btn-secondary">Exportar PDF</button>
+            <button class="btn btn-primary">Regerar</button>
+          </div>
+        </div>
+
+        <!-- Status banner -->
+        <div class="status-banner">
+          <div>
+            <div class="status-score">
+              <span class="status-score-num">3</span><span class="status-score-total">/8</span>
+            </div>
+            <div class="status-score-label">Dimensões críticas</div>
+          </div>
+          <div style="width:1px;height:42px;background:var(--border)"></div>
+          <div class="status-bar">
+            <div class="status-pills">
+              <span class="pill crit">3 críticos</span>
+              <span class="pill par">3 parciais</span>
+              <span class="pill al">1 alinhado</span>
+              <span class="pill str">1 destaque</span>
+            </div>
+            <div class="status-bar-text">Ponto principal: bio e identidade não comunicam pra quem o atendimento é. <a href="#dim1" style="color:var(--primary);text-decoration:none">Ver detalhe →</a></div>
+          </div>
+        </div>
+
+        <!-- Resumo executivo -->
+        <div class="section-h">Resumo executivo</div>
+        <div class="exec">
+          <div class="exec-bullets">
+            <div class="exec-bullet">
+              <div class="exec-bullet-num">1</div>
+              <div class="exec-bullet-text"><strong>Bio não converte:</strong> link único, sem promessa explícita pra quem você quer atender.</div>
+            </div>
+            <div class="exec-bullet">
+              <div class="exec-bullet-num">2</div>
+              <div class="exec-bullet-text"><strong>Pilares de conteúdo desbalanceados:</strong> 0% de quebra de objeção contra ~25% recomendado pro PPI.</div>
+            </div>
+            <div class="exec-bullet">
+              <div class="exec-bullet-num">3</div>
+              <div class="exec-bullet-text"><strong>Sem CTA na maioria das peças:</strong> 71% dos posts não pedem nenhuma ação — engajamento passivo.</div>
+            </div>
+            <div class="exec-bullet">
+              <div class="exec-bullet-num">4</div>
+              <div class="exec-bullet-text"><strong>Audiência atual ≠ PPI alvo:</strong> 62% dos comentadores fora da faixa demográfica do paciente ideal.</div>
+            </div>
+            <div class="exec-bullet">
+              <div class="exec-bullet-num">5</div>
+              <div class="exec-bullet-text"><strong>Tom de voz ✓ alinhado.</strong> Esse é o ponto forte — não mexer.</div>
+            </div>
+          </div>
+          <div class="exec-radar">
+            <div class="exec-radar-h">Posicionamento — Atual vs Ideal</div>
+            <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensões</div>
+            <canvas id="radar"></canvas>
+            <div class="exec-radar-legend">
+              <span class="exec-radar-leg ideal">Ideal</span>
+              <span class="exec-radar-leg atual">Atual</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagnóstico -->
+        <div class="section-h">Diagnóstico por dimensão · 8 áreas</div>
+
+        <!-- DIM 1: PROMESSA -->
+        <div class="dim" id="dim1">
+          <div class="dim-head">
+            <span class="dim-num">01</span>
+            <span class="dim-name">Promessa &amp; Diferencial</span>
+            <span class="pill crit" style="margin-left:auto">crítico</span>
+          </div>
+          <h3 class="dim-headline">Sua bio diz que você é <em>sério</em>, mas não diz pra <em>quem</em>.</h3>
+          <div class="dim-side">
+            <div class="dim-side-col atual">
+              <div class="dim-side-label">Hoje seu perfil diz</div>
+              <div class="dim-side-text">"Nutricionista. Saúde integral. Atendimento humanizado."</div>
+            </div>
+            <div class="dim-side-col sugerido">
+              <div class="dim-side-label">PPI pede que diga</div>
+              <div class="dim-side-text">"Pra quem já tentou e voltou ao ponto inicial. Construo o processo possível na sua rotina — sem extremismos."</div>
+            </div>
+          </div>
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Faça essa semana</div>
+            <div class="dim-sug-text"><strong>Reescrever bio</strong> amarrando público + dor + diferencial em 1 frase só.</div>
+            <div class="dim-sug-example">Pra quem já tentou de tudo. Construo o processo possível na sua rotina — sem extremismos, sem efeito sanfona.</div>
+          </div>
+        </div>
+
+        <!-- DIM 2: BIO/LINKS -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">02</span>
+            <span class="dim-name">Bio &amp; Links</span>
+            <span class="pill par" style="margin-left:auto">parcial</span>
+          </div>
+          <h3 class="dim-headline">Bio com info importante mas <em>pouco clara</em>; foto não comunica profissão.</h3>
+          <div class="scorecard">
+            <span class="scorecard-letter c">C</span>
+            <span class="scorecard-text">Foto de perfil sem sinal de categoria — poderia ser de qualquer profissional liberal</span>
+          </div>
+          <div class="scorecard">
+            <span class="scorecard-letter b">B</span>
+            <span class="scorecard-text">Bio com info importante, mas estrutura genérica (faltam público + promessa + CTA)</span>
+          </div>
+          <div class="scorecard">
+            <span class="scorecard-letter c">C</span>
+            <span class="scorecard-text">Sem destaques (highlights). Quebra o caminho de decisão de quem chega novo.</span>
+          </div>
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ 3 ações conectadas</div>
+            <div class="dim-sug-text"><strong>(1)</strong> Trocar foto pra uma com sinal explícito de profissão (consultório, atendimento). <strong>(2)</strong> Reduzir links pra 1 só — WhatsApp direto, sem agregador (compatível com ticket abaixo de R$3k). <strong>(3)</strong> Criar 5 destaques: <em>Comece aqui · Método · Resultados · Sobre mim · Agendar</em>.</div>
+          </div>
+        </div>
+
+        <!-- DIM 3: PILARES (com chart) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">03</span>
+            <span class="dim-name">Pilares &amp; intenção de conteúdo</span>
+            <span class="pill crit" style="margin-left:auto">crítico</span>
+          </div>
+          <h3 class="dim-headline">Você posta autoridade. Falta <em>quebrar objeção</em>.</h3>
+
+          <div class="dim-chart">
+            <div class="dim-chart-h">Distribuição por intenção · atual vs ideal pro PPI</div>
+            <div class="stacked-bar-wrap">
+              <div class="stacked-bar-row">
+                <span class="label">Educação aplicada</span>
+                <div class="track">
+                  <div class="actual-fill" style="width:42%; background:var(--primary)"></div>
+                  <div class="ideal-marker" style="left:30%"></div>
+                </div>
+                <span class="pct">42% / 30%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">Quebra de objeção</span>
+                <div class="track">
+                  <div class="actual-fill" style="width:0%; background:var(--critical)"></div>
+                  <div class="ideal-marker" style="left:30%"></div>
+                </div>
+                <span class="pct">0% / 30%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">Autoridade</span>
+                <div class="track">
+                  <div class="actual-fill" style="width:38%; background:var(--primary)"></div>
+                  <div class="ideal-marker" style="left:5%"></div>
+                </div>
+                <span class="pct">38% / 5%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">Prova social</span>
+                <div class="track">
+                  <div class="actual-fill" style="width:8%; background:var(--primary)"></div>
+                  <div class="ideal-marker" style="left:20%"></div>
+                </div>
+                <span class="pct">8% / 20%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">Conexão</span>
+                <div class="track">
+                  <div class="actual-fill" style="width:12%; background:var(--primary)"></div>
+                  <div class="ideal-marker" style="left:15%"></div>
+                </div>
+                <span class="pct">12% / 15%</span>
+              </div>
+            </div>
+            <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:2px;height:10px;background:var(--text)"></span>marca = ideal pro PPI</div>
+          </div>
+
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Próximas 4 semanas</div>
+            <div class="dim-sug-text"><strong>Lançar pilar "Conteúdo contrafactual"</strong> — posts que mostram por que dietas restritivas falham, por que força de vontade não sustenta, por que o caminho atual não funciona. Calibrar mix pra ~30% educação · 30% quebra · 20% prova social · 15% conexão · 5% autoridade.</div>
+          </div>
+        </div>
+
+        <!-- DIM 4: AUDIÊNCIA REAL (com chart) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">04</span>
+            <span class="dim-name">Audiência real vs PPI alvo</span>
+            <span class="pill par" style="margin-left:auto">parcial</span>
+          </div>
+          <h3 class="dim-headline">Você atrai 22-30 anos. Seu PPI tem <em>35-50</em>.</h3>
+
+          <div class="dim-chart">
+            <div class="dim-chart-h">Faixa etária · comentadores reais vs PPI</div>
+            <div class="stacked-bar-wrap">
+              <div class="stacked-bar-row">
+                <span class="label">18-25</span>
+                <div class="track"><div class="actual-fill" style="width:34%;background:var(--primary)"></div><div class="ideal-marker" style="left:0%"></div></div>
+                <span class="pct">34% / 0%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">26-34</span>
+                <div class="track"><div class="actual-fill" style="width:28%;background:var(--primary)"></div><div class="ideal-marker" style="left:15%"></div></div>
+                <span class="pct">28% / 15%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">35-50</span>
+                <div class="track"><div class="actual-fill" style="width:30%;background:var(--primary)"></div><div class="ideal-marker" style="left:75%"></div></div>
+                <span class="pct">30% / 75%</span>
+              </div>
+              <div class="stacked-bar-row">
+                <span class="label">50+</span>
+                <div class="track"><div class="actual-fill" style="width:8%;background:var(--primary)"></div><div class="ideal-marker" style="left:10%"></div></div>
+                <span class="pct">8% / 10%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim-quote">A maioria dos comments são "amei a dica!" e "ah, eu também!" — vocabulário jovem (Insta gen Z). Comentadores 35-50 raramente respondem.</div>
+
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Médio prazo</div>
+            <div class="dim-sug-text">Conteúdo dos pilares 03 (quebra de objeção + prova social) endereça diretamente esse gap — paciente 35-50 quer ver casos parecidos com o dele e refutações dos medos comuns.</div>
+          </div>
+        </div>
+
+        <!-- DIM 5: CADÊNCIA (heatmap) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">05</span>
+            <span class="dim-name">Cadência</span>
+            <span class="pill par" style="margin-left:auto">parcial</span>
+          </div>
+          <h3 class="dim-headline">Posta com intenção, mas <em>sem ritmo previsível</em>.</h3>
+
+          <div class="dim-chart">
+            <div class="dim-chart-h">Atividade última semana · 7 dias × 24h</div>
+            <div class="heatmap" id="heatmap"></div>
+            <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px">Pico: ter/qui ~14h. Sem post regular nos fins de semana.</div>
+          </div>
+
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Polimento</div>
+            <div class="dim-sug-text"><strong>Definir 3 dias fixos de postagem</strong> (ex: ter/qui/sáb 14h). Constância simples vence picos de postagem pra o algoritmo e pra previsibilidade do público.</div>
+          </div>
+        </div>
+
+        <!-- DIM 6: CTA (funil) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">06</span>
+            <span class="dim-name">CTA &amp; resposta</span>
+            <span class="pill crit" style="margin-left:auto">crítico</span>
+          </div>
+          <h3 class="dim-headline">71% dos posts não pedem ação. <em>Conversa não acontece</em>.</h3>
+
+          <div class="dim-chart">
+            <div class="dim-chart-h">Distribuição de CTA · 30 últimos posts</div>
+            <div class="funnel-wrap">
+              <div class="funnel-row">
+                <span class="funnel-stage">Sem CTA</span>
+                <div class="funnel-bar" style="width:71%;background:var(--critical)"></div>
+                <span class="funnel-pct">71%</span>
+              </div>
+              <div class="funnel-row">
+                <span class="funnel-stage">Salve / curta</span>
+                <div class="funnel-bar" style="width:18%;background:var(--partial)"></div>
+                <span class="funnel-pct">18%</span>
+              </div>
+              <div class="funnel-row">
+                <span class="funnel-stage">Comente</span>
+                <div class="funnel-bar" style="width:7%;background:var(--primary)"></div>
+                <span class="funnel-pct">7%</span>
+              </div>
+              <div class="funnel-row">
+                <span class="funnel-stage">Manda DM</span>
+                <div class="funnel-bar" style="width:4%;background:var(--aligned)"></div>
+                <span class="funnel-pct">4%</span>
+              </div>
+              <div class="funnel-row">
+                <span class="funnel-stage">Agendar</span>
+                <div class="funnel-bar" style="width:0%;background:var(--strength)"></div>
+                <span class="funnel-pct">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Faça essa semana</div>
+            <div class="dim-sug-text"><strong>Implementar CTA em todo post</strong> — sem exceção. Hoje 0% pedem agendamento direto, e isso é onde a conversão mora. Exemplo testado pra perfil 35-50:</div>
+            <div class="dim-sug-example">Comente "ROTINA" se você se identifica e te mando os 3 primeiros passos no direct.</div>
+          </div>
+        </div>
+
+        <!-- DIM 7: TOM (qualitativo) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">07</span>
+            <span class="dim-name">Tom &amp; narrativa</span>
+            <span class="pill al" style="margin-left:auto">alinhado</span>
+          </div>
+          <h3 class="dim-headline">Tom de voz combina com o PPI. <em>Não mexa</em>.</h3>
+          <div class="scorecard">
+            <span class="scorecard-letter a">A</span>
+            <span class="scorecard-text">Pessoa do verbo: 2ª pessoa direta ("você"). Adequado pra paciente 35-50.</span>
+          </div>
+          <div class="scorecard">
+            <span class="scorecard-letter a">A</span>
+            <span class="scorecard-text">Registro: casual-profissional. Sem jargão técnico desnecessário.</span>
+          </div>
+          <div class="scorecard">
+            <span class="scorecard-letter b">B</span>
+            <span class="scorecard-text">Arco narrativo: institucional ("eu sou correto") — poderia migrar pra "eu te ajudo a..." (mais centrado no paciente).</span>
+          </div>
+        </div>
+
+        <!-- DIM 8: TOP/BOTTOM REELS (destaque) -->
+        <div class="dim">
+          <div class="dim-head">
+            <span class="dim-num">08</span>
+            <span class="dim-name">O que funciona &amp; o que não funciona</span>
+            <span class="pill str" style="margin-left:auto">destaque</span>
+          </div>
+          <h3 class="dim-headline">Reels com gancho de "erro comum" performam <em>3,4× a média</em>.</h3>
+          <div class="dim-side">
+            <div class="dim-side-col sugerido">
+              <div class="dim-side-label">Top 3 reels</div>
+              <div class="dim-side-text">"3 erros que sabotam emagrecimento" · "Por que você empaca depois dos 30" · "Não é falta de força de vontade" — todos com gancho contrafactual nos 3s iniciais.</div>
+            </div>
+            <div class="dim-side-col atual">
+              <div class="dim-side-label">Bottom 3 reels</div>
+              <div class="dim-side-text">3 reels institucionais ("conheça meu consultório", "minha jornada", "obrigado por X seguidores") — sem gancho de dor, baixo retention.</div>
+            </div>
+          </div>
+          <div class="dim-sug">
+            <div class="dim-sug-label">→ Continuar fazendo</div>
+            <div class="dim-sug-text">Esse é o ponto forte do perfil — Reels de gancho contrafactual. <strong>Dobrar a frequência:</strong> de 1/semana pra 2-3/semana. Esses Reels já estão dissolvendo as barreiras psicológicas das suas Personas.</div>
+          </div>
+        </div>
+
+        <!-- Plano de ação -->
+        <div class="section-h" style="margin-top: 36px">Plano de ação · 9 itens</div>
+
+        <div class="plano">
+
+          <div class="plano-col crit">
+            <div class="plano-col-h">
+              <span class="pill crit" style="padding:1px 6px">●</span>
+              <span class="plano-col-h-text">Crítico</span>
+              <span class="plano-col-h-count">3</span>
+            </div>
+            <div class="plano-col-when">Faça essa semana</div>
+            <div class="plano-item">
+              <div class="plano-item-title">Reescrever bio</div>
+              <div class="plano-item-why">Fecha gap de Promessa (#01)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Trocar foto de perfil</div>
+              <div class="plano-item-why">Sinal explícito de profissão (#02)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Implementar CTA em todo post</div>
+              <div class="plano-item-why">71% dos posts sem CTA hoje (#06)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+          </div>
+
+          <div class="plano-col med">
+            <div class="plano-col-h">
+              <span class="pill par" style="padding:1px 6px">●</span>
+              <span class="plano-col-h-text">Médio</span>
+              <span class="plano-col-h-count">4</span>
+            </div>
+            <div class="plano-col-when">Próximas 2-4 semanas</div>
+            <div class="plano-item">
+              <div class="plano-item-title">Lançar pilar contrafactual</div>
+              <div class="plano-item-why">0% quebra de objeção hoje (#03)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Reduzir links pra 1 (WhatsApp)</div>
+              <div class="plano-item-why">Tira fricção (#02)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Criar 5 destaques estruturados</div>
+              <div class="plano-item-why">Funil visual de decisão (#02)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Dobrar Reels contrafactuais</div>
+              <div class="plano-item-why">Onde performance está (#08)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+          </div>
+
+          <div class="plano-col pol">
+            <div class="plano-col-h">
+              <span class="pill" style="padding:1px 6px;background:var(--surface-soft);color:var(--text-medium)">●</span>
+              <span class="plano-col-h-text">Polimento</span>
+              <span class="plano-col-h-count">2</span>
+            </div>
+            <div class="plano-col-when">Quando der</div>
+            <div class="plano-item">
+              <div class="plano-item-title">Definir dias fixos de postagem</div>
+              <div class="plano-item-why">Constância &gt; volume (#05)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+            <div class="plano-item">
+              <div class="plano-item-title">Revisar arco narrativo</div>
+              <div class="plano-item-why">Centrar no paciente (#07)</div>
+              <div class="plano-item-action">Abrir tarefa</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tarefa-info">Cada item criar uma tarefa na sua aba <strong>Tarefas/Projetos</strong> com prazo sugerido. Você pode editar prazo e status lá.</div>
+
+        <!-- Related modules -->
+        <div class="related">
+          <div>
+            <div class="related-h">Esta análise se apoia em</div>
+            <div style="font-size:13.5px;color:var(--text)">Seu PPI · 3 Personas (atualizadas em 12 abr)</div>
+          </div>
+          <div class="related-actions">
+            <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI →</a>
+            <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Radar chart
+new Chart(document.getElementById('radar').getContext('2d'), {
+  type: 'radar',
+  data: {
+    labels: ['Promessa', 'Conteúdo', 'Audiência', 'CTA', 'Identidade'],
+    datasets: [
+      { label: 'Ideal', data: [5,5,5,5,5], fill: true, backgroundColor: 'rgba(115,115,115,0.08)', borderColor: 'rgba(115,115,115,0.5)', borderWidth: 1, pointRadius: 0 },
+      { label: 'Atual', data: [2,2,3,1.5,2.5], fill: true, backgroundColor: 'rgba(37,99,235,0.18)', borderColor: '#2563EB', borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { r: { beginAtZero: true, max: 5, ticks: { display: false }, pointLabels: { font: { size: 11, family: 'Inter' }, color: '#404040' }, grid: { color: '#E7E5E0' }, angleLines: { color: '#E7E5E0' } } }
+  }
+});
+
+// Heatmap (cadência)
+const heatmap = document.getElementById('heatmap');
+const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+const data = [
+  // Seg, Ter, Qua, Qui, Sex, Sáb, Dom — 24h
+  [0,0,0,0,0,0,0,0,1,0,0,0,0,1,2,0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,0,1,2,1,0,0,0,1,3,2,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,1,2,1,0,0,0,1,3,1,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+];
+data.forEach((row, di) => {
+  const label = document.createElement('div');
+  label.className = 'day-label';
+  label.textContent = days[di];
+  heatmap.appendChild(label);
+  row.forEach(v => {
+    const c = document.createElement('div');
+    c.className = 'cell' + (v ? ' l'+v : '');
+    heatmap.appendChild(c);
+  });
+});
+</script>
+
+</body>
+</html>
