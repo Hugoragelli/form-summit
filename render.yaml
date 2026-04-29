@@ -18,3 +18,5 @@ services:
         sync: false # Chave da OpenAI (https://platform.openai.com)
       - key: DEEPSEEK_API_KEY
         sync: false # Chave da DeepSeek (https://platform.deepseek.com)
+      - key: APIFY_TOKEN
+        sync: false # Token do Apify (https://console.apify.com/account/integrations)

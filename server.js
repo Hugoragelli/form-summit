@@ -4,6 +4,7 @@ const path = require('path');
 const { supabase } = require('./lib/clients');
 const { router: ppiRouter, SEED_PROMPT } = require('./agents/ppi');
 const { router: personasRouter, SEED_PERSONAS_PROMPT } = require('./agents/personas');
+const { router: instagramRouter } = require('./agents/instagram');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,9 +15,10 @@ app.use(express.static(path.join(__dirname)));
 // Rotas dos agentes
 app.use(ppiRouter);
 app.use(personasRouter);
+app.use(instagramRouter);
 
 // ============================================================
-// GET /clients — lista todas as submissoes
+// GET /clients ï¿½ lista todas as submissoes
 // ============================================================
 app.get('/clients', async (req, res) => {
     try {
@@ -37,7 +39,7 @@ app.get('*', (req, res) => {
 });
 
 // ============================================================
-// bootstrapDatabase — garante registros padrao no banco
+// bootstrapDatabase ï¿½ garante registros padrao no banco
 // Executa uma unica vez ao iniciar. Nao sobrescreve edicoes.
 // ============================================================
 async function bootstrapDatabase() {
