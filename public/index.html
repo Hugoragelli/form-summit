@@ -596,6 +596,9 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
           <div class="config-tabs">
             <button class="config-tab active" data-tab="ppi">Agente PPI</button>
             <button class="config-tab" data-tab="personas">Agente Personas</button>
+            <button class="config-tab" data-tab="analise">Agente Análise IG</button>
+            <button class="config-tab" data-tab="mcs">Agente MCS</button>
+            <button class="config-tab" data-tab="comparador">Agente Comparador</button>
           </div>
 
           <!-- Painel PPI -->
@@ -658,6 +661,85 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
 
             <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
               Temperatura: 0.6 · Response format: JSON
+            </div>
+          </div>
+
+          <!-- Painel Análise Instagram -->
+          <div id="config-panel-analise" class="config-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <div>
+                <div style="font-size:14px;font-weight:600">Agente Análise Instagram</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Analisa o perfil e reels scraped e devolve análise estruturada</div>
+              </div>
+              <button id="save-analise-btn" class="btn btn-primary" onclick="saveAnaliseConfig()">Salvar</button>
+            </div>
+
+            <div class="config-card">
+              <div class="config-card-h">Prompt do agente Análise Instagram</div>
+              <div class="config-card-sub">
+                Marcadores disponíveis:
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{metricas_pre_calculadas}}</code>
+                e
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{scraped_json}}</code>
+              </div>
+              <textarea id="prompt-analise" name="prompt-analise" spellcheck="false"></textarea>
+            </div>
+
+            <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
+              Temperatura: 0.3 · Response format: JSON
+            </div>
+          </div>
+
+          <!-- Painel MCS -->
+          <div id="config-panel-mcs" class="config-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <div>
+                <div style="font-size:14px;font-weight:600">Agente MCS</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Modelo de Comunicação Sugerido — ideal a partir de PPI + Personas</div>
+              </div>
+              <button id="save-mcs-btn" class="btn btn-primary" onclick="saveMCSConfig()">Salvar</button>
+            </div>
+
+            <div class="config-card">
+              <div class="config-card-h">Prompt do agente MCS</div>
+              <div class="config-card-sub">
+                Marcadores disponíveis:
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{ppi_json}}</code>,
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{personas_json}}</code>
+                e
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{form_respostas}}</code>
+              </div>
+              <textarea id="prompt-mcs" name="prompt-mcs" spellcheck="false"></textarea>
+            </div>
+
+            <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
+              Temperatura: 0.4 · Response format: JSON
+            </div>
+          </div>
+
+          <!-- Painel Comparador -->
+          <div id="config-panel-comparador" class="config-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <div>
+                <div style="font-size:14px;font-weight:600">Agente Comparador</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Compara ideal (MCS) × atual (análise IG) e gera a Bússola</div>
+              </div>
+              <button id="save-comparador-btn" class="btn btn-primary" onclick="saveComparadorConfig()">Salvar</button>
+            </div>
+
+            <div class="config-card">
+              <div class="config-card-h">Prompt do agente Comparador</div>
+              <div class="config-card-sub">
+                Marcadores disponíveis:
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{mcs_json}}</code>
+                e
+                <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{analise_json}}</code>
+              </div>
+              <textarea id="prompt-comparador" name="prompt-comparador" spellcheck="false"></textarea>
+            </div>
+
+            <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
+              Temperatura: 0.3 · Response format: JSON
             </div>
           </div>
 

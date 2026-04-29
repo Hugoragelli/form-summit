@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (target === 'section-clientes') loadClients();
-            if (target === 'section-config') { loadAIConfig(); loadPersonasConfig(); }
+            if (target === 'section-config') { loadAIConfig(); loadPersonasConfig(); loadAnaliseConfig(); loadMCSConfig(); loadComparadorConfig(); }
         });
     });
 
@@ -272,6 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Config IA ---
     // Tab switching
+    const lazyLoaders = {
+        analise:    () => loadAnaliseConfig(),
+        mcs:        () => loadMCSConfig(),
+        comparador: () => loadComparadorConfig(),
+    };
+
     document.querySelectorAll('.config-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.config-tab').forEach(t => t.classList.remove('active'));
@@ -279,6 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             const panel = document.getElementById(`config-panel-${tab.dataset.tab}`);
             if (panel) panel.classList.add('active');
+            if (lazyLoaders[tab.dataset.tab]) lazyLoaders[tab.dataset.tab]();
         });
     });
 
@@ -370,4 +377,50 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
         }
     };
+
+    // --- helpers genéricos para agentes simples (só prompt) ---
+    function makeSimpleAgentConfig({ loadFnName, endpoint, textareaId }) {
+        window[loadFnName] = async function () {
+            const el = document.getElementById(textareaId);
+            if (!el || el.value) return;
+            try {
+                const res = await fetch(endpoint);
+                const data = await res.json();
+                el.value = data.prompt || '';
+            } catch (_) { el.value = ''; }
+        };
+    }
+
+    makeSimpleAgentConfig({ loadFnName: 'loadAnaliseConfig',    endpoint: '/analise-instagram-config', textareaId: 'prompt-analise' });
+    makeSimpleAgentConfig({ loadFnName: 'loadMCSConfig',        endpoint: '/mcs-config',               textareaId: 'prompt-mcs' });
+    makeSimpleAgentConfig({ loadFnName: 'loadComparadorConfig', endpoint: '/comparador-config',        textareaId: 'prompt-comparador' });
+
+    function makeSimpleSaveFn({ saveFnName, endpoint, textareaId, btnId }) {
+        window[saveFnName] = async function () {
+            const el  = document.getElementById(textareaId);
+            const btn = document.getElementById(btnId);
+            if (!el) return;
+            const orig = btn.textContent;
+            btn.textContent = 'Salvando...';
+            btn.disabled = true;
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: el.value })
+                });
+                if (res.ok) {
+                    btn.textContent = 'Salvo!';
+                    setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+                } else throw new Error();
+            } catch (_) {
+                btn.textContent = 'Erro ao salvar';
+                btn.disabled = false;
+            }
+        };
+    }
+
+    makeSimpleSaveFn({ saveFnName: 'saveAnaliseConfig',    endpoint: '/analise-instagram-config', textareaId: 'prompt-analise',    btnId: 'save-analise-btn' });
+    makeSimpleSaveFn({ saveFnName: 'saveMCSConfig',        endpoint: '/mcs-config',               textareaId: 'prompt-mcs',        btnId: 'save-mcs-btn' });
+    makeSimpleSaveFn({ saveFnName: 'saveComparadorConfig', endpoint: '/comparador-config',        textareaId: 'prompt-comparador', btnId: 'save-comparador-btn' });
 });
