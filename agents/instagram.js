@@ -113,4 +113,19 @@ router.get('/scrape-instagram/:submission_id', async (req, res) => {
     }
 });
 
-module.exports = { router };
+// ============================================================
+// scrapeAndSave(submission_id, instagram_handle)
+// Usado por outros agentes para disparar scraping em background.
+// ============================================================
+async function scrapeAndSave(submission_id, instagram) {
+    if (!instagram) return;
+    const scraped = await scrapeInstagram(instagram);
+    const { error } = await supabase
+        .from('form_submissions')
+        .update({ instagram_scrape_json: JSON.stringify(scraped) })
+        .eq('id', submission_id);
+    if (error) throw error;
+    console.log(`[Instagram] Scraping salvo para submission ${submission_id}.`);
+}
+
+module.exports = { router, scrapeAndSave };

@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { supabase, openai, deepseek } = require('../lib/clients');
+const { scrapeAndSave } = require('./instagram');
 
 const router = Router();
 
@@ -275,6 +276,13 @@ router.post('/submit', async (req, res) => {
             .single();
 
         if (error) console.warn('[PPI] Supabase insert warning:', error.message);
+
+        // Fire-and-forget: scraping roda em background, não bloqueia a resposta
+        if (inserted?.id && req.body.instagram) {
+            scrapeAndSave(inserted.id, req.body.instagram)
+                .catch(e => console.warn('[Instagram] Erro no scraping (background):', e.message));
+        }
+
         res.json({ message: 'OK', ppi: ppiJson, id: inserted?.id });
     } catch (err) {
         console.error('[PPI] Erro no submit:', err.message);
@@ -327,6 +335,13 @@ router.post('/regenerate/:id', async (req, res) => {
 
         if (updateError) console.warn('[PPI] Supabase update warning:', updateError.message);
         console.log('[PPI] Regenerado para id:', id);
+
+        // Fire-and-forget: re-scraping em background junto com a regeneração do PPI
+        if (submission.instagram) {
+            scrapeAndSave(id, submission.instagram)
+                .catch(e => console.warn('[Instagram] Erro no re-scraping (background):', e.message));
+        }
+
         res.json({ ppi: ppiJson });
     } catch (err) {
         console.error('[PPI] Erro no regenerate:', err.message);
