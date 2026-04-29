@@ -288,26 +288,457 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
       <div style="font-size:11px;color:#A3A3A3">Sprint Summit NSF</div>
     </div>
 
-    <!-- ============================================ PAGE -->
+    <!-- ============================================ PAGE (dynamic) -->
     <div class="page">
       <div class="page-inner">
 
-        <!-- Page header -->
-        <div class="page-header">
-          <div>
-            <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
-            <h1 class="page-title">Bússola do Perfil</h1>
-            <div class="page-meta">@nutridanieldias · Última análise: <strong>15 abr 2026</strong> · <span style="color:var(--text-soft)">Versão 3</span></div>
+        <!-- Estado: sem PPI -->
+        <div id="state-no-ppi" style="display:none;text-align:center;padding:80px 0">
+          <div style="font-size:15px;font-weight:600;margin-bottom:8px">Nenhum PPI encontrado</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulário para gerar o PPI primeiro.</div>
+          <a href="index.html" class="btn btn-primary" style="text-decoration:none">Ir para o Formulário</a>
+        </div>
+
+        <!-- Estado: carregando -->
+        <div id="state-loading" style="display:none;text-align:center;padding:80px 0">
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;margin-bottom:16px"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg>
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Gerando Bússola do Perfil...</div>
+          <div id="loading-step" style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Iniciando...</div>
+          <div style="font-size:12px;color:var(--text-soft)" id="loading-timer"></div>
+        </div>
+
+        <!-- Estado: pronto pra gerar -->
+        <div id="state-generate" style="display:none">
+          <div class="page-header">
+            <div>
+              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
+              <h1 class="page-title">Bússola do Perfil</h1>
+              <div class="page-meta" id="gen-meta"></div>
+            </div>
           </div>
-          <div class="page-actions">
-            <button class="btn btn-tertiary">Histórico</button>
-            <button class="btn btn-secondary">Exportar PDF</button>
-            <button class="btn btn-primary">Regerar</button>
+          <div style="text-align:center;padding:60px 0;background:var(--surface);border:1px solid var(--border);border-radius:10px">
+            <div style="font-size:15px;font-weight:600;margin-bottom:8px">Bússola ainda não gerada</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">A Bússola vai gerar o Modelo de Comunicação Ideal (MCS) e cruzar com a análise do seu Instagram.</div>
+            <div style="font-size:12px;color:var(--text-soft);margin-bottom:24px">Pode levar até 2 minutos — a IA faz 3 análises em sequência.</div>
+            <button class="btn btn-primary" onclick="gerarBussola()" style="padding:10px 28px;font-size:14px">Gerar Bússola do Perfil</button>
           </div>
         </div>
 
-        <!-- Status banner -->
-        <div class="status-banner">
+        <!-- Estado: bússola pronta -->
+        <div id="state-bussola" style="display:none">
+
+          <!-- Page header dinâmico -->
+          <div class="page-header">
+            <div>
+              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
+              <h1 class="page-title">Bússola do Perfil</h1>
+              <div class="page-meta" id="bussola-meta"></div>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-secondary" onclick="gerarBussola()">Regerar</button>
+            </div>
+          </div>
+
+          <!-- Status banner -->
+          <div class="status-banner" id="bussola-status-banner"></div>
+
+          <!-- Resumo executivo -->
+          <div class="section-h">Resumo executivo</div>
+          <div class="exec">
+            <div class="exec-bullets" id="bussola-exec-bullets"></div>
+            <div class="exec-radar">
+              <div class="exec-radar-h">Posicionamento — Atual vs Ideal</div>
+              <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensões</div>
+              <canvas id="radar"></canvas>
+              <div class="exec-radar-legend">
+                <span class="exec-radar-leg ideal">Ideal</span>
+                <span class="exec-radar-leg atual">Atual</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnóstico por dimensão -->
+          <div class="section-h">Diagnóstico por dimensão · 8 áreas</div>
+          <div id="bussola-dimensoes"></div>
+
+          <!-- Plano de ação -->
+          <div class="section-h" style="margin-top:36px">Plano de ação</div>
+          <div class="plano" id="bussola-plano"></div>
+          <div class="tarefa-info">Cada item de ação está mapeado para a dimensão de origem. Revise e implemente em ordem de prioridade.</div>
+
+          <!-- Rodapé -->
+          <div class="related">
+            <div>
+              <div class="related-h">Esta análise se apoia em</div>
+              <div style="font-size:13.5px;color:var(--text)">Seu PPI · 3 Personas · Análise do Instagram</div>
+            </div>
+            <div class="related-actions">
+              <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI →</a>
+              <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas →</a>
+            </div>
+          </div>
+
+      </div><!-- /page-inner -->
+    </div><!-- /page -->
+
+  </div><!-- /bc-content-wrap -->
+</div><!-- /bc-app -->
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+(function () {
+    // ── helpers de estado ────────────────────────────────────
+    const states = ['state-no-ppi','state-loading','state-generate','state-bussola'];
+    function showState(id) {
+        states.forEach(s => { document.getElementById(s).style.display = (s === id) ? 'block' : 'none'; });
+    }
+
+    const ppi          = tryParse('ppi_current');
+    const submissionId = localStorage.getItem('ppi_submission_id') || null;
+    const nutriNome    = localStorage.getItem('ppi_nutri_nome') || '';
+    const ppiDate      = localStorage.getItem('ppi_date') || '';
+
+    function tryParse(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
+
+    // ── lógica de inicialização ──────────────────────────────
+    if (!ppi || !submissionId) {
+        showState('state-no-ppi');
+        return;
+    }
+
+    // Tenta mostrar bússola já salva no localStorage
+    const cached = tryParse('bussola_current');
+    if (cached && cached.resumo_executivo) {
+        renderBussola(cached);
+        showState('state-bussola');
+    } else {
+        // Tenta buscar do banco
+        document.getElementById('gen-meta').textContent = nutriNome ? `@${nutriNome} · PPI gerado em ${ppiDate}` : `PPI gerado em ${ppiDate}`;
+        showState('state-generate');
+        fetch(`/bussola/${submissionId}`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (data && data.resumo_executivo) {
+                    localStorage.setItem('bussola_current', JSON.stringify(data));
+                    renderBussola(data);
+                    showState('state-bussola');
+                }
+            })
+            .catch(() => {});
+    }
+
+    // ── gerarBussola (chamada pelo botão) ────────────────────
+    let timerInterval;
+    window.gerarBussola = async function () {
+        showState('state-loading');
+        const stepEl  = document.getElementById('loading-step');
+        const timerEl = document.getElementById('loading-timer');
+        const steps   = ['Consultando PPI e Personas...', 'Gerando Modelo de Comunicação Ideal (MCS)...', 'Analisando perfil do Instagram...', 'Cruzando ideal × atual...'];
+        let s = 0;
+        stepEl.textContent = steps[s];
+        let secs = 0;
+        timerInterval = setInterval(() => {
+            secs++;
+            timerEl.textContent = `${secs}s`;
+            if (secs % 20 === 0 && s < steps.length - 1) { s++; stepEl.textContent = steps[s]; }
+        }, 1000);
+
+        try {
+            const res = await fetch(`/bussola/${submissionId}`, { method: 'POST' });
+            clearInterval(timerInterval);
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ error: 'Erro desconhecido.' }));
+                throw new Error(err.error || `HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            localStorage.setItem('bussola_current', JSON.stringify(data));
+            renderBussola(data);
+            showState('state-bussola');
+        } catch (err) {
+            clearInterval(timerInterval);
+            alert('Erro ao gerar Bússola: ' + err.message);
+            showState('state-generate');
+        }
+    };
+
+    // ── renderBussola ────────────────────────────────────────
+    function renderBussola(b) {
+        const score = b.resumo_executivo?.score || {};
+        const handle = b.username ? `@${b.username} · ` : (nutriNome ? `@${nutriNome} · ` : '');
+        const dateStr = b.gerado_em ? new Date(b.gerado_em).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }) : ppiDate;
+
+        document.getElementById('bussola-meta').innerHTML = `${handle}Última análise: <strong>${dateStr}</strong>`;
+
+        // ── Status banner ──
+        const banner = document.getElementById('bussola-status-banner');
+        banner.innerHTML = `
+            <div>
+              <div class="status-score">
+                <span class="status-score-num">${score.criticos || 0}</span><span class="status-score-total">/8</span>
+              </div>
+              <div class="status-score-label">Dimensões críticas</div>
+            </div>
+            <div style="width:1px;height:42px;background:var(--border)"></div>
+            <div class="status-bar">
+              <div class="status-pills">
+                ${score.criticos  ? `<span class="pill crit">${score.criticos} crítico${score.criticos !== 1 ? 's' : ''}</span>` : ''}
+                ${score.parciais  ? `<span class="pill par">${score.parciais} parcial${score.parciais !== 1 ? 'is' : ''}</span>` : ''}
+                ${score.alinhados ? `<span class="pill al">${score.alinhados} alinhado${score.alinhados !== 1 ? 's' : ''}</span>` : ''}
+                ${score.destaques ? `<span class="pill str">${score.destaques} destaque${score.destaques !== 1 ? 's' : ''}</span>` : ''}
+              </div>
+              <div class="status-bar-text">${(b.resumo_executivo?.pontos_principais?.[0] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+            </div>`;
+
+        // ── Bullets executivos ──
+        const bullets = b.resumo_executivo?.pontos_principais || [];
+        document.getElementById('bussola-exec-bullets').innerHTML = bullets.map((p, i) =>
+            `<div class="exec-bullet">
+              <div class="exec-bullet-num">${i + 1}</div>
+              <div class="exec-bullet-text">${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+            </div>`
+        ).join('');
+
+        // ── Radar ──
+        const radarAtual = b.resumo_executivo?.radar_atual || [2,2,2,2,2];
+        if (window._radarChart) { window._radarChart.destroy(); }
+        window._radarChart = new Chart(document.getElementById('radar').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['Promessa', 'Conteúdo', 'Audiência', 'CTA', 'Identidade'],
+                datasets: [
+                    { label: 'Ideal', data: [5,5,5,5,5], fill: true, backgroundColor: 'rgba(115,115,115,0.08)', borderColor: 'rgba(115,115,115,0.5)', borderWidth: 1, pointRadius: 0 },
+                    { label: 'Atual', data: radarAtual, fill: true, backgroundColor: 'rgba(37,99,235,0.18)', borderColor: '#2563EB', borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 3 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { r: { beginAtZero: true, max: 5, ticks: { display: false }, pointLabels: { font: { size: 11, family: 'Inter' }, color: '#404040' }, grid: { color: '#E7E5E0' }, angleLines: { color: '#E7E5E0' } } }
+            }
+        });
+
+        // ── Dimensões ──
+        const dimsEl = document.getElementById('bussola-dimensoes');
+        dimsEl.innerHTML = '';
+
+        const dimDefs = [
+            { key: 'dimensao_01_promessa',  num: '01', nome: 'Promessa & Diferencial',       render: renderDimSide },
+            { key: 'dimensao_02_bio',       num: '02', nome: 'Bio & Links',                  render: renderDimScorecards },
+            { key: 'dimensao_03_pilares',   num: '03', nome: 'Pilares & Intenção',            render: renderDimPilares },
+            { key: 'dimensao_04_audiencia', num: '04', nome: 'Audiência real vs PPI alvo',    render: renderDimAudiencia },
+            { key: 'dimensao_05_cadencia',  num: '05', nome: 'Cadência & Formato',            render: renderDimCadencia },
+            { key: 'dimensao_06_cta',       num: '06', nome: 'CTA & Resposta',                render: renderDimCTA },
+            { key: 'dimensao_07_tom',       num: '07', nome: 'Tom & Narrativa',               render: renderDimScorecards },
+            { key: 'dimensao_08_performance', num: '08', nome: 'O que funciona & o que não', render: renderDimPerformance }
+        ];
+
+        dimDefs.forEach(def => {
+            const dim = b[def.key];
+            if (!dim) return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'dim';
+            wrapper.id = `dim${def.num}`;
+            wrapper.innerHTML = `
+                <div class="dim-head">
+                  <span class="dim-num">${def.num}</span>
+                  <span class="dim-name">${def.nome}</span>
+                  <span class="${pillClass(dim.status)}" style="margin-left:auto">${pillLabel(dim.status)}</span>
+                </div>
+                <h3 class="dim-headline">${dim.headline || ''}</h3>
+                <div class="dim-body"></div>
+                ${renderSugestao(dim.sugestao)}`;
+            const body = wrapper.querySelector('.dim-body');
+            def.render(body, dim);
+            dimsEl.appendChild(wrapper);
+        });
+
+        // ── Plano de ação ──
+        const plano = b.plano_de_acao || {};
+        const planoEl = document.getElementById('bussola-plano');
+        planoEl.innerHTML = `
+            ${renderPlanoCol('crit', 'Crítico', 'Faça essa semana', plano.critico || [])}
+            ${renderPlanoCol('med', 'Médio', 'Próximas 2–4 semanas', plano.medio || [])}
+            ${renderPlanoCol('pol', 'Polimento', 'Quando der', plano.polimento || [])}`;
+    }
+
+    // ── helpers de renderização por dimensão ────────────────
+
+    function pillClass(status) {
+        return { critico: 'pill crit', parcial: 'pill par', alinhado: 'pill al', destaque: 'pill str' }[status] || 'pill par';
+    }
+    function pillLabel(status) {
+        return { critico: 'crítico', parcial: 'parcial', alinhado: 'alinhado', destaque: 'destaque' }[status] || status;
+    }
+
+    function renderSugestao(sug) {
+        if (!sug) return '';
+        return `<div class="dim-sug">
+          <div class="dim-sug-label">→ ${sug.label || 'Sugestão'}</div>
+          <div class="dim-sug-text">${(sug.texto || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+          ${sug.exemplo ? `<div class="dim-sug-example">${sug.exemplo}</div>` : ''}
+        </div>`;
+    }
+
+    function renderDimSide(el, dim) {
+        if (!dim.atual && !dim.sugerido) return;
+        el.innerHTML = `<div class="dim-side">
+          <div class="dim-side-col atual">
+            <div class="dim-side-label">Hoje o perfil diz</div>
+            <div class="dim-side-text">${dim.atual || '—'}</div>
+          </div>
+          <div class="dim-side-col sugerido">
+            <div class="dim-side-label">PPI pede que diga</div>
+            <div class="dim-side-text">${dim.sugerido || '—'}</div>
+          </div>
+        </div>`;
+    }
+
+    function renderDimScorecards(el, dim) {
+        const cards = dim.scorecards || [];
+        el.innerHTML = cards.map(c => `
+            <div class="scorecard">
+              <span class="scorecard-letter ${(c.letra||'').toLowerCase()}">${c.letra}</span>
+              <span class="scorecard-text">${c.texto}</span>
+            </div>`).join('');
+    }
+
+    function renderDimPilares(el, dim) {
+        const atual = dim.distribuicao_atual || {};
+        const ideal = dim.distribuicao_ideal || {};
+        const labels = { conexao: 'Conexão', quebra_objecao: 'Quebra de objeção', autoridade: 'Autoridade', prova_social: 'Prova social', educacao_aplicada: 'Educação aplicada' };
+        const color = { critico: 'var(--critical)', parcial: 'var(--partial)', alinhado: 'var(--primary)', destaque: 'var(--aligned)' };
+        const barColor = color[dim.status] || 'var(--primary)';
+
+        el.innerHTML = `<div class="dim-chart">
+          <div class="dim-chart-h">Distribuição por intenção · atual vs ideal pro PPI</div>
+          <div class="stacked-bar-wrap">
+            ${Object.keys(labels).map(k => {
+                const a = atual[k] || 0;
+                const d = ideal[k] || 0;
+                const gap = Math.abs(a - d);
+                const bc = gap > 20 ? 'var(--critical)' : barColor;
+                return `<div class="stacked-bar-row">
+                  <span class="label">${labels[k]}</span>
+                  <div class="track">
+                    <div class="actual-fill" style="width:${a}%;background:${bc}"></div>
+                    <div class="ideal-marker" style="left:${d}%"></div>
+                  </div>
+                  <span class="pct">${a}% / ${d}%</span>
+                </div>`;
+            }).join('')}
+          </div>
+          <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:2px;height:10px;background:var(--text)"></span>marca = ideal pro PPI</div>
+          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">ⓘ ${dim.nota_metodologica}</div>` : ''}
+        </div>`;
+    }
+
+    function renderDimAudiencia(el, dim) {
+        let html = '';
+        if (dim.match_descricao) {
+            html += `<div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:14px;padding:14px 16px;background:var(--surface-soft);border-radius:8px;border:1px solid var(--border)">${dim.match_descricao}</div>`;
+        }
+        if (dim.quote) {
+            html += `<div class="dim-quote">${dim.quote}</div>`;
+        }
+        el.innerHTML = html;
+    }
+
+    function renderDimCadencia(el, dim) {
+        const dias = dim.dias_ativos || {};
+        const ordem = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+        const labels = { segunda: 'Seg', terca: 'Ter', quarta: 'Qua', quinta: 'Qui', sexta: 'Sex', sabado: 'Sáb', domingo: 'Dom' };
+        const maxVal = Math.max(...Object.values(dias), 1);
+
+        const mixAtual = dim.mix_formatos_atual || {};
+        const mixIdeal = dim.mix_formatos_ideal || {};
+
+        el.innerHTML = `<div class="dim-chart">
+          <div class="dim-chart-h">Frequência: <strong>${dim.frequencia_atual || '—'}/sem atual</strong> · ideal: ${dim.frequencia_ideal || '—'}/sem</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px">
+            ${ordem.map(d => {
+                const v = dias[d] || 0;
+                const h = Math.round((v / maxVal) * 40);
+                return `<div style="text-align:center">
+                  <div style="height:44px;display:flex;align-items:flex-end;justify-content:center">
+                    <div style="width:100%;max-width:28px;height:${h}px;background:var(--primary);border-radius:2px;min-height:${v > 0 ? 3 : 0}px"></div>
+                  </div>
+                  <div style="font-size:10px;color:var(--text-muted);margin-top:3px">${labels[d]}</div>
+                  <div style="font-size:10px;color:var(--text-soft)">${v}</div>
+                </div>`;
+            }).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-top:8px">
+            <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;margin-bottom:4px">Mix atual</div>${Object.entries(mixAtual).map(([k,v]) => `<span style="margin-right:8px">${k}: <strong>${v}</strong></span>`).join('')}</div>
+            <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;margin-bottom:4px">Mix ideal</div>${Object.entries(mixIdeal).map(([k,v]) => `<span style="margin-right:8px">${k}: <strong>${v}</strong></span>`).join('')}</div>
+          </div>
+        </div>`;
+    }
+
+    function renderDimCTA(el, dim) {
+        const atuais = dim.ctas_atuais_estimados || {};
+        const ideal  = dim.ctas_ideais || {};
+        const ctaLabels = { sem_cta: 'Sem CTA', salve: 'Salve / curta', comente: 'Comente', dm: 'Manda DM', link_bio: 'Link na bio', agendar: 'Agendar' };
+        const ctaColors = { sem_cta: 'var(--critical)', salve: 'var(--partial)', comente: 'var(--primary)', dm: 'var(--primary)', link_bio: 'var(--aligned)', agendar: 'var(--strength)' };
+
+        const respAtual = dim.taxa_resposta_atual != null ? `${dim.taxa_resposta_atual}%` : '—';
+        const respIdeal = dim.taxa_resposta_ideal != null ? `${dim.taxa_resposta_ideal}%` : '100%';
+
+        el.innerHTML = `<div class="dim-chart">
+          <div class="dim-chart-h">Distribuição de CTA · estimativa nos últimos posts</div>
+          <div class="funnel-wrap">
+            ${Object.keys(ctaLabels).filter(k => atuais[k] != null).map(k =>
+                `<div class="funnel-row">
+                  <span class="funnel-stage">${ctaLabels[k]}</span>
+                  <div class="funnel-bar" style="width:${atuais[k]}%;background:${ctaColors[k]}"></div>
+                  <span class="funnel-pct">${atuais[k]}%</span>
+                </div>`
+            ).join('')}
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Taxa de resposta nos comentários: <strong>${respAtual}</strong> · ideal: <strong>${respIdeal}</strong></div>
+          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">ⓘ ${dim.nota_metodologica}</div>` : ''}
+        </div>`;
+    }
+
+    function renderDimPerformance(el, dim) {
+        el.innerHTML = `<div class="dim-side">
+          <div class="dim-side-col sugerido">
+            <div class="dim-side-label">Top reels</div>
+            <div class="dim-side-text">${dim.top_reels_resumo || '—'}</div>
+          </div>
+          <div class="dim-side-col atual">
+            <div class="dim-side-label">Bottom reels</div>
+            <div class="dim-side-text">${dim.bottom_reels_resumo || '—'}</div>
+          </div>
+        </div>`;
+    }
+
+    function renderPlanoCol(cssClass, titulo, quando, itens) {
+        if (!itens.length) return `<div class="plano-col ${cssClass}">
+          <div class="plano-col-h"><span class="plano-col-h-text">${titulo}</span><span class="plano-col-h-count">0</span></div>
+          <div class="plano-col-when">${quando}</div>
+          <div style="font-size:12px;color:var(--text-soft);padding:8px 0">Sem ações neste nível.</div>
+        </div>`;
+        return `<div class="plano-col ${cssClass}">
+          <div class="plano-col-h">
+            <span class="plano-col-h-text">${titulo}</span>
+            <span class="plano-col-h-count">${itens.length}</span>
+          </div>
+          <div class="plano-col-when">${quando}</div>
+          ${itens.map(it => `<div class="plano-item">
+            <div class="plano-item-title">${it.titulo}</div>
+            <div class="plano-item-why">${it.motivo}</div>
+          </div>`).join('')}
+        </div>`;
+    }
+
+})();
+</script>
+
+</body>
+</html>
           <div>
             <div class="status-score">
               <span class="status-score-num">3</span><span class="status-score-total">/8</span>

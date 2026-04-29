@@ -5,6 +5,9 @@ const { supabase } = require('./lib/clients');
 const { router: ppiRouter, SEED_PROMPT } = require('./agents/ppi');
 const { router: personasRouter, SEED_PERSONAS_PROMPT } = require('./agents/personas');
 const { router: instagramRouter } = require('./agents/instagram');
+const { router: analiseInstagramRouter, SEED_ANALISE_INSTAGRAM_PROMPT } = require('./agents/analise-instagram');
+const { router: mcsRouter, SEED_MCS_PROMPT } = require('./agents/mcs');
+const { router: comparadorRouter, SEED_COMPARADOR_PROMPT } = require('./agents/comparador');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +19,9 @@ app.use(express.static(path.join(__dirname)));
 app.use(ppiRouter);
 app.use(personasRouter);
 app.use(instagramRouter);
+app.use(analiseInstagramRouter);
+app.use(mcsRouter);
+app.use(comparadorRouter);
 
 // ============================================================
 // GET /clients � lista todas as submissoes
@@ -77,6 +83,38 @@ async function bootstrapDatabase() {
                   : console.log('[DB] Prompt Personas seed inserido.');
         } else {
             console.log('[DB] Prompt Personas OK.');
+        }
+        // Analise Instagram prompt
+        const { data: analiseData } = await supabase
+            .from('ai_settings').select('id').eq('id', 'analise_instagram_prompt').single();
+        if (!analiseData) {
+            const { error } = await supabase.from('ai_settings').insert({ id: 'analise_instagram_prompt', prompt: SEED_ANALISE_INSTAGRAM_PROMPT });
+            error ? console.warn('[DB] Falha ao inserir prompt Analise Instagram:', error.message)
+                  : console.log('[DB] Prompt Analise Instagram seed inserido.');
+        } else {
+            console.log('[DB] Prompt Analise Instagram OK.');
+        }
+
+        // MCS prompt
+        const { data: mcsData } = await supabase
+            .from('ai_settings').select('id').eq('id', 'mcs_prompt').single();
+        if (!mcsData) {
+            const { error } = await supabase.from('ai_settings').insert({ id: 'mcs_prompt', prompt: SEED_MCS_PROMPT });
+            error ? console.warn('[DB] Falha ao inserir prompt MCS:', error.message)
+                  : console.log('[DB] Prompt MCS seed inserido.');
+        } else {
+            console.log('[DB] Prompt MCS OK.');
+        }
+
+        // Comparador prompt
+        const { data: comparadorData } = await supabase
+            .from('ai_settings').select('id').eq('id', 'comparador_prompt').single();
+        if (!comparadorData) {
+            const { error } = await supabase.from('ai_settings').insert({ id: 'comparador_prompt', prompt: SEED_COMPARADOR_PROMPT });
+            error ? console.warn('[DB] Falha ao inserir prompt Comparador:', error.message)
+                  : console.log('[DB] Prompt Comparador seed inserido.');
+        } else {
+            console.log('[DB] Prompt Comparador OK.');
         }
     } catch (err) {
         console.warn('[DB] Erro no bootstrap:', err.message);
