@@ -592,6 +592,29 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
             </div>
           </div>
 
+          <!-- Provedor global -->
+          <div class="config-card" style="margin-bottom:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <div>
+                <div class="config-card-h">Provedor de IA</div>
+                <div class="config-card-sub" style="margin-bottom:0">Usado por todos os agentes — PPI, Personas, MCS, Análise IG e Comparador.</div>
+              </div>
+              <button id="save-provider-btn" class="btn btn-primary" onclick="saveProvider()">Salvar</button>
+            </div>
+            <div style="display:flex;gap:12px">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-openai">
+                <input type="radio" name="ai_provider" id="provider-openai" value="openai" style="accent-color:var(--accent)">
+                <span style="font-size:13px;font-weight:500">OpenAI</span>
+                <span style="font-size:11px;color:var(--text-soft);margin-left:auto">gpt-5.1</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-deepseek">
+                <input type="radio" name="ai_provider" id="provider-deepseek" value="deepseek" style="accent-color:var(--accent)">
+                <span style="font-size:13px;font-weight:500">DeepSeek</span>
+                <span style="font-size:11px;color:var(--text-soft);margin-left:auto">deepseek-v4-pro</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Tabs -->
           <div class="config-tabs">
             <button class="config-tab active" data-tab="ppi">Agente PPI</button>
@@ -609,23 +632,6 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
                 <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Prompt enviado à IA para gerar o Perfil de Paciente Ideal</div>
               </div>
               <button id="save-ppi-btn" class="btn btn-primary" onclick="saveAIConfig()">Salvar</button>
-            </div>
-
-            <div class="config-card" style="margin-bottom:16px">
-              <div class="config-card-h">Provedor de IA</div>
-              <div class="config-card-sub">Selecione qual serviço de IA será usado para gerar o PPI e as Personas.</div>
-              <div style="display:flex;gap:12px;margin-top:12px">
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-openai">
-                  <input type="radio" name="ai_provider" id="provider-openai" value="openai" style="accent-color:var(--accent)">
-                  <span style="font-size:13px;font-weight:500">OpenAI</span>
-                  <span style="font-size:11px;color:var(--text-soft);margin-left:auto">gpt-5.1</span>
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-deepseek">
-                  <input type="radio" name="ai_provider" id="provider-deepseek" value="deepseek" style="accent-color:var(--accent)">
-                  <span style="font-size:13px;font-weight:500">DeepSeek</span>
-                  <span style="font-size:11px;color:var(--text-soft);margin-left:auto">deepseek-v4-pro</span>
-                </label>
-              </div>
             </div>
 
             <div class="config-card">

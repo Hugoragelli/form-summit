@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (target === 'section-clientes') loadClients();
-            if (target === 'section-config') { loadAIConfig(); loadPersonasConfig(); loadAnaliseConfig(); loadMCSConfig(); loadComparadorConfig(); }
+    if (target === 'section-config') { loadProvider(); loadAIConfig(); loadPersonasConfig(); loadAnaliseConfig(); loadMCSConfig(); loadComparadorConfig(); }
         });
     });
 
@@ -289,6 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    async function loadProvider() {
+        try {
+            const res = await fetch('/ai-config');
+            const data = await res.json();
+            const provider = data.provider || 'openai';
+            const radio = document.querySelector(`input[name="ai_provider"][value="${provider}"]`);
+            if (radio) { radio.checked = true; updateProviderLabels(provider); }
+        } catch (_) {}
+    }
+
     async function loadAIConfig() {
         const el = document.getElementById('prompt-ppi');
         if (!el) return;
@@ -296,13 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/ai-config');
             const data = await res.json();
             el.value = data.prompt || '';
-
-            const provider = data.provider || 'openai';
-            const radio = document.querySelector(`input[name="ai_provider"][value="${provider}"]`);
-            if (radio) {
-                radio.checked = true;
-                updateProviderLabels(provider);
-            }
         } catch (_) {
             el.value = '';
         }
@@ -331,15 +334,40 @@ document.addEventListener('DOMContentLoaded', () => {
         radio.addEventListener('change', e => updateProviderLabels(e.target.value));
     });
 
+    window.saveProvider = async () => {
+        const btn = document.getElementById('save-provider-btn');
+        const providerRadio = document.querySelector('input[name="ai_provider"]:checked');
+        if (!btn) return;
+        const orig = btn.textContent;
+        btn.textContent = 'Salvando...';
+        btn.disabled = true;
+        try {
+            // reutiliza /ai-config enviando apenas o provider (prompt em branco é ignorado pelo backend se vazio)
+            const promptEl = document.getElementById('prompt-ppi');
+            const res = await fetch('/ai-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ provider: providerRadio?.value || 'openai', prompt: promptEl?.value || undefined })
+            });
+            if (res.ok) {
+                btn.textContent = 'Salvo!';
+                setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+            } else throw new Error();
+        } catch (_) {
+            btn.textContent = 'Erro ao salvar';
+            btn.disabled = false;
+        }
+    };
+
     window.saveAIConfig = async () => {
         const el = document.getElementById('prompt-ppi');
         const btn = document.getElementById('save-ppi-btn');
-        const providerRadio = document.querySelector('input[name="ai_provider"]:checked');
         if (!el) return;
         const orig = btn.textContent;
         btn.textContent = 'Salvando...';
         btn.disabled = true;
         try {
+            const providerRadio = document.querySelector('input[name="ai_provider"]:checked');
             const res = await fetch('/ai-config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
