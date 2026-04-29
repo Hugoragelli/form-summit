@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Bússola do Perfil — interior</title>
+<title>BÃºssola do Perfil â€” interior</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -70,7 +70,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .bc-topbar-crumbs strong { color: var(--text); font-weight: 600; }
 .bc-topbar-search { flex: 1; max-width: 320px; margin: 0 24px; position: relative; }
 .bc-topbar-search input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface-soft); color: var(--text); }
-.bc-topbar-search::before { content: '⌕'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+.bc-topbar-search::before { content: 'âŒ•'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
 .bc-topbar-actions { display: flex; gap: 6px; align-items: center; }
 .bc-topbar-btn { padding: 6px 10px; font-size: 12px; color: var(--text-medium); border-radius: 6px; cursor: pointer; }
 
@@ -80,7 +80,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .bc-banner-text em { color: #FCD34D; font-style: normal; }
 
 /* ============================================
-   PAGE — BÚSSOLA DO PERFIL
+   PAGE â€” BÃšSSOLA DO PERFIL
    ============================================ */
 .page { padding: 24px 32px 80px; max-width: 100%; }
 .page-inner { max-width: 800px; margin: 0 auto; }
@@ -184,7 +184,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .dim-quote::before { content: '"'; color: var(--text-soft); }
 .dim-quote::after { content: '"'; color: var(--text-soft); }
 
-/* Sugestão */
+/* SugestÃ£o */
 .dim-sug { background: var(--primary-soft); border: 1px solid #DBEAFE; border-radius: 8px; padding: 14px 16px; }
 .dim-sug-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 .dim-sug-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
@@ -198,7 +198,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .funnel-bar { height: 18px; border-radius: 3px; background: var(--primary); }
 .funnel-pct { font-size: 11px; color: var(--text-medium); font-variant-numeric: tabular-nums; font-weight: 600; min-width: 40px; }
 
-/* Heatmap (cadência) */
+/* Heatmap (cadÃªncia) */
 .heatmap { display: grid; grid-template-columns: 28px repeat(24, 1fr); gap: 2px; font-size: 9px; margin-bottom: 14px; }
 .heatmap .day-label { color: var(--text-muted); padding: 4px 4px 0; font-weight: 600; }
 .heatmap .cell { aspect-ratio: 1; border-radius: 1px; background: var(--surface-soft); }
@@ -210,7 +210,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .heatmap-axis div:first-child { grid-column: span 1; }
 .heatmap-axis span { text-align: center; }
 
-/* Plano de ação */
+/* Plano de aÃ§Ã£o */
 .plano { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .plano-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; }
 .plano-col-h { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -225,11 +225,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .plano-item-title { font-weight: 600; font-size: 13px; line-height: 1.35; margin-bottom: 4px; }
 .plano-item-why { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px; }
 .plano-item-action { font-size: 11px; color: var(--primary); font-weight: 600; cursor: pointer; }
-.plano-item-action::after { content: ' →'; }
+.plano-item-action::after { content: ' â†’'; }
 
 /* Tarefa banner */
 .tarefa-info { font-size: 12px; color: var(--text-muted); margin-top: 10px; padding: 12px 14px; background: var(--surface-soft); border-radius: 6px; display: flex; align-items: center; gap: 8px; }
-.tarefa-info::before { content: 'ⓘ'; color: var(--primary); font-size: 14px; }
+.tarefa-info::before { content: 'â“˜'; color: var(--primary); font-size: 14px; }
 
 /* Footer (related modules) */
 .related { margin-top: 36px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
@@ -249,16 +249,16 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
       <div class="bc-sidebar-brand-text">Business Compass</div>
     </div>
 
-    <div class="bc-sidebar-section">Operação</div>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>Formulário</a>
+    <div class="bc-sidebar-section">OperaÃ§Ã£o</div>
+    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>FormulÃ¡rio</a>
     <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
 
-    <div class="bc-sidebar-section">Estratégia</div>
+    <div class="bc-sidebar-section">EstratÃ©gia</div>
     <a href="perfil-de-paciente-ideal.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>Perfil de Paciente Ideal</a>
     <a href="3-personas.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
-    <a href="bussola-do-perfil.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
+    <a href="bussola-do-perfil.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>BÃºssola do Perfil</a>
 
-    <div class="bc-sidebar-section">Configurações</div>
+    <div class="bc-sidebar-section">ConfiguraÃ§Ãµes</div>
     <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3M3.5 3.5l2 2M10.5 10.5l2 2M10.5 5.5l2-2M3.5 12.5l2-2"/></svg>Agente IA</a>
 
     <div class="bc-sidebar-user">
@@ -272,10 +272,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
     <!-- Topbar -->
     <header class="bc-topbar">
-      <div class="bc-topbar-crumbs">Estratégia · <strong>Bússola do Perfil</strong></div>
+      <div class="bc-topbar-crumbs">EstratÃ©gia Â· <strong>BÃºssola do Perfil</strong></div>
       <div class="bc-topbar-search"><input placeholder="Buscar..."/></div>
       <div class="bc-topbar-actions">
-        <span class="bc-topbar-btn">🔔</span>
+        <span class="bc-topbar-btn">ðŸ””</span>
         <span class="bc-topbar-btn">DD</span>
       </div>
     </header>
@@ -293,14 +293,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         <!-- Estado: sem PPI -->
         <div id="state-no-ppi" style="display:none;text-align:center;padding:80px 0">
           <div style="font-size:15px;font-weight:600;margin-bottom:8px">Nenhum PPI encontrado</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulário para gerar o PPI primeiro.</div>
-          <a href="index.html" class="btn btn-primary" style="text-decoration:none">Ir para o Formulário</a>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulÃ¡rio para gerar o PPI primeiro.</div>
+          <a href="index.html" class="btn btn-primary" style="text-decoration:none">Ir para o FormulÃ¡rio</a>
         </div>
 
         <!-- Estado: carregando -->
         <div id="state-loading" style="display:none;text-align:center;padding:80px 0">
           <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;margin-bottom:16px"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg>
-          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Gerando Bússola do Perfil...</div>
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Gerando BÃºssola do Perfil...</div>
           <div id="loading-step" style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Iniciando...</div>
           <div style="font-size:12px;color:var(--text-soft)" id="loading-timer"></div>
         </div>
@@ -309,35 +309,43 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         <div id="state-generate" style="display:none">
           <div class="page-header">
             <div>
-              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
-              <h1 class="page-title">Bússola do Perfil</h1>
+              <div class="page-eyebrow">DiagnÃ³stico estratÃ©gico do perfil</div>
+              <h1 class="page-title">BÃºssola do Perfil</h1>
               <div class="page-meta" id="gen-meta"></div>
             </div>
           </div>
           <div style="text-align:center;padding:60px 0;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-            <div style="font-size:15px;font-weight:600;margin-bottom:8px">Bússola ainda não gerada</div>
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">A Bússola vai gerar o Modelo de Comunicação Ideal (MCS) e cruzar com a análise do seu Instagram.</div>
-            <div style="font-size:12px;color:var(--text-soft);margin-bottom:24px">Pode levar até 2 minutos — a IA faz 3 análises em sequência.</div>
-            <button class="btn btn-primary" onclick="gerarBussola()" style="padding:10px 28px;font-size:14px">Gerar Bússola do Perfil</button>
+            <div style="font-size:15px;font-weight:600;margin-bottom:8px">BÃºssola ainda nÃ£o gerada</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">A BÃºssola vai gerar o Modelo de ComunicaÃ§Ã£o Ideal (MCS) e cruzar com a anÃ¡lise do seu Instagram.</div>
+            <div style="font-size:12px;color:var(--text-soft);margin-bottom:24px">Pode levar atÃ© 2 minutos â€” a IA faz 3 anÃ¡lises em sequÃªncia.</div>
+            <button class="btn btn-primary" onclick="gerarBussola()" style="padding:10px 28px;font-size:14px">Gerar BÃºssola do Perfil</button>
           </div>
         </div>
 
-        <!-- Estado: bússola pronta -->
+        <!-- Estado: bÃºssola pronta -->
         <div id="state-bussola" style="display:none">
 
-          <!-- Page header dinâmico -->
+          <!-- Page header dinÃ¢mico -->
           <div class="page-header">
             <div>
-              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
-              <h1 class="page-title">Bússola do Perfil</h1>
+              <div class="page-eyebrow">DiagnÃ³stico estratÃ©gico do perfil</div>
+              <h1 class="page-title">BÃºssola do Perfil</h1>
               <div class="page-meta" id="bussola-meta"></div>
             </div>
             <div class="page-actions">
+              <button class="btn btn-secondary" onclick="toggleJsonPanel()">{ }</button>
               <button class="btn btn-secondary" onclick="gerarBussola()">Regerar</button>
             </div>
           </div>
 
-          <!-- Status banner -->
+          <!-- JSON Debug Panel -->
+          <div id="json-panel" style="display:none;margin-bottom:24px;background:#0A0A0A;border-radius:10px;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #262626;">
+              <span style="font-size:11px;font-weight:700;color:#737373;text-transform:uppercase;letter-spacing:0.08em">JSON Â· BÃºssola atual</span>
+              <button onclick="copyJson()" id="btn-copy-json" style="padding:4px 10px;font-size:11px;font-weight:600;background:#262626;color:#E5E5E5;border:1px solid #404040;border-radius:5px;cursor:pointer;">Copiar</button>
+            </div>
+            <pre id="json-content" style="margin:0;padding:16px;font-size:11.5px;line-height:1.6;color:#86EFAC;font-family:'Fira Code','Cascadia Code','Consolas',monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;"></pre>
+          </div>
           <div class="status-banner" id="bussola-status-banner"></div>
 
           <!-- Resumo executivo -->
@@ -345,8 +353,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
           <div class="exec">
             <div class="exec-bullets" id="bussola-exec-bullets"></div>
             <div class="exec-radar">
-              <div class="exec-radar-h">Posicionamento — Atual vs Ideal</div>
-              <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensões</div>
+              <div class="exec-radar-h">Posicionamento â€” Atual vs Ideal</div>
+              <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensÃµes</div>
               <canvas id="radar"></canvas>
               <div class="exec-radar-legend">
                 <span class="exec-radar-leg ideal">Ideal</span>
@@ -355,24 +363,24 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             </div>
           </div>
 
-          <!-- Diagnóstico por dimensão -->
-          <div class="section-h">Diagnóstico por dimensão · 8 áreas</div>
+          <!-- DiagnÃ³stico por dimensÃ£o -->
+          <div class="section-h">DiagnÃ³stico por dimensÃ£o Â· 8 Ã¡reas</div>
           <div id="bussola-dimensoes"></div>
 
-          <!-- Plano de ação -->
-          <div class="section-h" style="margin-top:36px">Plano de ação</div>
+          <!-- Plano de aÃ§Ã£o -->
+          <div class="section-h" style="margin-top:36px">Plano de aÃ§Ã£o</div>
           <div class="plano" id="bussola-plano"></div>
-          <div class="tarefa-info">Cada item de ação está mapeado para a dimensão de origem. Revise e implemente em ordem de prioridade.</div>
+          <div class="tarefa-info">Cada item de aÃ§Ã£o estÃ¡ mapeado para a dimensÃ£o de origem. Revise e implemente em ordem de prioridade.</div>
 
-          <!-- Rodapé -->
+          <!-- RodapÃ© -->
           <div class="related">
             <div>
-              <div class="related-h">Esta análise se apoia em</div>
-              <div style="font-size:13.5px;color:var(--text)">Seu PPI · 3 Personas · Análise do Instagram</div>
+              <div class="related-h">Esta anÃ¡lise se apoia em</div>
+              <div style="font-size:13.5px;color:var(--text)">Seu PPI Â· 3 Personas Â· AnÃ¡lise do Instagram</div>
             </div>
             <div class="related-actions">
-              <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI →</a>
-              <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas →</a>
+              <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI â†’</a>
+              <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas â†’</a>
             </div>
           </div>
 
@@ -388,7 +396,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
 <script>
 (function () {
-    // ── helpers de estado ────────────────────────────────────
+    // â”€â”€ helpers de estado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const states = ['state-no-ppi','state-loading','state-generate','state-bussola'];
     function showState(id) {
         states.forEach(s => { document.getElementById(s).style.display = (s === id) ? 'block' : 'none'; });
@@ -401,20 +409,20 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
     function tryParse(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
 
-    // ── lógica de inicialização ──────────────────────────────
+    // â”€â”€ lÃ³gica de inicializaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (!ppi || !submissionId) {
         showState('state-no-ppi');
         return;
     }
 
-    // Tenta mostrar bússola já salva no localStorage
+    // Tenta mostrar bÃºssola jÃ¡ salva no localStorage
     const cached = tryParse('bussola_current');
     if (cached && cached.resumo_executivo) {
         renderBussola(cached);
         showState('state-bussola');
     } else {
         // Tenta buscar do banco
-        document.getElementById('gen-meta').textContent = nutriNome ? `@${nutriNome} · PPI gerado em ${ppiDate}` : `PPI gerado em ${ppiDate}`;
+        document.getElementById('gen-meta').textContent = nutriNome ? `@${nutriNome} Â· PPI gerado em ${ppiDate}` : `PPI gerado em ${ppiDate}`;
         showState('state-generate');
         fetch(`/bussola/${submissionId}`)
             .then(r => r.ok ? r.json() : null)
@@ -428,13 +436,31 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             .catch(() => {});
     }
 
-    // ── gerarBussola (chamada pelo botão) ────────────────────
+    // ── JSON panel ──────────────────────────────────────────
+    window.toggleJsonPanel = function () {
+        const panel = document.getElementById('json-panel');
+        const content = document.getElementById('json-content');
+        if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
+        const raw = localStorage.getItem('bussola_current');
+        content.textContent = raw ? JSON.stringify(JSON.parse(raw), null, 2) : '// Nenhuma bússola carregada ainda.';
+        panel.style.display = 'block';
+    };
+
+    window.copyJson = function () {
+        const content = document.getElementById('json-content');
+        const btn = document.getElementById('btn-copy-json');
+        navigator.clipboard.writeText(content.textContent).then(() => {
+            btn.textContent = 'Copiado!';
+            setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+        });
+    };
+
     let timerInterval;
     window.gerarBussola = async function () {
         showState('state-loading');
         const stepEl  = document.getElementById('loading-step');
         const timerEl = document.getElementById('loading-timer');
-        const steps   = ['Consultando PPI e Personas...', 'Gerando Modelo de Comunicação Ideal (MCS)...', 'Analisando perfil do Instagram...', 'Cruzando ideal × atual...'];
+        const steps   = ['Consultando PPI e Personas...', 'Gerando Modelo de ComunicaÃ§Ã£o Ideal (MCS)...', 'Analisando perfil do Instagram...', 'Cruzando ideal Ã— atual...'];
         let s = 0;
         stepEl.textContent = steps[s];
         let secs = 0;
@@ -457,32 +483,32 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             showState('state-bussola');
         } catch (err) {
             clearInterval(timerInterval);
-            alert('Erro ao gerar Bússola: ' + err.message);
+            alert('Erro ao gerar BÃºssola: ' + err.message);
             showState('state-generate');
         }
     };
 
-    // ── renderBussola ────────────────────────────────────────
+    // â”€â”€ renderBussola â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function renderBussola(b) {
         const score = b.resumo_executivo?.score || {};
-        const handle = b.username ? `@${b.username} · ` : (nutriNome ? `@${nutriNome} · ` : '');
+        const handle = b.username ? `@${b.username} Â· ` : (nutriNome ? `@${nutriNome} Â· ` : '');
         const dateStr = b.gerado_em ? new Date(b.gerado_em).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }) : ppiDate;
 
-        document.getElementById('bussola-meta').innerHTML = `${handle}Última análise: <strong>${dateStr}</strong>`;
+        document.getElementById('bussola-meta').innerHTML = `${handle}Ãšltima anÃ¡lise: <strong>${dateStr}</strong>`;
 
-        // ── Status banner ──
+        // â”€â”€ Status banner â”€â”€
         const banner = document.getElementById('bussola-status-banner');
         banner.innerHTML = `
             <div>
               <div class="status-score">
                 <span class="status-score-num">${score.criticos || 0}</span><span class="status-score-total">/8</span>
               </div>
-              <div class="status-score-label">Dimensões críticas</div>
+              <div class="status-score-label">DimensÃµes crÃ­ticas</div>
             </div>
             <div style="width:1px;height:42px;background:var(--border)"></div>
             <div class="status-bar">
               <div class="status-pills">
-                ${score.criticos  ? `<span class="pill crit">${score.criticos} crítico${score.criticos !== 1 ? 's' : ''}</span>` : ''}
+                ${score.criticos  ? `<span class="pill crit">${score.criticos} crÃ­tico${score.criticos !== 1 ? 's' : ''}</span>` : ''}
                 ${score.parciais  ? `<span class="pill par">${score.parciais} parcial${score.parciais !== 1 ? 'is' : ''}</span>` : ''}
                 ${score.alinhados ? `<span class="pill al">${score.alinhados} alinhado${score.alinhados !== 1 ? 's' : ''}</span>` : ''}
                 ${score.destaques ? `<span class="pill str">${score.destaques} destaque${score.destaques !== 1 ? 's' : ''}</span>` : ''}
@@ -490,7 +516,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
               <div class="status-bar-text">${(b.resumo_executivo?.pontos_principais?.[0] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
             </div>`;
 
-        // ── Bullets executivos ──
+        // â”€â”€ Bullets executivos â”€â”€
         const bullets = b.resumo_executivo?.pontos_principais || [];
         document.getElementById('bussola-exec-bullets').innerHTML = bullets.map((p, i) =>
             `<div class="exec-bullet">
@@ -499,13 +525,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             </div>`
         ).join('');
 
-        // ── Radar ──
+        // â”€â”€ Radar â”€â”€
         const radarAtual = b.resumo_executivo?.radar_atual || [2,2,2,2,2];
         if (window._radarChart) { window._radarChart.destroy(); }
         window._radarChart = new Chart(document.getElementById('radar').getContext('2d'), {
             type: 'radar',
             data: {
-                labels: ['Promessa', 'Conteúdo', 'Audiência', 'CTA', 'Identidade'],
+                labels: ['Promessa', 'ConteÃºdo', 'AudiÃªncia', 'CTA', 'Identidade'],
                 datasets: [
                     { label: 'Ideal', data: [5,5,5,5,5], fill: true, backgroundColor: 'rgba(115,115,115,0.08)', borderColor: 'rgba(115,115,115,0.5)', borderWidth: 1, pointRadius: 0 },
                     { label: 'Atual', data: radarAtual, fill: true, backgroundColor: 'rgba(37,99,235,0.18)', borderColor: '#2563EB', borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 3 }
@@ -518,19 +544,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             }
         });
 
-        // ── Dimensões ──
+        // â”€â”€ DimensÃµes â”€â”€
         const dimsEl = document.getElementById('bussola-dimensoes');
         dimsEl.innerHTML = '';
 
         const dimDefs = [
             { key: 'dimensao_01_promessa',  num: '01', nome: 'Promessa & Diferencial',       render: renderDimSide },
             { key: 'dimensao_02_bio',       num: '02', nome: 'Bio & Links',                  render: renderDimScorecards },
-            { key: 'dimensao_03_pilares',   num: '03', nome: 'Pilares & Intenção',            render: renderDimPilares },
-            { key: 'dimensao_04_audiencia', num: '04', nome: 'Audiência real vs PPI alvo',    render: renderDimAudiencia },
-            { key: 'dimensao_05_cadencia',  num: '05', nome: 'Cadência & Formato',            render: renderDimCadencia },
+            { key: 'dimensao_03_pilares',   num: '03', nome: 'Pilares & IntenÃ§Ã£o',            render: renderDimPilares },
+            { key: 'dimensao_04_audiencia', num: '04', nome: 'AudiÃªncia real vs PPI alvo',    render: renderDimAudiencia },
+            { key: 'dimensao_05_cadencia',  num: '05', nome: 'CadÃªncia & Formato',            render: renderDimCadencia },
             { key: 'dimensao_06_cta',       num: '06', nome: 'CTA & Resposta',                render: renderDimCTA },
             { key: 'dimensao_07_tom',       num: '07', nome: 'Tom & Narrativa',               render: renderDimScorecards },
-            { key: 'dimensao_08_performance', num: '08', nome: 'O que funciona & o que não', render: renderDimPerformance }
+            { key: 'dimensao_08_performance', num: '08', nome: 'O que funciona & o que nÃ£o', render: renderDimPerformance }
         ];
 
         dimDefs.forEach(def => {
@@ -553,28 +579,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             dimsEl.appendChild(wrapper);
         });
 
-        // ── Plano de ação ──
+        // â”€â”€ Plano de aÃ§Ã£o â”€â”€
         const plano = b.plano_de_acao || {};
         const planoEl = document.getElementById('bussola-plano');
         planoEl.innerHTML = `
-            ${renderPlanoCol('crit', 'Crítico', 'Faça essa semana', plano.critico || [])}
-            ${renderPlanoCol('med', 'Médio', 'Próximas 2–4 semanas', plano.medio || [])}
+            ${renderPlanoCol('crit', 'CrÃ­tico', 'FaÃ§a essa semana', plano.critico || [])}
+            ${renderPlanoCol('med', 'MÃ©dio', 'PrÃ³ximas 2â€“4 semanas', plano.medio || [])}
             ${renderPlanoCol('pol', 'Polimento', 'Quando der', plano.polimento || [])}`;
     }
 
-    // ── helpers de renderização por dimensão ────────────────
+    // â”€â”€ helpers de renderizaÃ§Ã£o por dimensÃ£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     function pillClass(status) {
         return { critico: 'pill crit', parcial: 'pill par', alinhado: 'pill al', destaque: 'pill str' }[status] || 'pill par';
     }
     function pillLabel(status) {
-        return { critico: 'crítico', parcial: 'parcial', alinhado: 'alinhado', destaque: 'destaque' }[status] || status;
+        return { critico: 'crÃ­tico', parcial: 'parcial', alinhado: 'alinhado', destaque: 'destaque' }[status] || status;
     }
 
     function renderSugestao(sug) {
         if (!sug) return '';
         return `<div class="dim-sug">
-          <div class="dim-sug-label">→ ${sug.label || 'Sugestão'}</div>
+          <div class="dim-sug-label">â†’ ${sug.label || 'SugestÃ£o'}</div>
           <div class="dim-sug-text">${(sug.texto || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
           ${sug.exemplo ? `<div class="dim-sug-example">${sug.exemplo}</div>` : ''}
         </div>`;
@@ -585,11 +611,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         el.innerHTML = `<div class="dim-side">
           <div class="dim-side-col atual">
             <div class="dim-side-label">Hoje o perfil diz</div>
-            <div class="dim-side-text">${dim.atual || '—'}</div>
+            <div class="dim-side-text">${dim.atual || 'â€”'}</div>
           </div>
           <div class="dim-side-col sugerido">
             <div class="dim-side-label">PPI pede que diga</div>
-            <div class="dim-side-text">${dim.sugerido || '—'}</div>
+            <div class="dim-side-text">${dim.sugerido || 'â€”'}</div>
           </div>
         </div>`;
     }
@@ -606,12 +632,12 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
     function renderDimPilares(el, dim) {
         const atual = dim.distribuicao_atual || {};
         const ideal = dim.distribuicao_ideal || {};
-        const labels = { conexao: 'Conexão', quebra_objecao: 'Quebra de objeção', autoridade: 'Autoridade', prova_social: 'Prova social', educacao_aplicada: 'Educação aplicada' };
+        const labels = { conexao: 'ConexÃ£o', quebra_objecao: 'Quebra de objeÃ§Ã£o', autoridade: 'Autoridade', prova_social: 'Prova social', educacao_aplicada: 'EducaÃ§Ã£o aplicada' };
         const color = { critico: 'var(--critical)', parcial: 'var(--partial)', alinhado: 'var(--primary)', destaque: 'var(--aligned)' };
         const barColor = color[dim.status] || 'var(--primary)';
 
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">Distribuição por intenção · atual vs ideal pro PPI</div>
+          <div class="dim-chart-h">DistribuiÃ§Ã£o por intenÃ§Ã£o Â· atual vs ideal pro PPI</div>
           <div class="stacked-bar-wrap">
             ${Object.keys(labels).map(k => {
                 const a = atual[k] || 0;
@@ -629,7 +655,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
             }).join('')}
           </div>
           <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:2px;height:10px;background:var(--text)"></span>marca = ideal pro PPI</div>
-          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">ⓘ ${dim.nota_metodologica}</div>` : ''}
+          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">â“˜ ${dim.nota_metodologica}</div>` : ''}
         </div>`;
     }
 
@@ -647,14 +673,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
     function renderDimCadencia(el, dim) {
         const dias = dim.dias_ativos || {};
         const ordem = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
-        const labels = { segunda: 'Seg', terca: 'Ter', quarta: 'Qua', quinta: 'Qui', sexta: 'Sex', sabado: 'Sáb', domingo: 'Dom' };
+        const labels = { segunda: 'Seg', terca: 'Ter', quarta: 'Qua', quinta: 'Qui', sexta: 'Sex', sabado: 'SÃ¡b', domingo: 'Dom' };
         const maxVal = Math.max(...Object.values(dias), 1);
 
         const mixAtual = dim.mix_formatos_atual || {};
         const mixIdeal = dim.mix_formatos_ideal || {};
 
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">Frequência: <strong>${dim.frequencia_atual || '—'}/sem atual</strong> · ideal: ${dim.frequencia_ideal || '—'}/sem</div>
+          <div class="dim-chart-h">FrequÃªncia: <strong>${dim.frequencia_atual || 'â€”'}/sem atual</strong> Â· ideal: ${dim.frequencia_ideal || 'â€”'}/sem</div>
           <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px">
             ${ordem.map(d => {
                 const v = dias[d] || 0;
@@ -681,11 +707,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         const ctaLabels = { sem_cta: 'Sem CTA', salve: 'Salve / curta', comente: 'Comente', dm: 'Manda DM', link_bio: 'Link na bio', agendar: 'Agendar' };
         const ctaColors = { sem_cta: 'var(--critical)', salve: 'var(--partial)', comente: 'var(--primary)', dm: 'var(--primary)', link_bio: 'var(--aligned)', agendar: 'var(--strength)' };
 
-        const respAtual = dim.taxa_resposta_atual != null ? `${dim.taxa_resposta_atual}%` : '—';
+        const respAtual = dim.taxa_resposta_atual != null ? `${dim.taxa_resposta_atual}%` : 'â€”';
         const respIdeal = dim.taxa_resposta_ideal != null ? `${dim.taxa_resposta_ideal}%` : '100%';
 
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">Distribuição de CTA · estimativa nos últimos posts</div>
+          <div class="dim-chart-h">DistribuiÃ§Ã£o de CTA Â· estimativa nos Ãºltimos posts</div>
           <div class="funnel-wrap">
             ${Object.keys(ctaLabels).filter(k => atuais[k] != null).map(k =>
                 `<div class="funnel-row">
@@ -695,8 +721,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
                 </div>`
             ).join('')}
           </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Taxa de resposta nos comentários: <strong>${respAtual}</strong> · ideal: <strong>${respIdeal}</strong></div>
-          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">ⓘ ${dim.nota_metodologica}</div>` : ''}
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Taxa de resposta nos comentÃ¡rios: <strong>${respAtual}</strong> Â· ideal: <strong>${respIdeal}</strong></div>
+          ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">â“˜ ${dim.nota_metodologica}</div>` : ''}
         </div>`;
     }
 
@@ -704,11 +730,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         el.innerHTML = `<div class="dim-side">
           <div class="dim-side-col sugerido">
             <div class="dim-side-label">Top reels</div>
-            <div class="dim-side-text">${dim.top_reels_resumo || '—'}</div>
+            <div class="dim-side-text">${dim.top_reels_resumo || 'â€”'}</div>
           </div>
           <div class="dim-side-col atual">
             <div class="dim-side-label">Bottom reels</div>
-            <div class="dim-side-text">${dim.bottom_reels_resumo || '—'}</div>
+            <div class="dim-side-text">${dim.bottom_reels_resumo || 'â€”'}</div>
           </div>
         </div>`;
     }
@@ -717,7 +743,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
         if (!itens.length) return `<div class="plano-col ${cssClass}">
           <div class="plano-col-h"><span class="plano-col-h-text">${titulo}</span><span class="plano-col-h-count">0</span></div>
           <div class="plano-col-when">${quando}</div>
-          <div style="font-size:12px;color:var(--text-soft);padding:8px 0">Sem ações neste nível.</div>
+          <div style="font-size:12px;color:var(--text-soft);padding:8px 0">Sem aÃ§Ãµes neste nÃ­vel.</div>
         </div>`;
         return `<div class="plano-col ${cssClass}">
           <div class="plano-col-h">
@@ -733,478 +759,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
     }
 
 })();
-</script>
-
-</body>
-</html>
-          <div>
-            <div class="status-score">
-              <span class="status-score-num">3</span><span class="status-score-total">/8</span>
-            </div>
-            <div class="status-score-label">Dimensões críticas</div>
-          </div>
-          <div style="width:1px;height:42px;background:var(--border)"></div>
-          <div class="status-bar">
-            <div class="status-pills">
-              <span class="pill crit">3 críticos</span>
-              <span class="pill par">3 parciais</span>
-              <span class="pill al">1 alinhado</span>
-              <span class="pill str">1 destaque</span>
-            </div>
-            <div class="status-bar-text">Ponto principal: bio e identidade não comunicam pra quem o atendimento é. <a href="#dim1" style="color:var(--primary);text-decoration:none">Ver detalhe →</a></div>
-          </div>
-        </div>
-
-        <!-- Resumo executivo -->
-        <div class="section-h">Resumo executivo</div>
-        <div class="exec">
-          <div class="exec-bullets">
-            <div class="exec-bullet">
-              <div class="exec-bullet-num">1</div>
-              <div class="exec-bullet-text"><strong>Bio não converte:</strong> link único, sem promessa explícita pra quem você quer atender.</div>
-            </div>
-            <div class="exec-bullet">
-              <div class="exec-bullet-num">2</div>
-              <div class="exec-bullet-text"><strong>Pilares de conteúdo desbalanceados:</strong> 0% de quebra de objeção contra ~25% recomendado pro PPI.</div>
-            </div>
-            <div class="exec-bullet">
-              <div class="exec-bullet-num">3</div>
-              <div class="exec-bullet-text"><strong>Sem CTA na maioria das peças:</strong> 71% dos posts não pedem nenhuma ação — engajamento passivo.</div>
-            </div>
-            <div class="exec-bullet">
-              <div class="exec-bullet-num">4</div>
-              <div class="exec-bullet-text"><strong>Audiência atual ≠ PPI alvo:</strong> 62% dos comentadores fora da faixa demográfica do paciente ideal.</div>
-            </div>
-            <div class="exec-bullet">
-              <div class="exec-bullet-num">5</div>
-              <div class="exec-bullet-text"><strong>Tom de voz ✓ alinhado.</strong> Esse é o ponto forte — não mexer.</div>
-            </div>
-          </div>
-          <div class="exec-radar">
-            <div class="exec-radar-h">Posicionamento — Atual vs Ideal</div>
-            <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensões</div>
-            <canvas id="radar"></canvas>
-            <div class="exec-radar-legend">
-              <span class="exec-radar-leg ideal">Ideal</span>
-              <span class="exec-radar-leg atual">Atual</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Diagnóstico -->
-        <div class="section-h">Diagnóstico por dimensão · 8 áreas</div>
-
-        <!-- DIM 1: PROMESSA -->
-        <div class="dim" id="dim1">
-          <div class="dim-head">
-            <span class="dim-num">01</span>
-            <span class="dim-name">Promessa &amp; Diferencial</span>
-            <span class="pill crit" style="margin-left:auto">crítico</span>
-          </div>
-          <h3 class="dim-headline">Sua bio diz que você é <em>sério</em>, mas não diz pra <em>quem</em>.</h3>
-          <div class="dim-side">
-            <div class="dim-side-col atual">
-              <div class="dim-side-label">Hoje seu perfil diz</div>
-              <div class="dim-side-text">"Nutricionista. Saúde integral. Atendimento humanizado."</div>
-            </div>
-            <div class="dim-side-col sugerido">
-              <div class="dim-side-label">PPI pede que diga</div>
-              <div class="dim-side-text">"Pra quem já tentou e voltou ao ponto inicial. Construo o processo possível na sua rotina — sem extremismos."</div>
-            </div>
-          </div>
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Faça essa semana</div>
-            <div class="dim-sug-text"><strong>Reescrever bio</strong> amarrando público + dor + diferencial em 1 frase só.</div>
-            <div class="dim-sug-example">Pra quem já tentou de tudo. Construo o processo possível na sua rotina — sem extremismos, sem efeito sanfona.</div>
-          </div>
-        </div>
-
-        <!-- DIM 2: BIO/LINKS -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">02</span>
-            <span class="dim-name">Bio &amp; Links</span>
-            <span class="pill par" style="margin-left:auto">parcial</span>
-          </div>
-          <h3 class="dim-headline">Bio com info importante mas <em>pouco clara</em>; foto não comunica profissão.</h3>
-          <div class="scorecard">
-            <span class="scorecard-letter c">C</span>
-            <span class="scorecard-text">Foto de perfil sem sinal de categoria — poderia ser de qualquer profissional liberal</span>
-          </div>
-          <div class="scorecard">
-            <span class="scorecard-letter b">B</span>
-            <span class="scorecard-text">Bio com info importante, mas estrutura genérica (faltam público + promessa + CTA)</span>
-          </div>
-          <div class="scorecard">
-            <span class="scorecard-letter c">C</span>
-            <span class="scorecard-text">Sem destaques (highlights). Quebra o caminho de decisão de quem chega novo.</span>
-          </div>
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ 3 ações conectadas</div>
-            <div class="dim-sug-text"><strong>(1)</strong> Trocar foto pra uma com sinal explícito de profissão (consultório, atendimento). <strong>(2)</strong> Reduzir links pra 1 só — WhatsApp direto, sem agregador (compatível com ticket abaixo de R$3k). <strong>(3)</strong> Criar 5 destaques: <em>Comece aqui · Método · Resultados · Sobre mim · Agendar</em>.</div>
-          </div>
-        </div>
-
-        <!-- DIM 3: PILARES (com chart) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">03</span>
-            <span class="dim-name">Pilares &amp; intenção de conteúdo</span>
-            <span class="pill crit" style="margin-left:auto">crítico</span>
-          </div>
-          <h3 class="dim-headline">Você posta autoridade. Falta <em>quebrar objeção</em>.</h3>
-
-          <div class="dim-chart">
-            <div class="dim-chart-h">Distribuição por intenção · atual vs ideal pro PPI</div>
-            <div class="stacked-bar-wrap">
-              <div class="stacked-bar-row">
-                <span class="label">Educação aplicada</span>
-                <div class="track">
-                  <div class="actual-fill" style="width:42%; background:var(--primary)"></div>
-                  <div class="ideal-marker" style="left:30%"></div>
-                </div>
-                <span class="pct">42% / 30%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">Quebra de objeção</span>
-                <div class="track">
-                  <div class="actual-fill" style="width:0%; background:var(--critical)"></div>
-                  <div class="ideal-marker" style="left:30%"></div>
-                </div>
-                <span class="pct">0% / 30%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">Autoridade</span>
-                <div class="track">
-                  <div class="actual-fill" style="width:38%; background:var(--primary)"></div>
-                  <div class="ideal-marker" style="left:5%"></div>
-                </div>
-                <span class="pct">38% / 5%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">Prova social</span>
-                <div class="track">
-                  <div class="actual-fill" style="width:8%; background:var(--primary)"></div>
-                  <div class="ideal-marker" style="left:20%"></div>
-                </div>
-                <span class="pct">8% / 20%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">Conexão</span>
-                <div class="track">
-                  <div class="actual-fill" style="width:12%; background:var(--primary)"></div>
-                  <div class="ideal-marker" style="left:15%"></div>
-                </div>
-                <span class="pct">12% / 15%</span>
-              </div>
-            </div>
-            <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:2px;height:10px;background:var(--text)"></span>marca = ideal pro PPI</div>
-          </div>
-
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Próximas 4 semanas</div>
-            <div class="dim-sug-text"><strong>Lançar pilar "Conteúdo contrafactual"</strong> — posts que mostram por que dietas restritivas falham, por que força de vontade não sustenta, por que o caminho atual não funciona. Calibrar mix pra ~30% educação · 30% quebra · 20% prova social · 15% conexão · 5% autoridade.</div>
-          </div>
-        </div>
-
-        <!-- DIM 4: AUDIÊNCIA REAL (com chart) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">04</span>
-            <span class="dim-name">Audiência real vs PPI alvo</span>
-            <span class="pill par" style="margin-left:auto">parcial</span>
-          </div>
-          <h3 class="dim-headline">Você atrai 22-30 anos. Seu PPI tem <em>35-50</em>.</h3>
-
-          <div class="dim-chart">
-            <div class="dim-chart-h">Faixa etária · comentadores reais vs PPI</div>
-            <div class="stacked-bar-wrap">
-              <div class="stacked-bar-row">
-                <span class="label">18-25</span>
-                <div class="track"><div class="actual-fill" style="width:34%;background:var(--primary)"></div><div class="ideal-marker" style="left:0%"></div></div>
-                <span class="pct">34% / 0%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">26-34</span>
-                <div class="track"><div class="actual-fill" style="width:28%;background:var(--primary)"></div><div class="ideal-marker" style="left:15%"></div></div>
-                <span class="pct">28% / 15%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">35-50</span>
-                <div class="track"><div class="actual-fill" style="width:30%;background:var(--primary)"></div><div class="ideal-marker" style="left:75%"></div></div>
-                <span class="pct">30% / 75%</span>
-              </div>
-              <div class="stacked-bar-row">
-                <span class="label">50+</span>
-                <div class="track"><div class="actual-fill" style="width:8%;background:var(--primary)"></div><div class="ideal-marker" style="left:10%"></div></div>
-                <span class="pct">8% / 10%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="dim-quote">A maioria dos comments são "amei a dica!" e "ah, eu também!" — vocabulário jovem (Insta gen Z). Comentadores 35-50 raramente respondem.</div>
-
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Médio prazo</div>
-            <div class="dim-sug-text">Conteúdo dos pilares 03 (quebra de objeção + prova social) endereça diretamente esse gap — paciente 35-50 quer ver casos parecidos com o dele e refutações dos medos comuns.</div>
-          </div>
-        </div>
-
-        <!-- DIM 5: CADÊNCIA (heatmap) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">05</span>
-            <span class="dim-name">Cadência</span>
-            <span class="pill par" style="margin-left:auto">parcial</span>
-          </div>
-          <h3 class="dim-headline">Posta com intenção, mas <em>sem ritmo previsível</em>.</h3>
-
-          <div class="dim-chart">
-            <div class="dim-chart-h">Atividade última semana · 7 dias × 24h</div>
-            <div class="heatmap" id="heatmap"></div>
-            <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px">Pico: ter/qui ~14h. Sem post regular nos fins de semana.</div>
-          </div>
-
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Polimento</div>
-            <div class="dim-sug-text"><strong>Definir 3 dias fixos de postagem</strong> (ex: ter/qui/sáb 14h). Constância simples vence picos de postagem pra o algoritmo e pra previsibilidade do público.</div>
-          </div>
-        </div>
-
-        <!-- DIM 6: CTA (funil) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">06</span>
-            <span class="dim-name">CTA &amp; resposta</span>
-            <span class="pill crit" style="margin-left:auto">crítico</span>
-          </div>
-          <h3 class="dim-headline">71% dos posts não pedem ação. <em>Conversa não acontece</em>.</h3>
-
-          <div class="dim-chart">
-            <div class="dim-chart-h">Distribuição de CTA · 30 últimos posts</div>
-            <div class="funnel-wrap">
-              <div class="funnel-row">
-                <span class="funnel-stage">Sem CTA</span>
-                <div class="funnel-bar" style="width:71%;background:var(--critical)"></div>
-                <span class="funnel-pct">71%</span>
-              </div>
-              <div class="funnel-row">
-                <span class="funnel-stage">Salve / curta</span>
-                <div class="funnel-bar" style="width:18%;background:var(--partial)"></div>
-                <span class="funnel-pct">18%</span>
-              </div>
-              <div class="funnel-row">
-                <span class="funnel-stage">Comente</span>
-                <div class="funnel-bar" style="width:7%;background:var(--primary)"></div>
-                <span class="funnel-pct">7%</span>
-              </div>
-              <div class="funnel-row">
-                <span class="funnel-stage">Manda DM</span>
-                <div class="funnel-bar" style="width:4%;background:var(--aligned)"></div>
-                <span class="funnel-pct">4%</span>
-              </div>
-              <div class="funnel-row">
-                <span class="funnel-stage">Agendar</span>
-                <div class="funnel-bar" style="width:0%;background:var(--strength)"></div>
-                <span class="funnel-pct">0%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Faça essa semana</div>
-            <div class="dim-sug-text"><strong>Implementar CTA em todo post</strong> — sem exceção. Hoje 0% pedem agendamento direto, e isso é onde a conversão mora. Exemplo testado pra perfil 35-50:</div>
-            <div class="dim-sug-example">Comente "ROTINA" se você se identifica e te mando os 3 primeiros passos no direct.</div>
-          </div>
-        </div>
-
-        <!-- DIM 7: TOM (qualitativo) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">07</span>
-            <span class="dim-name">Tom &amp; narrativa</span>
-            <span class="pill al" style="margin-left:auto">alinhado</span>
-          </div>
-          <h3 class="dim-headline">Tom de voz combina com o PPI. <em>Não mexa</em>.</h3>
-          <div class="scorecard">
-            <span class="scorecard-letter a">A</span>
-            <span class="scorecard-text">Pessoa do verbo: 2ª pessoa direta ("você"). Adequado pra paciente 35-50.</span>
-          </div>
-          <div class="scorecard">
-            <span class="scorecard-letter a">A</span>
-            <span class="scorecard-text">Registro: casual-profissional. Sem jargão técnico desnecessário.</span>
-          </div>
-          <div class="scorecard">
-            <span class="scorecard-letter b">B</span>
-            <span class="scorecard-text">Arco narrativo: institucional ("eu sou correto") — poderia migrar pra "eu te ajudo a..." (mais centrado no paciente).</span>
-          </div>
-        </div>
-
-        <!-- DIM 8: TOP/BOTTOM REELS (destaque) -->
-        <div class="dim">
-          <div class="dim-head">
-            <span class="dim-num">08</span>
-            <span class="dim-name">O que funciona &amp; o que não funciona</span>
-            <span class="pill str" style="margin-left:auto">destaque</span>
-          </div>
-          <h3 class="dim-headline">Reels com gancho de "erro comum" performam <em>3,4× a média</em>.</h3>
-          <div class="dim-side">
-            <div class="dim-side-col sugerido">
-              <div class="dim-side-label">Top 3 reels</div>
-              <div class="dim-side-text">"3 erros que sabotam emagrecimento" · "Por que você empaca depois dos 30" · "Não é falta de força de vontade" — todos com gancho contrafactual nos 3s iniciais.</div>
-            </div>
-            <div class="dim-side-col atual">
-              <div class="dim-side-label">Bottom 3 reels</div>
-              <div class="dim-side-text">3 reels institucionais ("conheça meu consultório", "minha jornada", "obrigado por X seguidores") — sem gancho de dor, baixo retention.</div>
-            </div>
-          </div>
-          <div class="dim-sug">
-            <div class="dim-sug-label">→ Continuar fazendo</div>
-            <div class="dim-sug-text">Esse é o ponto forte do perfil — Reels de gancho contrafactual. <strong>Dobrar a frequência:</strong> de 1/semana pra 2-3/semana. Esses Reels já estão dissolvendo as barreiras psicológicas das suas Personas.</div>
-          </div>
-        </div>
-
-        <!-- Plano de ação -->
-        <div class="section-h" style="margin-top: 36px">Plano de ação · 9 itens</div>
-
-        <div class="plano">
-
-          <div class="plano-col crit">
-            <div class="plano-col-h">
-              <span class="pill crit" style="padding:1px 6px">●</span>
-              <span class="plano-col-h-text">Crítico</span>
-              <span class="plano-col-h-count">3</span>
-            </div>
-            <div class="plano-col-when">Faça essa semana</div>
-            <div class="plano-item">
-              <div class="plano-item-title">Reescrever bio</div>
-              <div class="plano-item-why">Fecha gap de Promessa (#01)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Trocar foto de perfil</div>
-              <div class="plano-item-why">Sinal explícito de profissão (#02)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Implementar CTA em todo post</div>
-              <div class="plano-item-why">71% dos posts sem CTA hoje (#06)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-          </div>
-
-          <div class="plano-col med">
-            <div class="plano-col-h">
-              <span class="pill par" style="padding:1px 6px">●</span>
-              <span class="plano-col-h-text">Médio</span>
-              <span class="plano-col-h-count">4</span>
-            </div>
-            <div class="plano-col-when">Próximas 2-4 semanas</div>
-            <div class="plano-item">
-              <div class="plano-item-title">Lançar pilar contrafactual</div>
-              <div class="plano-item-why">0% quebra de objeção hoje (#03)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Reduzir links pra 1 (WhatsApp)</div>
-              <div class="plano-item-why">Tira fricção (#02)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Criar 5 destaques estruturados</div>
-              <div class="plano-item-why">Funil visual de decisão (#02)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Dobrar Reels contrafactuais</div>
-              <div class="plano-item-why">Onde performance está (#08)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-          </div>
-
-          <div class="plano-col pol">
-            <div class="plano-col-h">
-              <span class="pill" style="padding:1px 6px;background:var(--surface-soft);color:var(--text-medium)">●</span>
-              <span class="plano-col-h-text">Polimento</span>
-              <span class="plano-col-h-count">2</span>
-            </div>
-            <div class="plano-col-when">Quando der</div>
-            <div class="plano-item">
-              <div class="plano-item-title">Definir dias fixos de postagem</div>
-              <div class="plano-item-why">Constância &gt; volume (#05)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-            <div class="plano-item">
-              <div class="plano-item-title">Revisar arco narrativo</div>
-              <div class="plano-item-why">Centrar no paciente (#07)</div>
-              <div class="plano-item-action">Abrir tarefa</div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="tarefa-info">Cada item criar uma tarefa na sua aba <strong>Tarefas/Projetos</strong> com prazo sugerido. Você pode editar prazo e status lá.</div>
-
-        <!-- Related modules -->
-        <div class="related">
-          <div>
-            <div class="related-h">Esta análise se apoia em</div>
-            <div style="font-size:13.5px;color:var(--text)">Seu PPI · 3 Personas (atualizadas em 12 abr)</div>
-          </div>
-          <div class="related-actions">
-            <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI →</a>
-            <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas →</a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-// Radar chart
-new Chart(document.getElementById('radar').getContext('2d'), {
-  type: 'radar',
-  data: {
-    labels: ['Promessa', 'Conteúdo', 'Audiência', 'CTA', 'Identidade'],
-    datasets: [
-      { label: 'Ideal', data: [5,5,5,5,5], fill: true, backgroundColor: 'rgba(115,115,115,0.08)', borderColor: 'rgba(115,115,115,0.5)', borderWidth: 1, pointRadius: 0 },
-      { label: 'Atual', data: [2,2,3,1.5,2.5], fill: true, backgroundColor: 'rgba(37,99,235,0.18)', borderColor: '#2563EB', borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 3 }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { r: { beginAtZero: true, max: 5, ticks: { display: false }, pointLabels: { font: { size: 11, family: 'Inter' }, color: '#404040' }, grid: { color: '#E7E5E0' }, angleLines: { color: '#E7E5E0' } } }
-  }
-});
-
-// Heatmap (cadência)
-const heatmap = document.getElementById('heatmap');
-const days = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
-const data = [
-  // Seg, Ter, Qua, Qui, Sex, Sáb, Dom — 24h
-  [0,0,0,0,0,0,0,0,1,0,0,0,0,1,2,0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,0,0,0,1,2,1,0,0,0,1,3,2,0,0,0,1,0,0,0,0],
-  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,1,2,1,0,0,0,1,3,1,0,0,0,1,0,0,0,0],
-  [0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-];
-data.forEach((row, di) => {
-  const label = document.createElement('div');
-  label.className = 'day-label';
-  label.textContent = days[di];
-  heatmap.appendChild(label);
-  row.forEach(v => {
-    const c = document.createElement('div');
-    c.className = 'cell' + (v ? ' l'+v : '');
-    heatmap.appendChild(c);
-  });
-});
 </script>
 
 </body>
