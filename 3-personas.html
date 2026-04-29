@@ -216,304 +216,69 @@ a { text-decoration: none; color: inherit; }
     <div class="page">
       <div class="page-inner">
 
-        <div class="page-header">
-          <div>
-            <div class="page-eyebrow">3 caras humanizadas do mesmo PPI</div>
-            <h1 class="page-title">3 Personas</h1>
-            <div class="page-meta">@nutridanieldias · Última geração: <strong>12 abr 2026</strong> · <span style="color:var(--text-soft)">Versão 3</span></div>
+        <!-- Estado: carregando -->
+        <div id="state-loading" style="display:none;text-align:center;padding:80px 0;color:var(--text-muted)">
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;margin-bottom:12px"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg>
+          <div style="font-size:14px">Gerando personas...</div>
+        </div>
+
+        <!-- Estado: sem PPI -->
+        <div id="state-no-ppi" style="display:none;text-align:center;padding:80px 0">
+          <div style="font-size:15px;font-weight:600;margin-bottom:8px">Nenhum PPI encontrado</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulário para gerar o Perfil de Paciente Ideal primeiro.</div>
+          <a href="index.html" class="btn btn-primary">Ir para o Formulário</a>
+        </div>
+
+        <!-- Estado: sem personas (tem PPI) -->
+        <div id="state-generate" style="display:none">
+          <div class="page-header">
+            <div>
+              <div class="page-eyebrow">3 caras humanizadas do mesmo PPI</div>
+              <h1 class="page-title">3 Personas</h1>
+            </div>
           </div>
-          <div class="page-actions">
-            <button class="btn btn-tertiary">Histórico</button>
-            <button class="btn btn-secondary">Exportar PDF</button>
-            <button class="btn btn-primary">Regerar</button>
+          <div class="ppi-snap" id="ppi-snap-generate">
+            <div class="ppi-snap-icon">P</div>
+            <div id="ppi-snap-generate-text">Carregando PPI...</div>
+          </div>
+          <div style="text-align:center;padding:60px 0">
+            <div style="font-size:15px;font-weight:600;margin-bottom:8px">Personas ainda não geradas</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Clique abaixo para gerar as 3 personas a partir do PPI deste cliente.</div>
+            <button class="btn btn-primary" onclick="gerarPersonas()" style="padding:10px 24px">Gerar 3 Personas</button>
           </div>
         </div>
 
-        <!-- PPI snap -->
-        <div class="ppi-snap">
-          <div class="ppi-snap-icon">P</div>
-          <div>
-            As 3 personas abaixo dividem o mesmo PPI estrutural <strong>(Mulheres 35-50, executivas/liberais, classe AB)</strong> mas têm contextos de vida, vocabulários e gatilhos distintos. <a href="perfil-de-paciente-ideal.html">Ver PPI completo →</a>
+        <!-- Estado: personas prontas -->
+        <div id="state-personas" style="display:none">
+          <div class="page-header">
+            <div>
+              <div class="page-eyebrow">3 caras humanizadas do mesmo PPI</div>
+              <h1 class="page-title">3 Personas</h1>
+              <div class="page-meta" id="personas-meta"></div>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-secondary" onclick="gerarPersonas()">Regerar</button>
+            </div>
           </div>
-        </div>
 
-        <!-- Persona nav -->
-        <div class="persona-nav">
-          <span class="persona-nav-h">Pular pra</span>
-          <div class="persona-nav-list">
-            <a href="#p1" class="persona-nav-link" data-p="1"><span class="dot"></span>Joana</a>
-            <a href="#p2" class="persona-nav-link" data-p="2"><span class="dot"></span>Marina</a>
-            <a href="#p3" class="persona-nav-link" data-p="3"><span class="dot"></span>Carla</a>
+          <div class="ppi-snap" id="ppi-snap-ready">
+            <div class="ppi-snap-icon">P</div>
+            <div id="ppi-snap-ready-text"></div>
           </div>
-        </div>
 
-        <!-- ============== PERSONA 1: JOANA ============== -->
-        <article class="persona" id="p1" data-p="1">
-          <header class="persona-head">
-            <div class="persona-avatar">JN</div>
-            <div class="persona-head-text">
-              <div class="persona-num">Persona 1 · de 3</div>
-              <h2 class="persona-name">Joana</h2>
-              <p class="persona-arquetipo">A advogada estagnada com filho pequeno</p>
+          <div class="persona-nav" id="persona-nav"></div>
+
+          <div id="personas-container"></div>
+
+          <div class="related">
+            <div>
+              <div class="related-h">Próximos passos</div>
+              <div style="font-size:13.5px;color:var(--text)">Estas 3 Personas vão alimentar a Bússola do Perfil junto com seu PPI</div>
             </div>
-          </header>
-
-          <div class="persona-body">
-
-            <div class="persona-quote">
-              <div class="persona-quote-text">eu não tenho tempo nem pra mim</div>
-              <div class="persona-quote-attr">— frase mais marcante</div>
+            <div class="related-actions">
+              <a href="perfil-de-paciente-ideal.html" class="related-link">Ver PPI →</a>
+              <a href="bussola-do-perfil.html" class="related-link">Bússola do Perfil →</a>
             </div>
-
-            <div class="sub-h">Contexto de vida</div>
-            <div class="quadrant">
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Profissão</div>
-                <div class="quadrant-cell-value">Advogada sócia em escritório de M&amp;A</div>
-              </div>
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Estado familiar</div>
-                <div class="quadrant-cell-value">Casada · 1 filho de 4 anos · marido também executivo</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Rotina típica</div>
-                <div class="quadrant-cell-value">Sai 7h · almoça em reunião 12h · busca filho 19h · jantar pronto · dorme 23h. Fim de semana é caos doméstico.</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Momento de vida</div>
-                <div class="quadrant-cell-value">Pós-promoção · novo cargo de gestão · ganho de 6kg em 18 meses</div>
-              </div>
-            </div>
-
-            <div class="sub-h">Voz · como ela fala</div>
-            <div class="moodboard">
-              <div class="moodboard-frases">
-                <div class="moodboard-frase">eu não tenho tempo nem pra mim</div>
-                <div class="moodboard-frase">já tentei tudo, sempre volto</div>
-                <div class="moodboard-frase">minha rotina não cabe dieta</div>
-              </div>
-              <div class="moodboard-tom">
-                <span class="moodboard-tom-label">Tom</span>
-                <span>Racional · busca dados e método · impaciência com generalidades</span>
-              </div>
-            </div>
-
-            <div class="sub-h">Gatilhos &amp; objeções</div>
-            <div class="split-tags">
-              <div class="split-tags-col gat">
-                <div class="split-tags-col-h">↗ Gatilhos atuais</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">Volta às aulas do filho em fevereiro (fotos)</div>
-                  <div class="split-tag">Review de performance no trabalho</div>
-                  <div class="split-tag">Comprar roupa nova e não servir</div>
-                </div>
-              </div>
-              <div class="split-tags-col obj">
-                <div class="split-tags-col-h">⚠ Objeções típicas</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">"não tenho tempo pra fazer marmita"</div>
-                  <div class="split-tag">"meu marido come tudo errado"</div>
-                  <div class="split-tag">"tô viajando muito"</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sub-h">Comunicação</div>
-            <div class="comm-grid">
-              <div class="comm-card">
-                <div class="comm-card-label">Canal preferido</div>
-                <div class="comm-card-value"><span class="comm-card-icon">W</span>WhatsApp</div>
-              </div>
-              <div class="comm-card">
-                <div class="comm-card-label">Tipo de post que ressoa</div>
-                <div class="comm-card-value">Carrossel curto com método (3-5 slides) · Reel-bastidor de rotina real (não receita)</div>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-        <!-- ============== PERSONA 2: MARINA ============== -->
-        <article class="persona" id="p2" data-p="2">
-          <header class="persona-head">
-            <div class="persona-avatar">MR</div>
-            <div class="persona-head-text">
-              <div class="persona-num">Persona 2 · de 3</div>
-              <h2 class="persona-name">Marina</h2>
-              <p class="persona-arquetipo">A executiva pós-parto reentrando no jogo</p>
-            </div>
-          </header>
-
-          <div class="persona-body">
-
-            <div class="persona-quote">
-              <div class="persona-quote-text">meu corpo não é mais meu</div>
-              <div class="persona-quote-attr">— frase mais marcante</div>
-            </div>
-
-            <div class="sub-h">Contexto de vida</div>
-            <div class="quadrant">
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Profissão</div>
-                <div class="quadrant-cell-value">Diretora de RH em multinacional</div>
-              </div>
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Estado familiar</div>
-                <div class="quadrant-cell-value">Casada · recém-mãe (bebê 8 meses) · marido também executivo</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Rotina típica</div>
-                <div class="quadrant-cell-value">Licença acabando · home + escritório alternado · amamentando · dormindo mal. Fim de semana é recuperar do sono perdido.</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Momento de vida</div>
-                <div class="quadrant-cell-value">Volta full-time ao trabalho com bebê de 8 meses · ganho de 12kg desde gestação · identidade abalada</div>
-              </div>
-            </div>
-
-            <div class="sub-h">Voz · como ela fala</div>
-            <div class="moodboard">
-              <div class="moodboard-frases">
-                <div class="moodboard-frase">minha barriga ainda parece grávida</div>
-                <div class="moodboard-frase">amamentação me esgota mas não emagrece</div>
-                <div class="moodboard-frase">meu corpo não é mais meu</div>
-              </div>
-              <div class="moodboard-tom">
-                <span class="moodboard-tom-label">Tom</span>
-                <span>Emotivo · busca acolhimento estruturado · sensível mas pragmática</span>
-              </div>
-            </div>
-
-            <div class="sub-h">Gatilhos &amp; objeções</div>
-            <div class="split-tags">
-              <div class="split-tags-col gat">
-                <div class="split-tags-col-h">↗ Gatilhos atuais</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">Foto de família — bebê fazendo 1 ano</div>
-                  <div class="split-tag">Volta full-time ao escritório</div>
-                  <div class="split-tag">Vestido de casamento de amiga próxima</div>
-                </div>
-              </div>
-              <div class="split-tags-col obj">
-                <div class="split-tags-col-h">⚠ Objeções típicas</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">"amamentação não pode dieta"</div>
-                  <div class="split-tag">"não tenho energia nenhuma"</div>
-                  <div class="split-tag">"marido cobra performance no trabalho"</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sub-h">Comunicação</div>
-            <div class="comm-grid">
-              <div class="comm-card">
-                <div class="comm-card-label">Canal preferido</div>
-                <div class="comm-card-value"><span class="comm-card-icon">W</span>WhatsApp</div>
-              </div>
-              <div class="comm-card">
-                <div class="comm-card-label">Tipo de post que ressoa</div>
-                <div class="comm-card-value">Storytelling de bastidor real maternidade · check-in semanal · carrossel sobre nutrição na amamentação</div>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-        <!-- ============== PERSONA 3: CARLA ============== -->
-        <article class="persona" id="p3" data-p="3">
-          <header class="persona-head">
-            <div class="persona-avatar">CR</div>
-            <div class="persona-head-text">
-              <div class="persona-num">Persona 3 · de 3</div>
-              <h2 class="persona-name">Carla</h2>
-              <p class="persona-arquetipo">A CEO autônoma sem filho, em scale-up</p>
-            </div>
-          </header>
-
-          <div class="persona-body">
-
-            <div class="persona-quote">
-              <div class="persona-quote-text">eu sei o que comer, não consigo é manter</div>
-              <div class="persona-quote-attr">— frase mais marcante</div>
-            </div>
-
-            <div class="sub-h">Contexto de vida</div>
-            <div class="quadrant">
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Profissão</div>
-                <div class="quadrant-cell-value">Sócia-fundadora de agência digital · 47 anos</div>
-              </div>
-              <div class="quadrant-cell">
-                <div class="quadrant-cell-label">Estado familiar</div>
-                <div class="quadrant-cell-value">Solteira por escolha · sem filhos · mora sozinha em loft em SP</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Rotina típica</div>
-                <div class="quadrant-cell-value">Home office · almoço solo · jantar 4×/semana com clientes ou eventos · treina 5×/semana com personal</div>
-              </div>
-              <div class="quadrant-cell full">
-                <div class="quadrant-cell-label">Momento de vida</div>
-                <div class="quadrant-cell-value">Empresa em scale · pré-IPO · ganho de 4kg em 6 meses pela frequência de jantares</div>
-              </div>
-            </div>
-
-            <div class="sub-h">Voz · como ela fala</div>
-            <div class="moodboard">
-              <div class="moodboard-frases">
-                <div class="moodboard-frase">eu sei o que comer, não consigo é manter</div>
-                <div class="moodboard-frase">treino, mas meu corpo não responde mais</div>
-                <div class="moodboard-frase">preciso de método pra disciplina</div>
-              </div>
-              <div class="moodboard-tom">
-                <span class="moodboard-tom-label">Tom</span>
-                <span>Pragmática · decisão rápida · valoriza ROI · cética com promessa motivacional</span>
-              </div>
-            </div>
-
-            <div class="sub-h">Gatilhos &amp; objeções</div>
-            <div class="split-tags">
-              <div class="split-tags-col gat">
-                <div class="split-tags-col-h">↗ Gatilhos atuais</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">Foto de press release do IPO</div>
-                  <div class="split-tag">Viagem internacional de negócios</div>
-                  <div class="split-tag">Jantar com investidores</div>
-                </div>
-              </div>
-              <div class="split-tags-col obj">
-                <div class="split-tags-col-h">⚠ Objeções típicas</div>
-                <div class="split-tags-list">
-                  <div class="split-tag">"jantar é negócio, não dá pra evitar"</div>
-                  <div class="split-tag">"minha rotina muda toda semana"</div>
-                  <div class="split-tag">"minha vida é diferente da maioria"</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sub-h">Comunicação</div>
-            <div class="comm-grid">
-              <div class="comm-card">
-                <div class="comm-card-label">Canal preferido</div>
-                <div class="comm-card-value"><span class="comm-card-icon">W</span>WhatsApp</div>
-              </div>
-              <div class="comm-card">
-                <div class="comm-card-label">Tipo de post que ressoa</div>
-                <div class="comm-card-value">Dados/estudos sobre alimentação executiva · método aplicável a vida sem horário fixo · bastidor de viagens</div>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-        <!-- FOOTER -->
-        <div class="related">
-          <div>
-            <div class="related-h">Próximos passos</div>
-            <div style="font-size:13.5px;color:var(--text)">Estas 3 Personas vão alimentar a Bússola do Perfil junto com seu PPI</div>
-          </div>
-          <div class="related-actions">
-            <a href="perfil-de-paciente-ideal.html" class="related-link">Ver PPI →</a>
-            <a href="bussola-do-perfil.html" class="related-link">Bússola do Perfil →</a>
           </div>
         </div>
 
@@ -522,6 +287,136 @@ a { text-decoration: none; color: inherit; }
 
   </div>
 </div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+(function () {
+    const ppi = (() => { try { return JSON.parse(localStorage.getItem('ppi_current')); } catch (_) { return null; } })();
+    const personas = (() => { try { return JSON.parse(localStorage.getItem('personas_current')); } catch (_) { return null; } })();
+    const submissionId = localStorage.getItem('ppi_submission_id') || null;
+    const nutriNome = localStorage.getItem('ppi_nutri_nome') || '';
+    const ppiDate = localStorage.getItem('ppi_date') || '';
+
+    function showState(id) {
+        ['state-loading', 'state-no-ppi', 'state-generate', 'state-personas'].forEach(s => {
+            document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+        });
+    }
+
+    function ppiSnap(ppi) {
+        if (!ppi) return 'PPI não disponível.';
+        const q = ppi.quem_e;
+        const resumo = ppi.resumo || '';
+        const desc = q ? `<strong>(${[q.faixa_etaria, q.genero_predominante, q.estrato_e_profissao].filter(Boolean).join(', ')})</strong> ` : '';
+        return `As 3 personas abaixo dividem o mesmo PPI estrutural ${desc}mas têm contextos de vida, vocabulários e gatilhos distintos. <a href="perfil-de-paciente-ideal.html">Ver PPI completo →</a>`;
+    }
+
+    function renderPersonas(personasList) {
+        const nav = document.getElementById('persona-nav');
+        const container = document.getElementById('personas-container');
+        const metaEl = document.getElementById('personas-meta');
+
+        nav.innerHTML = `<span class="persona-nav-h">Pular pra</span><div class="persona-nav-list">${
+            personasList.map(p => `<a href="#persona-${p.numero}" class="persona-nav-link" data-p="${p.numero}"><span class="dot"></span>${p.nome}</a>`).join('')
+        }</div>`;
+
+        if (metaEl) {
+            const parts = [nutriNome ? `@${nutriNome.toLowerCase().replace(/\s+/g,'').replace('@','')}` : null, ppiDate ? `Última geração: <strong>${ppiDate}</strong>` : null].filter(Boolean);
+            metaEl.innerHTML = parts.join(' · ');
+        }
+
+        const snapEl = document.getElementById('ppi-snap-ready-text');
+        if (snapEl) snapEl.innerHTML = ppiSnap(ppi);
+
+        container.innerHTML = personasList.map(p => `
+            <article class="persona" id="persona-${p.numero}" data-p="${p.numero}">
+              <header class="persona-head">
+                <div class="persona-avatar">${p.iniciais || p.nome.slice(0,2).toUpperCase()}</div>
+                <div class="persona-head-text">
+                  <div class="persona-num">Persona ${p.numero} · de ${personasList.length}</div>
+                  <h2 class="persona-name">${p.nome}</h2>
+                  <p class="persona-arquetipo">${p.arquetipo}</p>
+                </div>
+              </header>
+              <div class="persona-body">
+                <div class="persona-quote">
+                  <div class="persona-quote-text">${p.frase_marcante}</div>
+                  <div class="persona-quote-attr">— frase mais marcante</div>
+                </div>
+                <div class="sub-h">Contexto de vida</div>
+                <div class="quadrant">
+                  <div class="quadrant-cell"><div class="quadrant-cell-label">Profissão</div><div class="quadrant-cell-value">${p.contexto?.profissao || '—'}</div></div>
+                  <div class="quadrant-cell"><div class="quadrant-cell-label">Estado familiar</div><div class="quadrant-cell-value">${p.contexto?.estado_familiar || '—'}</div></div>
+                  <div class="quadrant-cell full"><div class="quadrant-cell-label">Rotina típica</div><div class="quadrant-cell-value">${p.contexto?.rotina_tipica || '—'}</div></div>
+                  <div class="quadrant-cell full"><div class="quadrant-cell-label">Momento de vida</div><div class="quadrant-cell-value">${p.contexto?.momento_de_vida || '—'}</div></div>
+                </div>
+                <div class="sub-h">Voz · como ela fala</div>
+                <div class="moodboard">
+                  <div class="moodboard-frases">${(p.frases || []).map(f => `<div class="moodboard-frase">${f}</div>`).join('')}</div>
+                  <div class="moodboard-tom"><span class="moodboard-tom-label">Tom</span><span>${p.tom || ''}</span></div>
+                </div>
+                <div class="sub-h">Gatilhos &amp; objeções</div>
+                <div class="split-tags">
+                  <div class="split-tags-col gat">
+                    <div class="split-tags-col-h">↗ Gatilhos atuais</div>
+                    <div class="split-tags-list">${(p.gatilhos || []).map(g => `<div class="split-tag">${g}</div>`).join('')}</div>
+                  </div>
+                  <div class="split-tags-col obj">
+                    <div class="split-tags-col-h">⚠ Objeções típicas</div>
+                    <div class="split-tags-list">${(p.objecoes || []).map(o => `<div class="split-tag">${o}</div>`).join('')}</div>
+                  </div>
+                </div>
+                <div class="sub-h">Comunicação</div>
+                <div class="comm-grid">
+                  <div class="comm-card"><div class="comm-card-label">Canal preferido</div><div class="comm-card-value"><span class="comm-card-icon">${(p.canal_preferido||'?').slice(0,1)}</span>${p.canal_preferido || '—'}</div></div>
+                  <div class="comm-card"><div class="comm-card-label">Tipo de post que ressoa</div><div class="comm-card-value">${p.tipo_post || '—'}</div></div>
+                </div>
+              </div>
+            </article>
+        `).join('');
+    }
+
+    window.gerarPersonas = async function () {
+        if (!ppi) { showState('state-no-ppi'); return; }
+        showState('state-loading');
+        try {
+            const body = { ppi };
+            if (submissionId) body.submission_id = submissionId;
+            const res = await fetch('/generate-personas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error('Erro no servidor: ' + res.status);
+            const data = await res.json();
+            if (!data.personas || !data.personas.length) throw new Error('Resposta inválida da IA.');
+            localStorage.setItem('personas_current', JSON.stringify(data.personas));
+            renderPersonas(data.personas);
+            showState('state-personas');
+        } catch (err) {
+            alert('Erro ao gerar personas: ' + err.message);
+            showState(ppi ? 'state-generate' : 'state-no-ppi');
+        }
+    };
+
+    // Inicialização
+    if (!ppi) {
+        showState('state-no-ppi');
+    } else if (personas && personas.length) {
+        const snapGenEl = document.getElementById('ppi-snap-ready-text');
+        if (snapGenEl) snapGenEl.innerHTML = ppiSnap(ppi);
+        renderPersonas(personas);
+        showState('state-personas');
+    } else {
+        const snapGenEl = document.getElementById('ppi-snap-generate-text');
+        if (snapGenEl) snapGenEl.innerHTML = ppiSnap(ppi);
+        showState('state-generate');
+    }
+})();
+</script>
 
 </body>
 </html>

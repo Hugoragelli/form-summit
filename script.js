@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (target === 'section-clientes') loadClients();
-            if (target === 'section-config') loadAIConfig();
+            if (target === 'section-config') { loadAIConfig(); loadPersonasConfig(); }
         });
     });
 
@@ -271,6 +271,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Config IA ---
+    // Tab switching
+    document.querySelectorAll('.config-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.config-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.config-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            const panel = document.getElementById(`config-panel-${tab.dataset.tab}`);
+            if (panel) panel.classList.add('active');
+        });
+    });
+
     async function loadAIConfig() {
         const el = document.getElementById('prompt-ppi');
         if (!el) return;
@@ -290,6 +301,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function loadPersonasConfig() {
+        const el = document.getElementById('prompt-personas');
+        if (!el || el.value) return; // já carregado
+        try {
+            const res = await fetch('/personas-config');
+            const data = await res.json();
+            el.value = data.prompt || '';
+        } catch (_) {
+            el.value = '';
+        }
+    }
+
     function updateProviderLabels(provider) {
         ['openai', 'deepseek'].forEach(p => {
             const lbl = document.getElementById(`provider-label-${p}`);
@@ -303,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.saveAIConfig = async () => {
         const el = document.getElementById('prompt-ppi');
-        const btn = document.getElementById('save-config-btn');
+        const btn = document.getElementById('save-ppi-btn');
         const providerRadio = document.querySelector('input[name="ai_provider"]:checked');
         if (!el) return;
         const orig = btn.textContent;
@@ -314,6 +337,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: el.value, provider: providerRadio?.value || 'openai' })
+            });
+            if (res.ok) {
+                btn.textContent = 'Salvo!';
+                setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 2000);
+            } else throw new Error();
+        } catch (_) {
+            btn.textContent = 'Erro ao salvar';
+            btn.disabled = false;
+        }
+    };
+
+    window.savePersonasConfig = async () => {
+        const el = document.getElementById('prompt-personas');
+        const btn = document.getElementById('save-personas-btn');
+        if (!el) return;
+        const orig = btn.textContent;
+        btn.textContent = 'Salvando...';
+        btn.disabled = true;
+        try {
+            const res = await fetch('/personas-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: el.value })
             });
             if (res.ok) {
                 btn.textContent = 'Salvo!';

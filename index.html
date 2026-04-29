@@ -158,7 +158,13 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
 .config-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px; }
 .config-card-h { font-size: 15px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
 .config-card-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.55; }
-#prompt-ppi { min-height: 480px; font-size: 12.5px; line-height: 1.6; font-family: 'Inter', system-ui, sans-serif; }
+#prompt-ppi, #prompt-personas { min-height: 480px; font-size: 12.5px; line-height: 1.6; font-family: 'Inter', system-ui, sans-serif; }
+.config-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.config-tab { padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--text-muted); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -1px; transition: all 120ms ease; }
+.config-tab:hover { color: var(--text); }
+.config-tab.active { color: var(--text); border-bottom-color: var(--text); }
+.config-panel { display: none; }
+.config-panel.active { display: block; }
 
 /* === RELATED === */
 .related { margin-top: 36px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
@@ -581,41 +587,78 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
           <div class="page-header">
             <div>
               <div class="page-eyebrow">Inteligência Artificial</div>
-              <h1 class="page-title">Agente PPI</h1>
-              <div class="page-meta">Prompt enviado à IA para gerar o Perfil de Paciente Ideal</div>
-            </div>
-            <div class="page-actions">
-              <button id="save-config-btn" class="btn btn-primary" onclick="saveAIConfig()">Salvar prompt</button>
+              <h1 class="page-title">Agentes</h1>
+              <div class="page-meta">Configure os prompts e o provedor de IA</div>
             </div>
           </div>
 
-          <div class="config-card" style="margin-bottom:16px">
-            <div class="config-card-h">Provedor de IA</div>
-            <div class="config-card-sub">Selecione qual serviço de IA será usado para gerar o PPI.</div>
-            <div style="display:flex;gap:12px;margin-top:12px">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-openai">
-                <input type="radio" name="ai_provider" id="provider-openai" value="openai" style="accent-color:var(--accent)">
-                <span style="font-size:13px;font-weight:500">OpenAI</span>
-                <span style="font-size:11px;color:var(--text-soft);margin-left:auto">gpt-5.1</span>
-              </label>
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-deepseek">
-                <input type="radio" name="ai_provider" id="provider-deepseek" value="deepseek" style="accent-color:var(--accent)">
-                <span style="font-size:13px;font-weight:500">DeepSeek</span>
-                <span style="font-size:11px;color:var(--text-soft);margin-left:auto">deepseek-v4-pro</span>
-              </label>
+          <!-- Tabs -->
+          <div class="config-tabs">
+            <button class="config-tab active" data-tab="ppi">Agente PPI</button>
+            <button class="config-tab" data-tab="personas">Agente Personas</button>
+          </div>
+
+          <!-- Painel PPI -->
+          <div id="config-panel-ppi" class="config-panel active">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <div>
+                <div style="font-size:14px;font-weight:600">Agente PPI</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Prompt enviado à IA para gerar o Perfil de Paciente Ideal</div>
+              </div>
+              <button id="save-ppi-btn" class="btn btn-primary" onclick="saveAIConfig()">Salvar</button>
+            </div>
+
+            <div class="config-card" style="margin-bottom:16px">
+              <div class="config-card-h">Provedor de IA</div>
+              <div class="config-card-sub">Selecione qual serviço de IA será usado para gerar o PPI e as Personas.</div>
+              <div style="display:flex;gap:12px;margin-top:12px">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-openai">
+                  <input type="radio" name="ai_provider" id="provider-openai" value="openai" style="accent-color:var(--accent)">
+                  <span style="font-size:13px;font-weight:500">OpenAI</span>
+                  <span style="font-size:11px;color:var(--text-soft);margin-left:auto">gpt-5.1</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-deepseek">
+                  <input type="radio" name="ai_provider" id="provider-deepseek" value="deepseek" style="accent-color:var(--accent)">
+                  <span style="font-size:13px;font-weight:500">DeepSeek</span>
+                  <span style="font-size:11px;color:var(--text-soft);margin-left:auto">deepseek-v4-pro</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="config-card">
+              <div class="config-card-h">Prompt do agente PPI</div>
+              <div class="config-card-sub">
+                Use <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{form_respostas}}</code> como marcador — será substituído pelo JSON com as respostas do formulário.
+              </div>
+              <textarea id="prompt-ppi" name="prompt-ppi" spellcheck="false"></textarea>
+            </div>
+
+            <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
+              Temperatura: 0.4 · Response format: JSON
             </div>
           </div>
 
-          <div class="config-card">
-            <div class="config-card-h">Prompt do agente PPI</div>
-            <div class="config-card-sub">
-              Use <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{form_respostas}}</code> como marcador — será substituído pelo JSON com as respostas do formulário antes de enviar à IA.
+          <!-- Painel Personas -->
+          <div id="config-panel-personas" class="config-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <div>
+                <div style="font-size:14px;font-weight:600">Agente Personas</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Prompt enviado à IA para gerar as 3 Personas a partir do PPI</div>
+              </div>
+              <button id="save-personas-btn" class="btn btn-primary" onclick="savePersonasConfig()">Salvar</button>
             </div>
-            <textarea id="prompt-ppi" name="prompt-ppi" spellcheck="false"></textarea>
-          </div>
 
-          <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
-            Temperatura: 0.4 · Response format: JSON
+            <div class="config-card">
+              <div class="config-card-h">Prompt do agente Personas</div>
+              <div class="config-card-sub">
+                Use <code style="background:var(--surface-soft);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">{{ppi_json}}</code> como marcador — será substituído pelo JSON do PPI gerado.
+              </div>
+              <textarea id="prompt-personas" name="prompt-personas" spellcheck="false"></textarea>
+            </div>
+
+            <div style="margin-top:16px;font-size:12px;color:var(--text-soft);line-height:1.6">
+              Temperatura: 0.6 · Response format: JSON
+            </div>
           </div>
 
         </div>
