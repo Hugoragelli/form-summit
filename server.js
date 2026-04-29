@@ -13,6 +13,10 @@ const supabase = createClient(
 );
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const deepseek = new OpenAI({
+    apiKey: process.env.DEEPSEEK_API_KEY,
+    baseURL: 'https://api.deepseek.com/v1'
+});
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
@@ -219,6 +223,18 @@ async function bootstrapDatabase() {
         } else {
             console.log('[DB] Prompt PPI encontrado no banco — OK.');
         }
+
+        // Garante que o registro de provider exista (padrão: openai)
+        const { data: providerData, error: providerError } = await supabase
+            .from('ai_settings')
+            .select('id')
+            .eq('id', 'ai_provider')
+            .single();
+
+        if (!providerError && !providerData) {
+            await supabase.from('ai_settings').insert({ id: 'ai_provider', prompt: 'openai' });
+            console.log('[DB] Provider padrão (openai) inserido.');
+        }
     } catch (err) {
         console.warn('[DB] Erro no bootstrap:', err.message);
     }
@@ -241,38 +257,46 @@ app.get('/clients', async (req, res) => {
 });
 
 // ============================================================
-// ROTA: GET /ai-config  — retorna prompt do banco
+// ROTA: GET /ai-config  — retorna prompt e provider do banco
 // ============================================================
 app.get('/ai-config', async (req, res) => {
     try {
-        const { data, error } = await supabase
-            .from('ai_settings')
-            .select('prompt')
-            .eq('id', 'ppi_prompt')
-            .single();
+        const [promptRes, providerRes] = await Promise.all([
+            supabase.from('ai_settings').select('prompt').eq('id', 'ppi_prompt').single(),
+            supabase.from('ai_settings').select('prompt').eq('id', 'ai_provider').single()
+        ]);
 
-        if (error) throw error;
-        res.json({ prompt: data.prompt, source: 'database' });
+        if (promptRes.error) throw promptRes.error;
+        res.json({
+            prompt: promptRes.data.prompt,
+            provider: providerRes.data?.prompt || 'openai',
+            source: 'database'
+        });
     } catch (e) {
         console.warn('[ai-config GET] Banco indisponível, retornando prompt de emergência:', e.message);
-        res.json({ prompt: EMERGENCY_PROMPT, source: 'fallback' });
+        res.json({ prompt: EMERGENCY_PROMPT, provider: 'openai', source: 'fallback' });
     }
 });
 
 // ============================================================
-// ROTA: POST /ai-config  — salva prompt editado no banco
+// ROTA: POST /ai-config  — salva prompt e provider no banco
 // ============================================================
 app.post('/ai-config', async (req, res) => {
     try {
-        const { prompt } = req.body;
+        const { prompt, provider } = req.body;
         if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Prompt vazio.' });
 
-        const { error } = await supabase
-            .from('ai_settings')
-            .upsert({ id: 'ppi_prompt', prompt: prompt.trim(), updated_at: new Date().toISOString() });
+        const validProviders = ['openai', 'deepseek'];
+        const safeProvider = validProviders.includes(provider) ? provider : 'openai';
 
-        if (error) throw error;
-        console.log('[ai-config POST] Prompt atualizado no banco.');
+        const [promptRes, providerRes] = await Promise.all([
+            supabase.from('ai_settings').upsert({ id: 'ppi_prompt', prompt: prompt.trim(), updated_at: new Date().toISOString() }),
+            supabase.from('ai_settings').upsert({ id: 'ai_provider', prompt: safeProvider, updated_at: new Date().toISOString() })
+        ]);
+
+        if (promptRes.error) throw promptRes.error;
+        if (providerRes.error) throw providerRes.error;
+        console.log(`[ai-config POST] Configuração atualizada — provider: ${safeProvider}.`);
         res.json({ message: 'OK' });
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -280,33 +304,47 @@ app.post('/ai-config', async (req, res) => {
 });
 
 // ============================================================
-// generatePPI — lê prompt do banco, jamais do código
+// generatePPI — lê prompt e provider do banco, jamais do código
 // ============================================================
 async function generatePPI(formData) {
-    // 1. Busca o prompt no banco (fonte primária)
-    const { data, error } = await supabase
-        .from('ai_settings')
-        .select('prompt')
-        .eq('id', 'ppi_prompt')
-        .single();
+    // 1. Busca o prompt e o provider no banco (fonte primária)
+    const [promptRes, providerRes] = await Promise.all([
+        supabase.from('ai_settings').select('prompt').eq('id', 'ppi_prompt').single(),
+        supabase.from('ai_settings').select('prompt').eq('id', 'ai_provider').single()
+    ]);
 
-    if (error || !data?.prompt) {
+    if (promptRes.error || !promptRes.data?.prompt) {
         console.warn('[generatePPI] Prompt não encontrado no banco. Verifique a tabela ai_settings.');
         throw new Error('Prompt do agente PPI não configurado no banco. Execute supabase_schema.sql e reinicie o servidor.');
     }
 
-    const fullPrompt = data.prompt.replace('{{form_respostas}}', JSON.stringify(formData, null, 2));
-    console.log('[generatePPI] Prompt lido do banco — enviando para OpenAI...');
+    const provider = providerRes.data?.prompt || 'openai';
+    const fullPrompt = promptRes.data.prompt.replace('{{form_respostas}}', JSON.stringify(formData, null, 2));
 
-    const response = await openai.chat.completions.create({
-        model: 'gpt-5.1',
-        temperature: 0.4,
-        messages: [{ role: 'user', content: fullPrompt }],
-        response_format: { type: 'json_object' }
-    });
+    let response;
+    if (provider === 'deepseek') {
+        console.log('[generatePPI] Prompt lido do banco — enviando para DeepSeek...');
+        response = await deepseek.chat.completions.create({
+        model: 'deepseek-v4-pro',
+            temperature: 0.4,
+            messages: [
+                { role: 'system', content: 'Você é um assistente especializado. Responda sempre em JSON válido sem texto adicional.' },
+                { role: 'user', content: fullPrompt }
+            ],
+            response_format: { type: 'json_object' }
+        });
+    } else {
+        console.log('[generatePPI] Prompt lido do banco — enviando para OpenAI...');
+        response = await openai.chat.completions.create({
+            model: 'gpt-5.1',
+            temperature: 0.4,
+            messages: [{ role: 'user', content: fullPrompt }],
+            response_format: { type: 'json_object' }
+        });
+    }
 
     const ppi = JSON.parse(response.choices[0].message.content);
-    console.log('[generatePPI] PPI gerado com sucesso.');
+    console.log(`[generatePPI] PPI gerado com sucesso via ${provider}.`);
     return ppi;
 }
 

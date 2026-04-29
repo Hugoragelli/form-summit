@@ -14,3 +14,7 @@ services:
         sync: false # Recomendado para o servidor
       - key: PORT
         value: 3000
+      - key: OPENAI_API_KEY
+        sync: false # Chave da OpenAI (https://platform.openai.com)
+      - key: DEEPSEEK_API_KEY
+        sync: false # Chave da DeepSeek (https://platform.deepseek.com)

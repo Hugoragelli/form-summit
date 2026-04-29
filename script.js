@@ -278,14 +278,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/ai-config');
             const data = await res.json();
             el.value = data.prompt || '';
+
+            const provider = data.provider || 'openai';
+            const radio = document.querySelector(`input[name="ai_provider"][value="${provider}"]`);
+            if (radio) {
+                radio.checked = true;
+                updateProviderLabels(provider);
+            }
         } catch (_) {
             el.value = '';
         }
     }
 
+    function updateProviderLabels(provider) {
+        ['openai', 'deepseek'].forEach(p => {
+            const lbl = document.getElementById(`provider-label-${p}`);
+            if (lbl) lbl.style.borderColor = (p === provider) ? 'var(--accent)' : 'var(--border)';
+        });
+    }
+
+    document.querySelectorAll('input[name="ai_provider"]').forEach(radio => {
+        radio.addEventListener('change', e => updateProviderLabels(e.target.value));
+    });
+
     window.saveAIConfig = async () => {
         const el = document.getElementById('prompt-ppi');
         const btn = document.getElementById('save-config-btn');
+        const providerRadio = document.querySelector('input[name="ai_provider"]:checked');
         if (!el) return;
         const orig = btn.textContent;
         btn.textContent = 'Salvando...';
@@ -294,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/ai-config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: el.value })
+                body: JSON.stringify({ prompt: el.value, provider: providerRadio?.value || 'openai' })
             });
             if (res.ok) {
                 btn.textContent = 'Salvo!';
