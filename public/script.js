@@ -480,5 +480,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initHash && hashMap[initHash]) {
         const targetItem = document.querySelector(`.bc-sidebar-item[data-target="${hashMap[initHash]}"]`);
         if (targetItem) targetItem.click();
+    } else {
+        // padrão: carrega clientes
+        loadClients();
     }
 });
