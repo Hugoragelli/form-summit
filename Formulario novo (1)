@@ -1,0 +1,435 @@
+import React, { useState } from 'react';
+import { 
+  Users, 
+  BrainCircuit, 
+  ActivitySquare, 
+  ShoppingCart, 
+  CheckCircle2, 
+  Target, 
+  User, 
+  Smartphone, 
+  Instagram, 
+  BarChart3, 
+  Megaphone, 
+  Briefcase, 
+  Sparkles, 
+  Info,
+  Send,
+  HelpCircle,
+  XOctagon,
+  ArrowDownCircle,
+  Quote,
+  MapPin,
+  TrendingUp,
+  Hash
+} from 'lucide-react';
+
+// Componente de Cartão de Seleção Otimizado
+const SelectCard = ({ title, description, selected, onClick, multi = false }) => (
+  <div 
+    onClick={onClick}
+    className={`
+      cursor-pointer p-4 rounded-2xl border-2 transition-all duration-200 flex items-start gap-4 h-full
+      ${selected 
+        ? 'border-indigo-600 bg-indigo-50 shadow-md transform scale-[1.01]' 
+        : 'border-slate-100 bg-white hover:border-indigo-200 hover:bg-slate-50'
+      }
+    `}
+  >
+    <div className="mt-1">
+      <div className={`
+        w-6 h-6 flex items-center justify-center border-2 transition-colors
+        ${multi ? 'rounded-lg' : 'rounded-full'}
+        ${selected ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}
+      `}>
+        {selected && <CheckCircle2 className="w-4 h-4 text-white" />}
+      </div>
+    </div>
+    <div className="flex-1">
+      <p className={`text-sm font-bold ${selected ? 'text-indigo-950' : 'text-slate-700'}`}>
+        {title}
+      </p>
+      {description && (
+        <p className={`text-xs mt-1 leading-relaxed ${selected ? 'text-indigo-800' : 'text-slate-500'}`}>
+          {description}
+        </p>
+      )}
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [profissaoContexto, setProfissaoContexto] = useState('Nutricionista');
+
+  const txtCliente = profissaoContexto === 'Treinador' ? 'aluno' : 'paciente';
+  const txtEntrega = profissaoContexto === 'Treinador' ? 'treino' : 'plano alimentar';
+  const txtLocal = profissaoContexto === 'Treinador' ? 'atendimento' : 'consultório';
+
+  const [formData, setFormData] = useState({
+    // Bloco 01 - Negócio
+    nome: '', whatsapp: '', instagram: '',
+    equipe: [], atendimento: '', modelo: '',
+    faturamento: '', ticketProfissional: '',
+    canaisAquisicao: [], redesSociais: [],
+    sonho12Meses: '', maiorObstaculo: '',
+
+    // Bloco 02 - PPI
+    ppiIdade: '', ppiProfissoes: '', ppiClasseSocial: '', 
+    ppiGenero: '', ppiObjetivoFisico: '', ppiQueixaPrincipal: '',
+    ppiDescricaoComportamental: '',
+    atendeQuemGostaria: null,
+    pacienteAtualDescricao: '', maiorDesejoPaciente: '',
+    reclamacoesFrequentes: '', tentativasPassadas: '',
+    faseMudanca: '', dificuldadesAlimentares: [],
+    pesaDecisao: '', investimentoPaciente: '', ritmoDecisao: '',
+    mudancaPercebida: '', diferenciais: '', antiPPI: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelect = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleMultiSelect = (field, value) => {
+    setFormData(prev => {
+      const current = prev[field] || [];
+      if (current.includes(value)) {
+        return { ...prev, [field]: current.filter(item => item !== value) };
+      } else {
+        return { ...prev, [field]: [...current, value] };
+      }
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 font-sans pb-24">
+      <div className="max-w-4xl mx-auto">
+        
+        {/* CONTEXTO */}
+        <div className="bg-slate-900 text-white p-4 rounded-3xl mb-10 flex items-center justify-between shadow-2xl border border-slate-700 sticky top-4 z-50">
+          <div className="flex items-center gap-3 ml-2">
+            <ActivitySquare className="w-5 h-5 text-indigo-400" />
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 italic">Diagnóstico Estratégico</p>
+          </div>
+          <div className="flex gap-2 bg-slate-800 p-1.5 rounded-2xl">
+            {['Nutricionista', 'Treinador'].map(p => (
+              <button key={p}
+                onClick={() => setProfissaoContexto(p)}
+                className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${profissaoContexto === p ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-200'}`}
+              >
+                {p.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Intro */}
+        <div className="mb-16 text-center">
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tighter leading-none">
+            RAIO-X <span className="text-indigo-600 italic">NSF</span>
+          </h1>
+          <div className="max-w-3xl mx-auto bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm text-left flex items-start gap-5">
+            <div className="bg-indigo-100 p-3 rounded-2xl shrink-0">
+              <Sparkles className="w-8 h-8 text-indigo-600" />
+            </div>
+            <div>
+              <p className="text-slate-700 text-lg leading-snug">
+                Este diagnóstico une o mapeamento do seu <strong>Negócio</strong> com a profundidade do seu <strong>PPI</strong>. Responda com precisão para que nossa IA entenda sua real capacidade de escala.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-16">
+          
+          {/* BLOCO 01: O NEGÓCIO */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
+            <div className="bg-slate-900 px-10 py-8 text-white flex items-center gap-4 border-b border-slate-800">
+              <Briefcase className="w-8 h-8 text-indigo-500" />
+              <h2 className="text-2xl font-black tracking-tight uppercase italic">Bloco 01: Seu Jogo Atual</h2>
+            </div>
+            
+            <div className="p-10 space-y-12">
+              {/* Contatos com placeholders corrigidos */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {label: 'Nome Completo', name: 'nome', icon: User, placeholder: 'Ex: João Silva'},
+                  {label: 'WhatsApp de Contato', name: 'whatsapp', icon: Smartphone, placeholder: '(00) 00000-0000'},
+                  {label: 'Instagram Profissional', name: 'instagram', icon: Instagram, placeholder: '@seu.perfil'}
+                ].map(field => (
+                  <div key={field.name}>
+                    <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-[0.2em] ml-1">{field.label}</label>
+                    <div className="relative group">
+                      <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
+                      <input type="text" name={field.name} value={formData[field.name]} onChange={handleChange} placeholder={field.placeholder}
+                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-50 rounded-[1.2rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-slate-800" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Estrutura e Localização */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">Estrutura de Equipe</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title='Euquipe' description="Sou o único responsável por tudo (mkt, vendas, atendimento)." multi={true} selected={formData.equipe.includes('Sozinho')} onClick={() => handleMultiSelect('equipe', 'Sozinho')} />
+                    <SelectCard title="Suporte Administrativo" description="Secretária ou assistente para agenda e cobrança." multi={true} selected={formData.equipe.includes('Secretaria')} onClick={() => handleMultiSelect('equipe', 'Secretaria')} />
+                    <SelectCard title="Suporte Técnico" description="Estagiário ou auxiliar para tarefas técnicas." multi={true} selected={formData.equipe.includes('Estagiaria')} onClick={() => handleMultiSelect('equipe', 'Estagiaria')} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6">Ambiente de Atendimento</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="100% Presencial" description="Atendo apenas em consultório físico." selected={formData.atendimento === 'Presencial'} onClick={() => handleSelect('atendimento', 'Presencial')} />
+                    <SelectCard title="100% Online" description="Atendo exclusivamente via videochamadas." selected={formData.atendimento === 'Online'} onClick={() => handleSelect('atendimento', 'Online')} />
+                    <SelectCard title="Modelo Híbrido" description="Alterno entre presencial e atendimentos online." selected={formData.atendimento === 'Hibrido'} onClick={() => handleSelect('atendimento', 'Hibrido')} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Faturamento e Ticket com Explicação */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t-2 border-slate-50">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6">Faturamento Médio Mensal</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Até 5k', '5k a 10k', '10k a 20k', '20k a 40k', '40k a 100k', '100k+'].map(f => (
+                      <SelectCard key={f} title={f} selected={formData.faturamento === f} onClick={() => handleSelect('faturamento', f)} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-2">Seu Ticket Médio Mensal</h3>
+                  <p className="text-xs text-slate-500 mb-6 font-medium italic">Ex: Se seu plano de 3 meses custa R$ 900, seu ticket mensal é R$ 300.</p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {['Até R$ 200', 'R$ 201 a R$ 400', 'R$ 401 a R$ 700', 'Acima de R$ 700'].map(t => (
+                      <SelectCard key={t} title={t} selected={formData.ticketProfissional === t} onClick={() => handleSelect('ticketProfissional', t)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Marketing e Aquisição */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t-2 border-slate-50">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6">Canais de Aquisição</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="Indicação Orgânica (Boca a boca)" multi={true} selected={formData.canaisAquisicao.includes('Indicacao')} onClick={() => handleMultiSelect('canaisAquisicao', 'Indicacao')} />
+                    <SelectCard title="Conteúdo Orgânico (Instagram/TikTok)" multi={true} selected={formData.canaisAquisicao.includes('Organico')} onClick={() => handleMultiSelect('canaisAquisicao', 'Organico')} />
+                    <SelectCard title="Tráfego Pago (Anúncios)" multi={true} selected={formData.canaisAquisicao.includes('Trafego')} onClick={() => handleMultiSelect('canaisAquisicao', 'Trafego')} />
+                    <SelectCard title="Parcerias Offline (Médicos/Academias)" multi={true} selected={formData.canaisAquisicao.includes('Parcerias')} onClick={() => handleMultiSelect('canaisAquisicao', 'Parcerias')} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6">Redes que mais usa profissionalmente</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Instagram', 'TikTok', 'YouTube', 'WhatsApp (Status)', 'LinkedIn', 'Google My Business'].map(r => (
+                      <SelectCard key={r} title={r} multi={true} selected={formData.redesSociais.includes(r)} onClick={() => handleMultiSelect('redesSociais', r)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Visão de 12 Meses */}
+              <div className="pt-10 border-t-2 border-slate-50 space-y-10">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-2 leading-tight">Onde você quer estar daqui a 12 meses?</h3>
+                  <p className="text-sm text-slate-500 mb-4 font-bold italic text-indigo-600">Fale sobre faturamento, liberdade e o estilo de vida que você quer construir.</p>
+                  <textarea name="sonho12Meses" value={formData.sonho12Meses} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-slate-50 border-2 border-slate-50 rounded-[1.8rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-slate-800 shadow-inner resize-none"
+                    placeholder='Ex: "Quero faturar 40k/mês atendendo apenas 3 dias por semana, com 90% da minha base em planos recorrentes..."' />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BLOCO 02: O PPI */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
+            <div className="bg-emerald-600 px-10 py-8 text-white flex items-center gap-4">
+              <Target className="w-8 h-8 text-emerald-100" />
+              <h2 className="text-2xl font-black tracking-tight uppercase italic">Bloco 02: O Paciente Ideal (PPI)</h2>
+            </div>
+
+            <div className="p-10 space-y-16">
+              
+              {/* O Sonho de Atendimento Subdividido */}
+              <div className="bg-emerald-50/50 p-8 md:p-10 rounded-[2.5rem] border-2 border-emerald-100 border-dashed">
+                <h3 className="text-xl font-black text-emerald-950 mb-6 leading-tight">
+                  Se você pudesse escolher apenas UM tipo de pessoa para atender e ser sempre feliz e lucrativo, quem seria?
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Faixa Etária</label>
+                    <input type="text" name="ppiIdade" value={formData.ppiIdade} onChange={handleChange}
+                      placeholder="Ex: 35-50 anos"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Profissão/Cargo</label>
+                    <input type="text" name="ppiProfissoes" value={formData.ppiProfissoes} onChange={handleChange}
+                      placeholder="Ex: Executivas / Médicas"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Classe Social / Renda</label>
+                    <input type="text" name="ppiClasseSocial" value={formData.ppiClasseSocial} onChange={handleChange}
+                      placeholder="Ex: Classe A / B"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Gênero Predominante</label>
+                    <input type="text" name="ppiGenero" value={formData.ppiGenero} onChange={handleChange}
+                      placeholder="Ex: Feminino"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Objetivo Físico/Saúde</label>
+                    <input type="text" name="ppiObjetivoFisico" value={formData.ppiObjetivoFisico} onChange={handleChange}
+                      placeholder="Ex: Emagrecimento Estético"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Principal Queixa</label>
+                    <input type="text" name="ppiQueixaPrincipal" value={formData.ppiQueixaPrincipal} onChange={handleChange}
+                      placeholder="Ex: Falta de energia / Intestino"
+                      className="w-full p-4 bg-white border-2 border-emerald-100 rounded-2xl focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900" />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <p className="text-sm text-emerald-800 font-bold leading-relaxed italic">
+                    Não use termos genéricos. Agora descreva o comportamento, estilo de vida e o nível de comprometimento dessa pessoa.
+                  </p>
+                  <textarea name="ppiDescricaoComportamental" value={formData.ppiDescricaoComportamental} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-white border-2 border-emerald-100 rounded-[1.8rem] focus:border-emerald-500 transition-all outline-none font-bold text-emerald-900 shadow-sm"
+                    placeholder='Ex: "Valorizam a saúde como pilar de performance no trabalho. Elas buscam praticidade total, pagam pelo método e seguem o protocolo sem questionar o preço..."' />
+                </div>
+              </div>
+
+              {/* Lógica de Atração Atual */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6 leading-tight">Sua base atual reflete esse perfil?</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="Sim, já atraio esse público" description="Minha base é qualificada e atendo majoritariamente quem eu gostaria." selected={formData.atendeQuemGostaria === true} onClick={() => handleSelect('atendeQuemGostaria', true)} />
+                    <SelectCard title="Não! Hoje eu não atendo quem eu gostaria" description="O perfil que aparece hoje ainda não é o que eu desejo escalar." selected={formData.atendeQuemGostaria === false} onClick={() => handleSelect('atendeQuemGostaria', false)} />
+                  </div>
+                </div>
+
+                {formData.atendeQuemGostaria === false && (
+                  <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+                    <h3 className="text-lg font-black text-slate-900 mb-4 leading-tight italic text-indigo-600">Perfil de Desalinhamento: Quem é que você atende hoje que NÃO queria estar atendendo?</h3>
+                    <textarea name="pacienteAtualDescricao" value={formData.pacienteAtualDescricao} onChange={handleChange} rows="5" 
+                      className="w-full p-6 bg-slate-50 border-2 border-slate-50 rounded-[1.8rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-slate-800 shadow-inner resize-none"
+                      placeholder='Ex: "Pessoas focadas apenas no menor preço, que buscam dietas milagrosas de 30 dias e não valorizam o acompanhamento contínuo..."' />
+                  </div>
+                )}
+              </div>
+
+              {/* O Desejo Raiz */}
+              <div className="pt-10 border-t-2 border-slate-50 space-y-10">
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 mb-3 leading-tight flex items-center gap-3">
+                    <ArrowDownCircle className="text-indigo-600" />
+                    Qual é o desejo RAIZ do {txtCliente} que você quer atender?
+                  </h3>
+                  <p className="text-sm text-slate-500 mb-6 font-bold leading-relaxed bg-indigo-50 p-5 rounded-2xl border-l-4 border-indigo-600">
+                    Não aceite "emagrecer". Explique qual é o <strong>objetivo emocional real</strong> dela/dele.
+                  </p>
+                  <textarea name="maiorDesejoPaciente" value={formData.maiorDesejoPaciente} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-slate-50 border-2 border-slate-50 rounded-[1.8rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-slate-800 shadow-inner resize-none"
+                    placeholder='Ex: "No fundo ela queria conseguir voltar a usar biquíni na praia sem sentir vergonha", ou "Ele quer se sentir respeitado e potente no trabalho novamente..."' />
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 mb-3 leading-tight flex items-center gap-3">
+                    <Quote className="text-indigo-600" />
+                    Quais são as reclamações dos {txtCliente}s que você mais ouve no dia a dia?
+                  </h3>
+                  <p className="text-sm text-slate-500 mb-5 font-bold italic">Diga pelo menos três frases REAIS que os pacientes dizem na primeira consulta.</p>
+                  <textarea name="reclamacoesFrequentes" value={formData.reclamacoesFrequentes} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-slate-50 border-2 border-slate-50 rounded-[1.8rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-indigo-800 shadow-inner resize-none" 
+                    placeholder='Ex: 1. "Sinto que nada mais funciona pra mim". 2. "Não aguento mais passar fome". 3. "Não me reconheço mais no espelho".' />
+                </div>
+              </div>
+
+              {/* Gatilhos e Nível de Consciência */}
+              <div className="space-y-12 pt-10 border-t-2 border-slate-50">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6 leading-tight uppercase tracking-widest text-indigo-600">Nível de Consciência do PPI</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="Pré-Contemplação (Inconsciente)" description="Ainda não percebeu que tem um problema real ou acha que o esforço não vale a pena." selected={formData.faseMudanca === 'pre'} onClick={() => handleSelect('faseMudanca', 'pre')} />
+                    <SelectCard title="Contemplação (Procrastinador)" description="Sabe que precisa mudar, mas fica buscando desculpas (tempo/dinheiro) para não agir agora." selected={formData.faseMudanca === 'contemplacao'} onClick={() => handleSelect('faseMudanca', 'contemplacao')} />
+                    <SelectCard title="Preparação / Ação (Decidido)" description="Já entendeu o custo de ficar parado e está ativamente buscando o melhor caminho estratégico." selected={formData.faseMudanca === 'acao'} onClick={() => handleSelect('faseMudanca', 'acao')} />
+                    <SelectCard title="Manutenção (Constante)" description="Já tem resultados ou bons hábitos, mas busca o ajuste fino ou performance máxima." selected={formData.faseMudanca === 'manutencao'} onClick={() => handleSelect('faseMudanca', 'manutencao')} />
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 mb-6 leading-tight italic">Barreiras da rotina desse perfil</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      'Refém de Delivery e refeições corporativas',
+                      'Agenda de trabalho sem brecha (Trabalha 10h+)',
+                      'Círculo social que sabota as escolhas',
+                      'Fome emocional gerada por estresse alto',
+                      'Final de semana vira "válvula de escape"',
+                      'Solidão (Não tem apoio dos familiares)'
+                    ].map(d => (
+                      <SelectCard key={d} title={d} multi={true} selected={formData.dificuldadesAlimentares.includes(d)} onClick={() => handleMultiSelect('dificuldadesAlimentares', d)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Posicionamento Final */}
+              <div className="space-y-12 pt-10 border-t-2 border-slate-50">
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 mb-4 leading-tight">Seus Diferenciais Competitivos (O que te faz ÚNICO)</h3>
+                  <p className="text-sm text-slate-500 mb-6 font-bold leading-relaxed italic text-indigo-600">
+                    Atenção: Evite "atendimento humanizado". Cite ferramentas ou rituais concretos que provam sua entrega.
+                  </p>
+                  <textarea name="diferenciais" value={formData.diferenciais} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-slate-50 border-2 border-slate-50 rounded-[1.8rem] focus:border-indigo-500 focus:bg-white transition-all outline-none font-bold text-slate-800 shadow-inner resize-none" 
+                    placeholder='Ex: "Monitoramento semanal via Wellts + Suporte direto para ajustes de viagens e eventos sociais em tempo real..."' />
+                </div>
+
+                <div className="bg-red-50 p-8 md:p-10 rounded-[2.5rem] border-2 border-red-100 shadow-sm">
+                  <h3 className="text-xl font-black text-red-950 mb-4 leading-tight flex items-center gap-3">
+                    <XOctagon className="text-red-600" />
+                    Quem você DETESTA atender? (O seu Anti-PPI)
+                  </h3>
+                  <p className="text-sm text-red-800/70 mb-6 font-bold leading-relaxed">
+                    Descreva os perfis de pacientes ou alunos que sugam sua energia e não têm fit nenhum com o seu método.
+                  </p>
+                  <textarea name="antiPPI" value={formData.antiPPI} onChange={handleChange} rows="4" 
+                    className="w-full p-6 bg-white border-2 border-red-100 rounded-[1.8rem] focus:border-red-500 transition-all outline-none font-bold text-red-900 shadow-sm resize-none" 
+                    placeholder='Ex: "Pessoas que buscam fórmulas mágicas (canetas emagrecedoras) e não querem mudar um único hábito de rotina..."' />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Botão de Envio */}
+          <div className="flex flex-col items-center gap-8 pt-10">
+            <button className="group relative flex items-center gap-4 px-20 py-8 bg-indigo-600 hover:bg-indigo-700 text-white text-2xl font-black rounded-[2.5rem] shadow-[0_30px_60px_rgba(79,70,229,0.3)] transition-all transform hover:-translate-y-2 active:scale-95">
+              FINALIZAR DIAGNÓSTICO
+              <Send className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
+            </button>
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] italic">Nutrição Sem Fronteiras © 2026</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
