@@ -1,634 +1,1268 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
+
 <title>Perfil de Paciente Ideal — BC</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+
 :root {
+
   --bg: #FAFAFA;
+
   --surface: #FFFFFF;
+
   --surface-soft: #F5F5F5;
+
   --sidebar-bg: #FAFAF9;
+
   --sidebar-active: #FFFFFF;
+
   --text: #0A0A0A;
+
   --text-medium: #404040;
+
   --text-muted: #737373;
+
   --text-soft: #A3A3A3;
+
   --border: #E7E5E0;
+
   --border-strong: #D4D4D4;
+
   --critical: #B91C1C;
+
   --critical-bg: #FEE2E2;
+
   --partial: #B45309;
+
   --partial-bg: #FEF3C7;
+
   --aligned: #15803D;
+
   --aligned-bg: #DCFCE7;
+
   --strength: #6D28D9;
+
   --strength-bg: #EDE9FE;
+
   --primary: #2563EB;
+
   --primary-soft: #EFF6FF;
+
   --emotion: #BE185D;
+
   --emotion-bg: #FCE7F3;
+
   --nsf-dark: #0A0A0A;
+
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 html, body { height: 100%; }
+
 body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
 a { text-decoration: none; color: inherit; }
 
+
+
 /* === BC CHROME === */
+
 .bc-app { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
 .bc-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 14px 10px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+
 .bc-sidebar-brand { padding: 4px 10px 16px; display: flex; align-items: center; gap: 8px; }
+
 .bc-sidebar-brand-mark { width: 24px; height: 24px; background: var(--nsf-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 800; }
+
 .bc-sidebar-brand-text { font-weight: 700; font-size: 13px; letter-spacing: -0.01em; }
+
 .bc-sidebar-section { color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5px; font-weight: 700; padding: 12px 10px 4px; }
+
 .bc-sidebar-item { padding: 7px 10px; color: var(--text-medium); display: flex; align-items: center; gap: 9px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 120ms ease; }
+
 .bc-sidebar-item:hover { background: rgba(0,0,0,0.04); }
+
 .bc-sidebar-item.active { background: var(--sidebar-active); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+
 .bc-sidebar-icon { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; }
+
 .bc-sidebar-item.active .bc-sidebar-icon { opacity: 1; }
+
 .bc-sidebar-user { position: absolute; bottom: 14px; left: 10px; right: 10px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
 .bc-sidebar-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--text-medium); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
 
+
+
 .bc-content-wrap { display: flex; flex-direction: column; min-width: 0; }
+
 .bc-topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+
 .bc-topbar-crumbs { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
 .bc-topbar-crumbs strong { color: var(--text); font-weight: 600; }
+
 .bc-topbar-search { flex: 1; max-width: 320px; margin: 0 24px; position: relative; }
+
 .bc-topbar-search input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface-soft); color: var(--text); }
+
 .bc-topbar-search::before { content: '⌕'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+
 .bc-topbar-actions { display: flex; gap: 6px; align-items: center; }
+
 .bc-topbar-btn { padding: 6px 10px; font-size: 12px; color: var(--text-medium); border-radius: 6px; cursor: pointer; }
+
 .bc-banner { background: var(--nsf-dark); color: white; padding: 10px 32px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+
 .bc-banner-text { font-weight: 500; }
+
 .bc-banner-text em { color: #FCD34D; font-style: normal; }
 
+
+
 /* === PAGE === */
+
 .page { padding: 24px 32px 80px; }
+
 .page-inner { max-width: 800px; margin: 0 auto; }
 
+
+
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+
 .page-eyebrow { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px; }
+
 .page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.15; }
+
 .page-meta { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
 .page-meta strong { color: var(--text-medium); font-weight: 600; }
+
 .page-actions { display: flex; gap: 8px; }
+
 .btn { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 0; transition: all 120ms ease; }
+
 .btn-primary { background: var(--text); color: white; }
+
 .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
 .btn-tertiary { color: var(--text-medium); background: transparent; }
 
+
+
 .section-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin: 36px 0 14px; display: flex; align-items: center; gap: 10px; }
+
 .section-h .num { font-size: 11px; color: var(--text-soft); font-weight: 700; letter-spacing: 0.05em; }
 
+
+
 /* === HERO QUOTE === */
+
 .hero-quote { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 40px; margin-bottom: 28px; position: relative; }
+
 .hero-quote-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin-bottom: 14px; }
+
 .hero-quote-text { font-size: 22px; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; color: var(--text); }
+
 .hero-quote-text::before { content: '"'; color: var(--text-soft); font-size: 32px; line-height: 0; vertical-align: -0.18em; margin-right: 4px; }
+
 .hero-quote-text::after { content: '"'; color: var(--text-soft); font-size: 32px; line-height: 0; vertical-align: -0.18em; margin-left: 4px; }
 
+
+
 /* === QUADRANT === */
+
 .quadrant { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+
 .quadrant-cell { background: var(--surface); padding: 16px 18px; }
+
 .quadrant-cell-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+
 .quadrant-cell-value { font-size: 14px; line-height: 1.5; color: var(--text); font-weight: 500; }
+
 .quadrant-cell.full { grid-column: span 2; }
 
+
+
 /* === Schwartz LADDER === */
+
 .schwartz { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
+
 .schwartz-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; }
+
 .schwartz-stairs { display: flex; flex-direction: column; gap: 4px; }
+
 .schwartz-step { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: baseline; gap: 12px; background: var(--surface); transition: all 120ms ease; }
+
 .schwartz-step.active { background: var(--primary-soft); border-color: var(--primary); }
+
 .schwartz-step.dim { opacity: 0.45; }
+
 .schwartz-step:nth-child(1) { margin-left: 0; }
+
 .schwartz-step:nth-child(2) { margin-left: 10px; }
+
 .schwartz-step:nth-child(3) { margin-left: 20px; }
+
 .schwartz-step:nth-child(4) { margin-left: 30px; }
+
 .schwartz-step:nth-child(5) { margin-left: 40px; }
+
 .schwartz-step-num { font-weight: 800; font-size: 12px; color: var(--text-soft); }
+
 .schwartz-step.active .schwartz-step-num { color: var(--primary); }
+
 .schwartz-step-label { font-weight: 700; font-size: 13px; color: var(--text); flex-shrink: 0; }
+
 .schwartz-step-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; }
+
 .schwartz-active-marker { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; margin-left: auto; }
 
+
+
 /* === OBJEÇÕES INTERNAS === */
+
 .objecoes-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+
 .objecao-item { padding: 10px 14px; background: var(--surface-soft); border: 1px solid var(--border); border-left: 3px solid var(--partial); border-radius: 0 6px 6px 0; font-size: 13px; color: var(--text); font-style: italic; line-height: 1.4; }
+
 .objecao-item::before { content: '"'; color: var(--text-soft); }
+
 .objecao-item::after { content: '"'; color: var(--text-soft); }
 
+
+
 /* === SECTION CARD === */
+
 .sec-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px 24px; margin-bottom: 14px; }
+
 .sec-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+
 .sec-card-h { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+
 .sec-card-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
 .sec-card-tag.dor { background: var(--critical-bg); color: var(--critical); }
+
 .sec-card-tag.transformacao { background: var(--emotion-bg); color: var(--emotion); }
+
 .sec-card-tag.anti { background: var(--critical-bg); color: var(--critical); }
 
+
+
 .frase-eixo { font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 16px; padding: 14px 18px; border-left: 3px solid var(--critical); background: #FFF8F8; border-radius: 0 6px 6px 0; }
+
 .frase-eixo.transformacao { border-left-color: var(--emotion); background: #FFF5FA; }
+
 .frase-eixo .emocao { color: var(--emotion); font-weight: 700; }
+
 .frase-eixo-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+
 .frase-eixo-tag.emocao { background: var(--emotion-bg); color: var(--emotion); }
 
+
+
 /* === TAG LIST === */
+
 .tags-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+
 .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+
 .tag-chip { padding: 6px 12px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 18px; font-size: 12.5px; color: var(--text); font-weight: 500; }
+
 .tag-chip.danger { background: var(--critical-bg); color: var(--critical); border-color: #FCA5A5; }
+
 .tag-chip.success { background: var(--aligned-bg); color: var(--aligned); border-color: #86EFAC; }
+
 .tag-chip.emotion { background: var(--emotion-bg); color: var(--emotion); border-color: #F9A8D4; }
 
+
+
 /* === META ROW === */
+
 .meta-row { display: flex; gap: 22px; padding: 12px 16px; background: var(--surface-soft); border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
+
 .meta-row-item { display: flex; flex-direction: column; gap: 2px; }
+
 .meta-row-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; }
+
 .meta-row-item .value { color: var(--text); font-weight: 600; }
 
+
+
 /* === ANTI-PPI === */
+
 .anti-recusa { margin-top: 16px; padding: 16px 18px; background: #FFF8F8; border: 1px solid #FECACA; border-radius: 8px; }
+
 .anti-recusa-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--critical); font-weight: 700; margin-bottom: 6px; }
+
 .anti-recusa-text { font-style: italic; font-size: 14px; color: var(--text); line-height: 1.5; }
 
+
+
 /* === FOOTER === */
+
 .related { margin-top: 36px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+
 .related-h { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+
 .related-actions { display: flex; gap: 10px; }
+
 .related-link { padding: 6px 12px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; color: var(--text); cursor: pointer; }
+
 .related-link:hover { background: white; border-color: var(--primary); color: var(--primary); }
 
+
+
 /* AI badge */
+
 .ai-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; background: var(--primary-soft); border: 1px solid #DBEAFE; border-radius: 12px; font-size: 11px; font-weight: 600; color: var(--primary); }
+
 </style>
+
 </head>
+
 <body>
+
+
 
 <div class="bc-app">
 
+
+
   <aside class="bc-sidebar">
+
     <div class="bc-sidebar-brand">
+
       <div class="bc-sidebar-brand-mark">BC</div>
+
       <div class="bc-sidebar-brand-text">Business Compass</div>
+
     </div>
+
+
 
     <div class="bc-sidebar-section">Operação</div>
+
     <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>Formulário</a>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
+
+    <a href="index.html#clientes" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
+
+
 
     <div class="bc-sidebar-section">Estratégia</div>
+
     <a href="perfil-de-paciente-ideal.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>Perfil de Paciente Ideal</a>
+
     <a href="3-personas.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
+
     <a href="bussola-do-perfil.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
 
+
+
     <div class="bc-sidebar-section">Configurações</div>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Agente IA</a>
+
+    <a href="index.html#config" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Agente IA</a>
+
+
 
     <div class="bc-sidebar-user">
+
       <div class="bc-sidebar-avatar" id="sidebar-avatar">BC</div>
+
       <div id="sidebar-user-name">Business Compass<br><span style="color:var(--text-soft);font-size:11px">Sprint Summit NSF</span></div>
+
     </div>
+
   </aside>
 
+
+
   <div class="bc-content-wrap">
+
     <header class="bc-topbar">
+
       <div class="bc-topbar-crumbs">Estratégia · <strong>Perfil de Paciente Ideal</strong></div>
+
       <div class="bc-topbar-search"><input placeholder="Buscar..."/></div>
+
       <div class="bc-topbar-actions">
+
         <span class="bc-topbar-btn">🔔</span>
+
       </div>
+
     </header>
 
+
+
     <div class="bc-banner">
+
       <div class="bc-banner-text">Qual ponteiro <em>move o seu resultado?</em></div>
+
       <div style="font-size:11px;color:#A3A3A3">Sprint Summit NSF</div>
+
     </div>
+
+
 
     <div class="page">
+
       <div class="page-inner">
 
+
+
         <!-- Page header -->
+
         <div class="page-header">
+
           <div>
+
             <div class="page-eyebrow">Quem é o paciente ideal do seu programa</div>
+
             <h1 class="page-title">Perfil de Paciente Ideal</h1>
+
             <div class="page-meta" id="page-meta"><span id="nutri-handle"></span>Última geração: <strong id="gen-date">—</strong> · <span style="color:var(--text-soft)" id="ppi-source">Exemplo estático</span></div>
+
           </div>
+
           <div class="page-actions">
+
             <button class="btn btn-tertiary">Histórico</button>
+
             <button class="btn btn-secondary">Exportar PDF</button>
+
             <button class="btn btn-secondary" onclick="toggleJsonPanel()" id="btn-json" title="Ver JSON bruto">{ }</button>
+
             <button class="btn btn-primary" id="btn-regerar" onclick="regerarPPI()">Regerar</button>
+
           </div>
+
         </div>
+
+
 
         <!-- JSON Debug Panel -->
+
         <div id="json-panel" style="display:none;margin-bottom:24px;background:#0A0A0A;border-radius:10px;overflow:hidden;">
+
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #262626;">
+
             <span style="font-size:11px;font-weight:700;color:#737373;text-transform:uppercase;letter-spacing:0.08em">JSON · PPI atual</span>
+
             <button onclick="copyJson()" id="btn-copy-json" style="padding:4px 10px;font-size:11px;font-weight:600;background:#262626;color:#E5E5E5;border:1px solid #404040;border-radius:5px;cursor:pointer;">Copiar</button>
+
           </div>
+
           <pre id="json-content" style="margin:0;padding:16px;font-size:11.5px;line-height:1.6;color:#86EFAC;font-family:'Fira Code','Cascadia Code','Consolas',monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;"></pre>
+
         </div>
+
+
 
         <!-- HERO: Resumo em uma frase -->
+
         <div class="hero-quote">
+
           <div class="hero-quote-label">Resumo em uma frase</div>
+
           <div class="hero-quote-text" id="ppi-resumo">Mulheres de 35-50, executivas ou liberais em grandes centros, que querem emagrecer com método e estrutura sem virar refém da dieta.</div>
+
         </div>
+
+
 
         <!-- 01: QUEM É -->
+
         <div class="section-h"><span class="num">01</span>Quem é</div>
+
         <div class="quadrant">
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Faixa etária</div>
+
             <div class="quadrant-cell-value" id="ppi-faixa-etaria">35-50 anos</div>
+
           </div>
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Gênero predominante</div>
+
             <div class="quadrant-cell-value" id="ppi-genero">Majoritariamente feminino</div>
+
           </div>
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Localização</div>
+
             <div class="quadrant-cell-value" id="ppi-localizacao">Grandes centros — predominantemente São Paulo, Rio, Curitiba</div>
+
           </div>
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Estrato &amp; profissão</div>
+
             <div class="quadrant-cell-value" id="ppi-estrato">Classe AB · executivas em cargo de decisão ou liberais autônomas</div>
+
           </div>
+
           <div class="quadrant-cell full">
+
             <div class="quadrant-cell-label">Estado familiar típico</div>
+
             <div class="quadrant-cell-value" id="ppi-familiar">Casadas com 1-2 filhos OU sem filhos por escolha — núcleo estável</div>
+
           </div>
+
         </div>
+
+
 
         <!-- 02: COMO PENSA -->
+
         <div class="section-h"><span class="num">02</span>Como pensa</div>
+
         <div class="quadrant">
+
           <div class="quadrant-cell full">
+
             <div class="quadrant-cell-label">Crenças sobre saúde</div>
+
             <div class="quadrant-cell-value" id="ppi-crencas">Sabe que dieta restritiva não funciona · valoriza método · desconfia de promessa rápida.</div>
+
           </div>
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Valores centrais</div>
+
             <div class="quadrant-cell-value" id="ppi-valores-text" style="display:none"></div>
+
             <div class="tags" id="ppi-valores-tags" style="margin-bottom:0">
+
               <span class="tag-chip">performance</span>
+
               <span class="tag-chip">autonomia</span>
+
               <span class="tag-chip">presença</span>
+
               <span class="tag-chip">controle</span>
+
             </div>
+
           </div>
+
           <div class="quadrant-cell">
+
             <div class="quadrant-cell-label">Disposição a investir</div>
+
             <div class="quadrant-cell-value" id="ppi-investir">R$ 1.500-3.000/mês <em style="color:var(--text-muted);font-style:normal">ou pacote semestral R$ 8-15k</em>. Não negocia se vê valor.</div>
+
           </div>
+
         </div>
+
+
 
         <!-- Schwartz -->
+
         <div class="schwartz">
+
           <div class="schwartz-h">Nível de consciência predominante · Escada de Schwartz</div>
+
           <div class="schwartz-stairs" id="schwartz-stairs">
+
             <div class="schwartz-step dim" data-nivel="inconsciente">
+
               <span class="schwartz-step-num">01</span>
+
               <span class="schwartz-step-label">Inconsciente</span>
+
               <span class="schwartz-step-desc">Não sabe que tem o problema</span>
+
             </div>
+
             <div class="schwartz-step dim" data-nivel="dor_consciente">
+
               <span class="schwartz-step-num">02</span>
+
               <span class="schwartz-step-label">Dor consciente</span>
+
               <span class="schwartz-step-desc">Sente que algo está errado, mas não sabe a solução</span>
+
             </div>
+
             <div class="schwartz-step dim" data-nivel="solucao_consciente">
+
               <span class="schwartz-step-num">03</span>
+
               <span class="schwartz-step-label">Solução consciente</span>
+
               <span class="schwartz-step-desc">Conhece soluções existentes, está pesquisando</span>
+
             </div>
+
             <div class="schwartz-step active" data-nivel="produto_consciente">
+
               <span class="schwartz-step-num">04</span>
+
               <span class="schwartz-step-label">Produto consciente</span>
+
               <span class="schwartz-step-desc">Conhece sua categoria, está comparando opções</span>
+
               <span class="schwartz-active-marker">● Aqui</span>
+
             </div>
+
             <div class="schwartz-step dim" data-nivel="mais_consciente">
+
               <span class="schwartz-step-num">05</span>
+
               <span class="schwartz-step-label">Mais consciente</span>
+
               <span class="schwartz-step-desc">Conhece você especificamente, decide pelo diferencial</span>
+
             </div>
+
           </div>
+
           <div style="font-size:11.5px;color:var(--text-muted);margin-top:10px;line-height:1.5" id="schwartz-hint">Conteúdo deve assumir que ela <strong>já tentou</strong> dietas antes e <strong>já sabe</strong> que método importa — entrar com prova social + autoridade, não com "por que dieta restritiva não funciona".</div>
+
         </div>
+
+
 
         <!-- Objeções internas -->
+
         <div id="objecoes-section" style="display:none">
+
           <div class="tags-h" style="margin-top:14px">Objeções internas do paciente</div>
+
           <div class="objecoes-list" id="ppi-objecoes-list"></div>
+
         </div>
+
+
 
         <!-- 03: EIXO DE DOR -->
+
         <div class="section-h"><span class="num">03</span>Eixo de dor</div>
+
         <div class="sec-card">
+
           <div class="sec-card-head">
+
             <h2 class="sec-card-h">O que dói no dia-a-dia</h2>
+
             <span class="sec-card-tag dor">Compartilhado pelas 3 personas</span>
+
           </div>
+
           <div class="frase-eixo" id="ppi-frase-eixo">Falta de controle e método numa rotina caótica, depois de várias tentativas frustradas.</div>
 
+
+
           <div class="tags-h">Manifestações concretas</div>
+
           <div class="tags" id="ppi-manifestacoes">
+
             <span class="tag-chip danger">Dorme mal nas vésperas de reunião</span>
+
             <span class="tag-chip danger">Come fora ~80% das refeições</span>
+
             <span class="tag-chip danger">Já fez 2-3 dietas restritivas e desistiu</span>
+
             <span class="tag-chip danger">Compensa fim de semana com "extravasar"</span>
+
             <span class="tag-chip danger">Se sente travada na própria pele</span>
+
           </div>
+
         </div>
+
+
 
         <!-- 04: EIXO DE TRANSFORMAÇÃO -->
+
         <div class="section-h"><span class="num">04</span>Eixo de transformação</div>
+
         <div class="sec-card">
+
           <div class="sec-card-head">
+
             <h2 class="sec-card-h">O que ele quer alcançar</h2>
+
             <span class="sec-card-tag transformacao">EMOÇÃO · não métrica</span>
+
           </div>
+
           <div class="frase-eixo transformacao">
+
             <span class="frase-eixo-tag emocao">Resultado emocional raiz</span><br>
+
             <span style="display:inline-block;margin-top:6px" id="ppi-emocao-raiz">Voltar a se sentir <span class="emocao">presente nas próprias fotos</span> sem culpa nem julgamento.</span>
+
           </div>
+
+
 
           <div class="tags-h">Resultados funcionais esperados</div>
+
           <div class="tags" id="ppi-resultados-funcionais">
+
             <span class="tag-chip success">Emagrecer 5-10kg sustentável</span>
+
             <span class="tag-chip success">Ter energia até as 22h</span>
+
             <span class="tag-chip success">Voltar a vestir roupas guardadas</span>
+
             <span class="tag-chip success">Não pensar em comida o dia inteiro</span>
+
           </div>
+
+
 
           <div class="meta-row" style="margin-top:8px">
+
             <div class="meta-row-item">
+
               <span class="label">Prazo esperado</span>
+
               <span class="value" id="ppi-prazo">3-6 meses pra ver resultado consistente</span>
+
             </div>
+
           </div>
+
         </div>
+
+
 
         <!-- 05: ANTI-PPI -->
+
         <div class="section-h"><span class="num">05</span>Anti-PPI · quem NÃO atender</div>
+
         <div class="sec-card">
+
           <div class="sec-card-head">
+
             <h2 class="sec-card-h">Características de quem drena</h2>
+
             <span class="sec-card-tag anti">Recusa explícita</span>
+
           </div>
+
+
 
           <div class="tags-h">Sinais a evitar</div>
+
           <div class="tags" id="ppi-anti-caracteristicas">
+
             <span class="tag-chip danger">Falta sem avisar</span>
+
             <span class="tag-chip danger">Negocia preço sem parar</span>
+
             <span class="tag-chip danger">Espera mágica em 30 dias</span>
+
             <span class="tag-chip danger">Não responde check-in</span>
+
             <span class="tag-chip danger">Compara você com cardápio do Insta</span>
+
           </div>
+
+
 
           <div class="tags-h" style="margin-top:14px">Razão por trás</div>
+
           <p style="font-size:13.5px;line-height:1.55;color:var(--text-medium)" id="ppi-anti-razao">Esse perfil drena tempo, não gera resultado, não renova e não indica — toda hora investida nele é hora não investida no PPI.</p>
 
+
+
           <div class="anti-recusa">
+
             <div class="anti-recusa-label">→ Frase de recusa recomendada</div>
+
             <div class="anti-recusa-text" id="ppi-anti-recusa">"Pra esse momento que você tá descrevendo, talvez meu programa não seja a melhor opção. Eu trabalho com quem está pronto pra um processo de 6 meses; se você precisa de um plano pra 30 dias, posso te indicar uma colega que faz exatamente isso."</div>
+
           </div>
+
         </div>
+
+
 
         <!-- FOOTER -->
+
         <div class="related">
+
           <div>
+
             <div class="related-h">Próximos passos</div>
+
             <div style="font-size:13.5px;color:var(--text)">Veja as 3 Personas humanizadas dentro deste PPI · ou rode a Bússola do Perfil</div>
+
           </div>
+
           <div class="related-actions">
+
             <a href="3-personas.html" class="related-link">Ver 3 Personas →</a>
+
             <a href="bussola-do-perfil.html" class="related-link">Bússola do Perfil →</a>
+
           </div>
+
         </div>
 
+
+
       </div>
+
     </div>
 
+
+
   </div>
+
 </div>
 
+
+
 <script>
+
 (function () {
+
     const raw = localStorage.getItem('ppi_current');
+
     if (!raw) return;
 
+
+
     let ppi;
+
     try { ppi = JSON.parse(raw); } catch (_) { return; }
 
+
+
     const set = (id, val) => {
+
         const el = document.getElementById(id);
+
         if (el && val != null) el.textContent = val;
+
     };
+
+
 
     const setHTML = (id, html) => {
+
         const el = document.getElementById(id);
+
         if (el && html != null) el.innerHTML = html;
+
     };
+
+
 
     const buildTags = (containerId, items, cls) => {
+
         const el = document.getElementById(containerId);
+
         if (!el || !Array.isArray(items)) return;
+
         el.innerHTML = items.map(t => `<span class="tag-chip ${cls}">${t}</span>`).join('');
+
     };
 
+
+
     // Meta
+
     const nome = localStorage.getItem('ppi_nutri_nome') || '';
+
     const date = localStorage.getItem('ppi_date') || new Date().toLocaleDateString('pt-BR');
+
     const handle = document.getElementById('nutri-handle');
+
     if (handle && nome) handle.textContent = nome + ' · ';
+
     set('gen-date', date);
+
     const src = document.getElementById('ppi-source');
+
     if (src) { src.textContent = 'Gerado por IA'; src.style.color = 'var(--primary)'; }
 
+
+
     // Sidebar user
+
     if (nome) {
+
         const av = document.getElementById('sidebar-avatar');
+
         const un = document.getElementById('sidebar-user-name');
+
         if (av) av.textContent = nome.slice(0, 2).toUpperCase();
+
         if (un) un.innerHTML = nome + '<br><span style="color:var(--text-soft);font-size:11px">Sprint Summit NSF</span>';
+
     }
+
+
 
     // Resumo
+
     set('ppi-resumo', ppi.resumo);
 
+
+
     // Quem é
+
     if (ppi.quem_e) {
+
         set('ppi-faixa-etaria', ppi.quem_e.faixa_etaria);
+
         set('ppi-genero', ppi.quem_e.genero_predominante);
+
         set('ppi-localizacao', ppi.quem_e.localizacao_macro);
+
         set('ppi-estrato', ppi.quem_e.estrato_e_profissao);
+
         set('ppi-familiar', ppi.quem_e.estado_familiar_tipico);
+
     }
+
+
 
     // Como pensa
+
     if (ppi.como_pensa) {
+
         set('ppi-crencas', ppi.como_pensa.crencas_sobre_saude);
+
         set('ppi-investir', ppi.como_pensa.disposicao_investir);
 
+
+
         // Valores: split by comma into tags, or show as text
+
         const valoresTagsEl = document.getElementById('ppi-valores-tags');
+
         const valoresTextEl = document.getElementById('ppi-valores-text');
+
         if (ppi.como_pensa.valores_centrais) {
+
             const partes = ppi.como_pensa.valores_centrais.split(/[,;·]+/).map(s => s.trim()).filter(Boolean);
+
             if (partes.length > 1 && valoresTagsEl) {
+
                 valoresTagsEl.innerHTML = partes.map(v => `<span class="tag-chip">${v}</span>`).join('');
+
                 valoresTagsEl.style.display = 'flex';
+
                 if (valoresTextEl) valoresTextEl.style.display = 'none';
+
             } else if (valoresTextEl) {
+
                 valoresTextEl.textContent = ppi.como_pensa.valores_centrais;
+
                 valoresTextEl.style.display = 'block';
+
                 if (valoresTagsEl) valoresTagsEl.style.display = 'none';
+
             }
+
         }
+
+
 
         // Schwartz
+
         const nivel = ppi.como_pensa.nivel_consciencia_predominante;
+
         if (nivel) {
+
             const stairs = document.querySelectorAll('.schwartz-step');
+
             stairs.forEach(step => {
+
                 const stepNivel = step.getAttribute('data-nivel');
+
                 const marker = step.querySelector('.schwartz-active-marker');
+
                 step.classList.remove('active', 'dim');
+
                 if (stepNivel === nivel) {
+
                     step.classList.add('active');
+
                     if (!marker) {
+
                         const m = document.createElement('span');
+
                         m.className = 'schwartz-active-marker';
+
                         m.textContent = '● Aqui';
+
                         step.appendChild(m);
+
                     } else {
+
                         marker.style.display = '';
+
                     }
+
                 } else {
+
                     step.classList.add('dim');
+
                     if (marker) marker.style.display = 'none';
+
                 }
+
             });
+
         }
+
+
 
         // Objeções internas
+
         if (Array.isArray(ppi.como_pensa.objecoes_internas) && ppi.como_pensa.objecoes_internas.length > 0) {
+
             const secEl = document.getElementById('objecoes-section');
+
             const listEl = document.getElementById('ppi-objecoes-list');
+
             if (secEl) secEl.style.display = 'block';
+
             if (listEl) {
+
                 listEl.innerHTML = ppi.como_pensa.objecoes_internas
+
                     .map(o => `<div class="objecao-item">${o}</div>`)
+
                     .join('');
+
             }
+
         }
+
     }
+
+
 
     // Eixo de dor
+
     if (ppi.eixo_de_dor) {
+
         set('ppi-frase-eixo', ppi.eixo_de_dor.frase_eixo);
+
         buildTags('ppi-manifestacoes', ppi.eixo_de_dor.manifestacoes_concretas, 'danger');
+
     }
+
+
 
     // Eixo de transformação
+
     if (ppi.eixo_de_transformacao) {
+
         set('ppi-emocao-raiz', ppi.eixo_de_transformacao.resultado_emocional_raiz);
+
         buildTags('ppi-resultados-funcionais', ppi.eixo_de_transformacao.resultados_funcionais, 'success');
+
         set('ppi-prazo', ppi.eixo_de_transformacao.prazo_esperado);
+
     }
+
+
 
     // Anti-PPI
+
     if (ppi.anti_ppi) {
+
         buildTags('ppi-anti-caracteristicas', ppi.anti_ppi.caracteristicas, 'danger');
+
         set('ppi-anti-razao', ppi.anti_ppi.razao_por_tras);
+
         set('ppi-anti-recusa', ppi.anti_ppi.frase_de_recusa_recomendada);
+
     }
+
 })();
 
+
+
 async function regerarPPI() {
+
     const btn = document.getElementById('btn-regerar');
+
     const originalText = btn.textContent;
+
     btn.disabled = true;
+
     btn.textContent = 'Buscando dados...';
 
+
+
     try {
+
         let id = localStorage.getItem('ppi_submission_id');
 
+
+
         if (!id) {
+
             // Fallback: busca a submissão mais recente do banco
+
             const latestRes = await fetch('/latest-submission');
+
             const latest = await latestRes.json();
+
             if (!latestRes.ok) throw new Error(latest.error || 'Nenhuma submissão encontrada.');
+
             id = latest.id;
+
             localStorage.setItem('ppi_submission_id', id);
+
         }
+
+
 
         btn.textContent = 'Gerando...';
 
+
+
         const response = await fetch(`/regenerate/${id}`, { method: 'POST' });
+
         const result = await response.json();
+
+
 
         if (!response.ok) throw new Error(result.error || 'Erro no servidor');
 
+
+
         localStorage.setItem('ppi_current', JSON.stringify(result.ppi));
+
         localStorage.setItem('ppi_date', new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }));
 
+
+
         // Recarrega a página para hidratar com o novo PPI
+
         window.location.reload();
+
     } catch (err) {
+
         alert('Erro ao regerar: ' + err.message);
+
         btn.disabled = false;
+
         btn.textContent = originalText;
+
     }
+
 }
+
+
 
 function toggleJsonPanel() {
+
     const panel = document.getElementById('json-panel');
+
     const content = document.getElementById('json-content');
+
     const isVisible = panel.style.display !== 'none';
 
+
+
     if (isVisible) {
+
         panel.style.display = 'none';
+
         return;
+
     }
+
+
 
     const raw = localStorage.getItem('ppi_current');
+
     if (!raw) {
+
         content.textContent = '// Nenhum PPI carregado ainda.';
+
     } else {
+
         try {
+
             content.textContent = JSON.stringify(JSON.parse(raw), null, 2);
+
         } catch (_) {
+
             content.textContent = raw;
+
         }
+
     }
+
     panel.style.display = 'block';
+
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
 }
+
+
 
 async function copyJson() {
+
     const content = document.getElementById('json-content').textContent;
+
     const btn = document.getElementById('btn-copy-json');
+
     try {
+
         await navigator.clipboard.writeText(content);
+
         btn.textContent = 'Copiado!';
+
         btn.style.color = '#86EFAC';
+
         setTimeout(() => { btn.textContent = 'Copiar'; btn.style.color = ''; }, 2000);
+
     } catch (_) {
+
         btn.textContent = 'Erro';
+
         setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+
     }
+
 }
+
 </script>
 
+
+
 </body>
+
 </html>
+

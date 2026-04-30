@@ -451,4 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
     makeSimpleSaveFn({ saveFnName: 'saveAnaliseConfig',    endpoint: '/analise-instagram-config', textareaId: 'prompt-analise',    btnId: 'save-analise-btn' });
     makeSimpleSaveFn({ saveFnName: 'saveMCSConfig',        endpoint: '/mcs-config',               textareaId: 'prompt-mcs',        btnId: 'save-mcs-btn' });
     makeSimpleSaveFn({ saveFnName: 'saveComparadorConfig', endpoint: '/comparador-config',        textareaId: 'prompt-comparador', btnId: 'save-comparador-btn' });
+
+    // --- Roteamento por hash (ex: index.html#clientes, index.html#config) ---
+    const hashMap = { clientes: 'section-clientes', config: 'section-config', form: 'section-form' };
+    const initHash = window.location.hash.replace('#', '');
+    if (initHash && hashMap[initHash]) {
+        const targetItem = document.querySelector(`.bc-sidebar-item[data-target="${hashMap[initHash]}"]`);
+        if (targetItem) targetItem.click();
+    }
 });

@@ -1,765 +1,2295 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
+
+
 <html lang="pt-BR">
+
+
 <head>
+
+
 <meta charset="UTF-8">
-<title>BÃºssola do Perfil â€” interior</title>
+
+
+<title>Bússola do Perfil — interior</title>
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+
 <style>
+
+
 :root {
+
+
   --bg: #FAFAFA;
+
+
   --surface: #FFFFFF;
+
+
   --surface-soft: #F5F5F5;
+
+
   --sidebar-bg: #FAFAF9;
+
+
   --sidebar-active: #FFFFFF;
+
+
   --text: #0A0A0A;
+
+
   --text-medium: #404040;
+
+
   --text-muted: #737373;
+
+
   --text-soft: #A3A3A3;
+
+
   --border: #E7E5E0;
+
+
   --border-strong: #D4D4D4;
+
+
   --critical: #B91C1C;
+
+
   --critical-bg: #FEE2E2;
+
+
   --partial: #B45309;
+
+
   --partial-bg: #FEF3C7;
+
+
   --aligned: #15803D;
+
+
   --aligned-bg: #DCFCE7;
+
+
   --strength: #6D28D9;
+
+
   --strength-bg: #EDE9FE;
+
+
   --primary: #2563EB;
+
+
   --primary-soft: #EFF6FF;
+
+
   --nsf-dark: #0A0A0A;
+
+
 }
+
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
 html, body { height: 100%; }
+
+
 body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
+
+
+
+
 /* ============================================
+
+
    BC CHROME
+
+
    ============================================ */
+
+
 .bc-app { display: grid; grid-template-columns: 200px 1fr; min-height: 100vh; }
 
+
+
+
+
 /* Sidebar */
+
+
 .bc-sidebar {
+
+
   background: var(--sidebar-bg);
+
+
   border-right: 1px solid var(--border);
+
+
   padding: 14px 10px;
+
+
   position: sticky;
+
+
   top: 0;
+
+
   height: 100vh;
+
+
   overflow-y: auto;
+
+
 }
+
+
 .bc-sidebar-brand { padding: 4px 10px 16px; display: flex; align-items: center; gap: 8px; }
+
+
 .bc-sidebar-brand-mark { width: 24px; height: 24px; background: var(--nsf-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 800; }
+
+
 .bc-sidebar-brand-text { font-weight: 700; font-size: 13px; letter-spacing: -0.01em; }
+
+
 .bc-sidebar-section { color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5px; font-weight: 700; padding: 12px 10px 4px; }
+
+
 .bc-sidebar-item { padding: 7px 10px; color: var(--text-medium); display: flex; align-items: center; gap: 9px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 120ms ease; }
+
+
 .bc-sidebar-item:hover { background: rgba(0,0,0,0.04); }
+
+
 .bc-sidebar-item.active { background: var(--sidebar-active); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+
+
 .bc-sidebar-icon { width: 14px; height: 14px; opacity: 0.6; }
+
+
 .bc-sidebar-item.active .bc-sidebar-icon { opacity: 1; }
+
+
 .bc-sidebar-user { position: absolute; bottom: 14px; left: 10px; right: 10px; padding: 8px 10px; border-top: 1px solid var(--border); padding-top: 14px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
+
 .bc-sidebar-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--text-medium); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
 
+
+
+
+
 /* Topbar */
+
+
 .bc-content-wrap { display: flex; flex-direction: column; min-width: 0; }
+
+
 .bc-topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+
+
 .bc-topbar-crumbs { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
+
 .bc-topbar-crumbs strong { color: var(--text); font-weight: 600; }
+
+
 .bc-topbar-search { flex: 1; max-width: 320px; margin: 0 24px; position: relative; }
+
+
 .bc-topbar-search input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface-soft); color: var(--text); }
-.bc-topbar-search::before { content: 'âŒ•'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+
+
+.bc-topbar-search::before { content: '⌕'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+
+
 .bc-topbar-actions { display: flex; gap: 6px; align-items: center; }
+
+
 .bc-topbar-btn { padding: 6px 10px; font-size: 12px; color: var(--text-medium); border-radius: 6px; cursor: pointer; }
 
+
+
+
+
 /* Page banner (NSF Sprint Summit style) */
+
+
 .bc-banner { background: var(--nsf-dark); color: white; padding: 10px 32px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+
+
 .bc-banner-text { font-weight: 500; }
+
+
 .bc-banner-text em { color: #FCD34D; font-style: normal; }
 
+
+
+
+
 /* ============================================
-   PAGE â€” BÃšSSOLA DO PERFIL
+
+
+   PAGE — BÚSSOLA DO PERFIL
+
+
    ============================================ */
+
+
 .page { padding: 24px 32px 80px; max-width: 100%; }
+
+
 .page-inner { max-width: 800px; margin: 0 auto; }
 
+
+
+
+
 /* Page header */
+
+
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+
+
 .page-eyebrow { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px; }
+
+
 .page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.15; }
+
+
 .page-meta { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+
 .page-meta strong { color: var(--text-medium); font-weight: 600; }
+
+
 .page-actions { display: flex; gap: 8px; }
+
+
 .btn { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 120ms ease; }
+
+
 .btn-primary { background: var(--text); color: white; }
+
+
 .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
+
 .btn-tertiary { color: var(--text-medium); background: transparent; }
 
+
+
+
+
 /* Status banner */
+
+
 .status-banner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 28px; }
+
+
 .status-score { display: flex; align-items: baseline; gap: 4px; }
+
+
 .status-score-num { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+
+
 .status-score-total { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+
+
 .status-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 2px; font-weight: 700; }
+
+
 .status-bar { flex: 1; }
+
+
 .status-pills { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+
+
 .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+
+
 .pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+
+
 .pill.crit { background: var(--critical-bg); color: var(--critical); }
+
+
 .pill.crit::before { background: var(--critical); }
+
+
 .pill.par { background: var(--partial-bg); color: var(--partial); }
+
+
 .pill.par::before { background: var(--partial); }
+
+
 .pill.al { background: var(--aligned-bg); color: var(--aligned); }
+
+
 .pill.al::before { background: var(--aligned); }
+
+
 .pill.str { background: var(--strength-bg); color: var(--strength); }
+
+
 .pill.str::before { background: var(--strength); }
+
+
 .status-bar-text { font-size: 12.5px; color: var(--text-muted); }
 
+
+
+
+
 /* Section heading */
+
+
 .section-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin: 36px 0 14px; }
 
+
+
+
+
 /* Resumo executivo */
+
+
 .exec { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+
+
 .exec-bullets { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+
+
 .exec-bullet { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+
+
 .exec-bullet:last-child { border-bottom: 0; }
+
+
 .exec-bullet-num { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-soft); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-medium); flex-shrink: 0; }
+
+
 .exec-bullet-text { font-size: 13.5px; line-height: 1.55; color: var(--text); }
+
+
 .exec-bullet-text strong { font-weight: 700; }
+
+
 .exec-radar { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+
+
 .exec-radar-h { font-size: 12px; font-weight: 700; color: var(--text-medium); margin-bottom: 6px; }
+
+
 .exec-radar-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+
+
 .exec-radar canvas { width: 100% !important; height: 220px !important; }
+
+
 .exec-radar-legend { display: flex; gap: 12px; justify-content: center; margin-top: 8px; font-size: 11px; }
+
+
 .exec-radar-leg { display: flex; align-items: center; gap: 4px; color: var(--text-muted); }
+
+
 .exec-radar-leg::before { content: ''; width: 10px; height: 2px; }
+
+
 .exec-radar-leg.ideal::before { background: var(--text-soft); }
+
+
 .exec-radar-leg.atual::before { background: var(--primary); }
 
+
+
+
+
 /* Dimension card */
+
+
 .dim { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px 24px; margin-bottom: 14px; }
+
+
 .dim-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+
+
 .dim-num { font-size: 11px; color: var(--text-soft); font-weight: 700; letter-spacing: 0.05em; }
+
+
 .dim-name { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+
 .dim-headline { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 14px; color: var(--text); }
+
+
 .dim-headline em { color: var(--critical); font-style: normal; font-weight: 700; }
 
+
+
+
+
 /* Side-by-side */
+
+
 .dim-side { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+
+
 .dim-side-col { padding: 14px 16px; }
+
+
 .dim-side-col + .dim-side-col { border-left: 1px solid var(--border); }
+
+
 .dim-side-col.atual { background: #FEF7F7; }
+
+
 .dim-side-col.sugerido { background: #F4FAF6; }
+
+
 .dim-side-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+
+
 .dim-side-col.atual .dim-side-label { color: var(--critical); }
+
+
 .dim-side-col.sugerido .dim-side-label { color: var(--aligned); }
+
+
 .dim-side-text { font-size: 13px; line-height: 1.5; color: var(--text); }
 
+
+
+
+
 /* Chart inside dim */
+
+
 .dim-chart { background: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px 12px; margin-bottom: 14px; }
+
+
 .dim-chart-h { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+
 .dim-chart canvas { width: 100% !important; max-height: 180px !important; }
 
+
+
+
+
 /* Stacked bar (custom) */
+
+
 .stacked-bar-wrap { margin-bottom: 14px; }
+
+
 .stacked-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; font-size: 12px; }
+
+
 .stacked-bar-row .label { width: 130px; color: var(--text-medium); font-size: 12px; }
+
+
 .stacked-bar-row .track { flex: 1; height: 22px; background: var(--surface-soft); border-radius: 4px; position: relative; overflow: hidden; display: flex; }
+
+
 .stacked-bar-row .actual-fill { height: 100%; }
+
+
 .stacked-bar-row .ideal-marker { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); border-radius: 1px; }
+
+
 .stacked-bar-row .pct { width: 64px; text-align: right; font-size: 11px; color: var(--text-medium); font-variant-numeric: tabular-nums; font-weight: 600; }
 
+
+
+
+
 /* Scorecard ABC */
+
+
 .scorecard { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+
+
 .scorecard-letter { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+
+
 .scorecard-letter.a { background: var(--aligned-bg); color: var(--aligned); }
+
+
 .scorecard-letter.b { background: var(--partial-bg); color: var(--partial); }
+
+
 .scorecard-letter.c { background: var(--critical-bg); color: var(--critical); }
+
+
 .scorecard-text { font-size: 12px; color: var(--text-medium); }
 
+
+
+
+
 /* Quote */
+
+
 .dim-quote { padding: 12px 16px; background: var(--surface-soft); border-left: 3px solid var(--text-medium); border-radius: 0 6px 6px 0; margin-bottom: 14px; font-size: 13px; color: var(--text); font-style: italic; }
+
+
 .dim-quote::before { content: '"'; color: var(--text-soft); }
+
+
 .dim-quote::after { content: '"'; color: var(--text-soft); }
 
-/* SugestÃ£o */
+
+
+
+
+/* Sugestão */
+
+
 .dim-sug { background: var(--primary-soft); border: 1px solid #DBEAFE; border-radius: 8px; padding: 14px 16px; }
+
+
 .dim-sug-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+
 .dim-sug-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+
+
 .dim-sug-text strong { font-weight: 700; }
+
+
 .dim-sug-example { display: block; margin-top: 10px; padding: 10px 12px; background: white; border: 1px solid #DBEAFE; border-radius: 6px; font-style: italic; font-size: 12.5px; color: var(--text-medium); }
 
+
+
+
+
 /* Funil simples (CTA) */
+
+
 .funnel-wrap { margin-bottom: 14px; }
+
+
 .funnel-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+
+
 .funnel-stage { width: 130px; font-size: 12px; color: var(--text-medium); }
+
+
 .funnel-bar { height: 18px; border-radius: 3px; background: var(--primary); }
+
+
 .funnel-pct { font-size: 11px; color: var(--text-medium); font-variant-numeric: tabular-nums; font-weight: 600; min-width: 40px; }
 
-/* Heatmap (cadÃªncia) */
+
+
+
+
+/* Heatmap (cadência) */
+
+
 .heatmap { display: grid; grid-template-columns: 28px repeat(24, 1fr); gap: 2px; font-size: 9px; margin-bottom: 14px; }
+
+
 .heatmap .day-label { color: var(--text-muted); padding: 4px 4px 0; font-weight: 600; }
+
+
 .heatmap .cell { aspect-ratio: 1; border-radius: 1px; background: var(--surface-soft); }
+
+
 .heatmap .cell.l1 { background: #DBEAFE; }
+
+
 .heatmap .cell.l2 { background: #93C5FD; }
+
+
 .heatmap .cell.l3 { background: var(--primary); }
+
+
 .heatmap .cell.l4 { background: #1E3A8A; }
+
+
 .heatmap-axis { display: grid; grid-template-columns: 28px repeat(24, 1fr); font-size: 8.5px; color: var(--text-soft); margin-top: 4px; padding: 0 0 0 0; }
+
+
 .heatmap-axis div:first-child { grid-column: span 1; }
+
+
 .heatmap-axis span { text-align: center; }
 
-/* Plano de aÃ§Ã£o */
+
+
+
+
+/* Plano de ação */
+
+
 .plano { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+
 .plano-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; }
+
+
 .plano-col-h { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
+
 .plano-col-h-text { font-weight: 700; font-size: 13px; }
+
+
 .plano-col.crit .plano-col-h-text { color: var(--critical); }
+
+
 .plano-col.med .plano-col-h-text { color: var(--partial); }
+
+
 .plano-col.pol .plano-col-h-text { color: var(--text-medium); }
+
+
 .plano-col-h-count { font-size: 11px; color: var(--text-soft); font-weight: 600; }
+
+
 .plano-col-when { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+
+
 .plano-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+
+
 .plano-item:last-child { border-bottom: 0; }
+
+
 .plano-item-title { font-weight: 600; font-size: 13px; line-height: 1.35; margin-bottom: 4px; }
+
+
 .plano-item-why { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px; }
+
+
 .plano-item-action { font-size: 11px; color: var(--primary); font-weight: 600; cursor: pointer; }
-.plano-item-action::after { content: ' â†’'; }
+
+
+.plano-item-action::after { content: ' →'; }
+
+
+
+
 
 /* Tarefa banner */
+
+
 .tarefa-info { font-size: 12px; color: var(--text-muted); margin-top: 10px; padding: 12px 14px; background: var(--surface-soft); border-radius: 6px; display: flex; align-items: center; gap: 8px; }
+
+
 .tarefa-info::before { content: 'â“˜'; color: var(--primary); font-size: 14px; }
 
+
+
+
+
 /* Footer (related modules) */
+
+
 .related { margin-top: 36px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+
 .related-h { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+
+
 .related-actions { display: flex; gap: 10px; }
+
+
 .related-link { padding: 6px 12px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; color: var(--text); cursor: pointer; }
+
+
 </style>
+
+
 </head>
+
+
 <body>
+
+
+
+
 
 <div class="bc-app">
 
+
+
+
+
   <!-- ============== SIDEBAR BC ============== -->
+
+
   <aside class="bc-sidebar">
+
+
     <div class="bc-sidebar-brand">
+
+
       <div class="bc-sidebar-brand-mark">BC</div>
+
+
       <div class="bc-sidebar-brand-text">Business Compass</div>
+
+
     </div>
 
-    <div class="bc-sidebar-section">OperaÃ§Ã£o</div>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>FormulÃ¡rio</a>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
 
-    <div class="bc-sidebar-section">EstratÃ©gia</div>
+
+
+
+    <div class="bc-sidebar-section">Operação</div>
+
+
+    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>Formulário</a>
+
+
+    <a href="index.html#clientes" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
+
+
+
+
+
+    <div class="bc-sidebar-section">Estratégia</div>
+
+
     <a href="perfil-de-paciente-ideal.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>Perfil de Paciente Ideal</a>
-    <a href="3-personas.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
-    <a href="bussola-do-perfil.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>BÃºssola do Perfil</a>
 
-    <div class="bc-sidebar-section">ConfiguraÃ§Ãµes</div>
-    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3M3.5 3.5l2 2M10.5 10.5l2 2M10.5 5.5l2-2M3.5 12.5l2-2"/></svg>Agente IA</a>
+
+    <a href="3-personas.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
+
+
+    <a href="bussola-do-perfil.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
+
+
+
+
+
+    <div class="bc-sidebar-section">Configurações</div>
+
+
+    <a href="index.html#config" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3M3.5 3.5l2 2M10.5 10.5l2 2M10.5 5.5l2-2M3.5 12.5l2-2"/></svg>Agente IA</a>
+
+
+
+
 
     <div class="bc-sidebar-user">
+
+
       <div class="bc-sidebar-avatar">JD</div>
+
+
       <div>Daniel Dias<br><span style="color:var(--text-soft);font-size:11px">@nutridanieldias</span></div>
+
+
     </div>
+
+
   </aside>
 
+
+
+
+
   <!-- ============== CONTENT ============== -->
+
+
   <div class="bc-content-wrap">
 
+
+
+
+
     <!-- Topbar -->
+
+
     <header class="bc-topbar">
-      <div class="bc-topbar-crumbs">EstratÃ©gia Â· <strong>BÃºssola do Perfil</strong></div>
+
+
+      <div class="bc-topbar-crumbs">Estratégia · <strong>Bússola do Perfil</strong></div>
+
+
       <div class="bc-topbar-search"><input placeholder="Buscar..."/></div>
+
+
       <div class="bc-topbar-actions">
-        <span class="bc-topbar-btn">ðŸ””</span>
+
+
+        <span class="bc-topbar-btn">🔔</span>
+
+
         <span class="bc-topbar-btn">DD</span>
+
+
       </div>
+
+
     </header>
 
+
+
+
+
     <!-- NSF banner -->
+
+
     <div class="bc-banner">
+
+
       <div class="bc-banner-text">Qual ponteiro <em>move o seu resultado?</em></div>
+
+
       <div style="font-size:11px;color:#A3A3A3">Sprint Summit NSF</div>
+
+
     </div>
 
+
+
+
+
     <!-- ============================================ PAGE (dynamic) -->
+
+
     <div class="page">
+
+
       <div class="page-inner">
 
+
+
+
+
         <!-- Estado: sem PPI -->
+
+
         <div id="state-no-ppi" style="display:none;text-align:center;padding:80px 0">
+
+
           <div style="font-size:15px;font-weight:600;margin-bottom:8px">Nenhum PPI encontrado</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulÃ¡rio para gerar o PPI primeiro.</div>
-          <a href="index.html" class="btn btn-primary" style="text-decoration:none">Ir para o FormulÃ¡rio</a>
+
+
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Preencha o formulário para gerar o PPI primeiro.</div>
+
+
+          <a href="index.html" class="btn btn-primary" style="text-decoration:none">Ir para o Formulário</a>
+
+
         </div>
+
+
+
+
 
         <!-- Estado: carregando -->
+
+
         <div id="state-loading" style="display:none;text-align:center;padding:80px 0">
+
+
           <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;margin-bottom:16px"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg>
-          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Gerando BÃºssola do Perfil...</div>
+
+
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Gerando Bússola do Perfil...</div>
+
+
           <div id="loading-step" style="font-size:13px;color:var(--text-muted);margin-bottom:24px">Iniciando...</div>
+
+
           <div style="font-size:12px;color:var(--text-soft)" id="loading-timer"></div>
+
+
         </div>
+
+
+
+
 
         <!-- Estado: pronto pra gerar -->
+
+
         <div id="state-generate" style="display:none">
+
+
           <div class="page-header">
+
+
             <div>
-              <div class="page-eyebrow">DiagnÃ³stico estratÃ©gico do perfil</div>
-              <h1 class="page-title">BÃºssola do Perfil</h1>
+
+
+              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
+
+
+              <h1 class="page-title">Bússola do Perfil</h1>
+
+
               <div class="page-meta" id="gen-meta"></div>
+
+
             </div>
+
+
           </div>
+
+
           <div style="text-align:center;padding:60px 0;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-            <div style="font-size:15px;font-weight:600;margin-bottom:8px">BÃºssola ainda nÃ£o gerada</div>
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">A BÃºssola vai gerar o Modelo de ComunicaÃ§Ã£o Ideal (MCS) e cruzar com a anÃ¡lise do seu Instagram.</div>
-            <div style="font-size:12px;color:var(--text-soft);margin-bottom:24px">Pode levar atÃ© 2 minutos â€” a IA faz 3 anÃ¡lises em sequÃªncia.</div>
-            <button class="btn btn-primary" onclick="gerarBussola()" style="padding:10px 28px;font-size:14px">Gerar BÃºssola do Perfil</button>
+
+
+            <div style="font-size:15px;font-weight:600;margin-bottom:8px">Bússola ainda não gerada</div>
+
+
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">A Bússola vai gerar o Modelo de Comunicação Ideal (MCS) e cruzar com a análise do seu Instagram.</div>
+
+
+            <div style="font-size:12px;color:var(--text-soft);margin-bottom:24px">Pode levar até 2 minutos — a IA faz 3 análises em sequência.</div>
+
+
+            <button class="btn btn-primary" onclick="gerarBussola()" style="padding:10px 28px;font-size:14px">Gerar Bússola do Perfil</button>
+
+
           </div>
+
+
         </div>
 
-        <!-- Estado: bÃºssola pronta -->
+
+
+
+
+        <!-- Estado: bússola pronta -->
+
+
         <div id="state-bussola" style="display:none">
 
-          <!-- Page header dinÃ¢mico -->
+
+
+
+
+          <!-- Page header dinâmico -->
+
+
           <div class="page-header">
+
+
             <div>
-              <div class="page-eyebrow">DiagnÃ³stico estratÃ©gico do perfil</div>
-              <h1 class="page-title">BÃºssola do Perfil</h1>
+
+
+              <div class="page-eyebrow">Diagnóstico estratégico do perfil</div>
+
+
+              <h1 class="page-title">Bússola do Perfil</h1>
+
+
               <div class="page-meta" id="bussola-meta"></div>
+
+
             </div>
+
+
             <div class="page-actions">
+
+
               <button class="btn btn-secondary" onclick="toggleJsonPanel()">{ }</button>
+
+
               <button class="btn btn-secondary" onclick="gerarBussola()">Regerar</button>
+
+
             </div>
+
+
           </div>
+
+
+
+
 
           <!-- JSON Debug Panel -->
+
+
           <div id="json-panel" style="display:none;margin-bottom:24px;background:#0A0A0A;border-radius:10px;overflow:hidden;">
+
+
             <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #262626;">
-              <span style="font-size:11px;font-weight:700;color:#737373;text-transform:uppercase;letter-spacing:0.08em">JSON Â· BÃºssola atual</span>
+
+
+              <span style="font-size:11px;font-weight:700;color:#737373;text-transform:uppercase;letter-spacing:0.08em">JSON · Bússola atual</span>
+
+
               <button onclick="copyJson()" id="btn-copy-json" style="padding:4px 10px;font-size:11px;font-weight:600;background:#262626;color:#E5E5E5;border:1px solid #404040;border-radius:5px;cursor:pointer;">Copiar</button>
+
+
             </div>
+
+
             <pre id="json-content" style="margin:0;padding:16px;font-size:11.5px;line-height:1.6;color:#86EFAC;font-family:'Fira Code','Cascadia Code','Consolas',monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;"></pre>
+
+
           </div>
+
+
           <div class="status-banner" id="bussola-status-banner"></div>
 
+
+
+
+
           <!-- Resumo executivo -->
+
+
           <div class="section-h">Resumo executivo</div>
+
+
           <div class="exec">
+
+
             <div class="exec-bullets" id="bussola-exec-bullets"></div>
+
+
             <div class="exec-radar">
-              <div class="exec-radar-h">Posicionamento â€” Atual vs Ideal</div>
-              <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensÃµes</div>
+
+
+              <div class="exec-radar-h">Posicionamento — Atual vs Ideal</div>
+
+
+              <div class="exec-radar-sub">5 eixos sumarizando as 8 dimensões</div>
+
+
               <canvas id="radar"></canvas>
+
+
               <div class="exec-radar-legend">
+
+
                 <span class="exec-radar-leg ideal">Ideal</span>
+
+
                 <span class="exec-radar-leg atual">Atual</span>
+
+
               </div>
+
+
             </div>
+
+
           </div>
 
-          <!-- DiagnÃ³stico por dimensÃ£o -->
-          <div class="section-h">DiagnÃ³stico por dimensÃ£o Â· 8 Ã¡reas</div>
+
+
+
+
+          <!-- Diagnóstico por dimensão -->
+
+
+          <div class="section-h">Diagnóstico por dimensão · 8 áreas</div>
+
+
           <div id="bussola-dimensoes"></div>
 
-          <!-- Plano de aÃ§Ã£o -->
-          <div class="section-h" style="margin-top:36px">Plano de aÃ§Ã£o</div>
-          <div class="plano" id="bussola-plano"></div>
-          <div class="tarefa-info">Cada item de aÃ§Ã£o estÃ¡ mapeado para a dimensÃ£o de origem. Revise e implemente em ordem de prioridade.</div>
 
-          <!-- RodapÃ© -->
+
+
+
+          <!-- Plano de ação -->
+
+
+          <div class="section-h" style="margin-top:36px">Plano de ação</div>
+
+
+          <div class="plano" id="bussola-plano"></div>
+
+
+          <div class="tarefa-info">Cada item de ação está mapeado para a dimensão de origem. Revise e implemente em ordem de prioridade.</div>
+
+
+
+
+
+          <!-- Rodapé -->
+
+
           <div class="related">
+
+
             <div>
-              <div class="related-h">Esta anÃ¡lise se apoia em</div>
-              <div style="font-size:13.5px;color:var(--text)">Seu PPI Â· 3 Personas Â· AnÃ¡lise do Instagram</div>
+
+
+              <div class="related-h">Esta análise se apoia em</div>
+
+
+              <div style="font-size:13.5px;color:var(--text)">Seu PPI · 3 Personas · Análise do Instagram</div>
+
+
             </div>
+
+
             <div class="related-actions">
-              <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI â†’</a>
-              <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas â†’</a>
+
+
+              <a href="perfil-de-paciente-ideal.html" class="related-link" style="text-decoration:none">Ver PPI →</a>
+
+
+              <a href="3-personas.html" class="related-link" style="text-decoration:none">Ver 3 Personas →</a>
+
+
             </div>
+
+
           </div>
 
+
+
+
+
       </div><!-- /page-inner -->
+
+
     </div><!-- /page -->
 
+
+
+
+
   </div><!-- /bc-content-wrap -->
+
+
 </div><!-- /bc-app -->
 
+
+
+
+
 <style>
+
+
 @keyframes spin { to { transform: rotate(360deg); } }
+
+
 </style>
 
+
+
+
+
 <script>
+
+
 (function () {
+
+
     // â”€â”€ helpers de estado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
     const states = ['state-no-ppi','state-loading','state-generate','state-bussola'];
+
+
     function showState(id) {
+
+
         states.forEach(s => { document.getElementById(s).style.display = (s === id) ? 'block' : 'none'; });
+
+
     }
 
+
+
+
+
     const ppi          = tryParse('ppi_current');
+
+
     const submissionId = localStorage.getItem('ppi_submission_id') || null;
+
+
     const nutriNome    = localStorage.getItem('ppi_nutri_nome') || '';
+
+
     const ppiDate      = localStorage.getItem('ppi_date') || '';
+
+
+
+
 
     function tryParse(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
 
-    // â”€â”€ lÃ³gica de inicializaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
+
+
+    // â”€â”€ lógica de inicialização â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
     if (!ppi || !submissionId) {
+
+
         showState('state-no-ppi');
+
+
         return;
+
+
     }
 
-    // Tenta mostrar bÃºssola jÃ¡ salva no localStorage
+
+
+
+
+    // Tenta mostrar bússola já salva no localStorage
+
+
     const cached = tryParse('bussola_current');
+
+
     if (cached && cached.resumo_executivo) {
+
+
         renderBussola(cached);
+
+
         showState('state-bussola');
+
+
     } else {
+
+
         // Tenta buscar do banco
-        document.getElementById('gen-meta').textContent = nutriNome ? `@${nutriNome} Â· PPI gerado em ${ppiDate}` : `PPI gerado em ${ppiDate}`;
+
+
+        document.getElementById('gen-meta').textContent = nutriNome ? `@${nutriNome} · PPI gerado em ${ppiDate}` : `PPI gerado em ${ppiDate}`;
+
+
         showState('state-generate');
+
+
         fetch(`/bussola/${submissionId}`)
+
+
             .then(r => r.ok ? r.json() : null)
+
+
             .then(data => {
+
+
                 if (data && data.resumo_executivo) {
+
+
                     localStorage.setItem('bussola_current', JSON.stringify(data));
+
+
                     renderBussola(data);
+
+
                     showState('state-bussola');
+
+
                 }
+
+
             })
+
+
             .catch(() => {});
+
+
     }
+
+
+
+
 
     // ── JSON panel ──────────────────────────────────────────
+
+
     window.toggleJsonPanel = function () {
+
+
         const panel = document.getElementById('json-panel');
+
+
         const content = document.getElementById('json-content');
+
+
         if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
+
+
         const raw = localStorage.getItem('bussola_current');
+
+
         content.textContent = raw ? JSON.stringify(JSON.parse(raw), null, 2) : '// Nenhuma bússola carregada ainda.';
+
+
         panel.style.display = 'block';
+
+
     };
+
+
+
+
 
     window.copyJson = function () {
+
+
         const content = document.getElementById('json-content');
+
+
         const btn = document.getElementById('btn-copy-json');
+
+
         navigator.clipboard.writeText(content.textContent).then(() => {
+
+
             btn.textContent = 'Copiado!';
+
+
             setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+
+
         });
+
+
     };
+
+
+
+
 
     let timerInterval;
+
+
     window.gerarBussola = async function () {
+
+
         showState('state-loading');
+
+
         const stepEl  = document.getElementById('loading-step');
+
+
         const timerEl = document.getElementById('loading-timer');
-        const steps   = ['Consultando PPI e Personas...', 'Gerando Modelo de ComunicaÃ§Ã£o Ideal (MCS)...', 'Analisando perfil do Instagram...', 'Cruzando ideal Ã— atual...'];
+
+
+        const steps   = ['Consultando PPI e Personas...', 'Gerando Modelo de Comunicação Ideal (MCS)...', 'Analisando perfil do Instagram...', 'Cruzando ideal × atual...'];
+
+
         let s = 0;
+
+
         stepEl.textContent = steps[s];
+
+
         let secs = 0;
+
+
         timerInterval = setInterval(() => {
+
+
             secs++;
+
+
             timerEl.textContent = `${secs}s`;
+
+
             if (secs % 20 === 0 && s < steps.length - 1) { s++; stepEl.textContent = steps[s]; }
+
+
         }, 1000);
 
+
+
+
+
         try {
+
+
             const res = await fetch(`/bussola/${submissionId}`, { method: 'POST' });
+
+
             clearInterval(timerInterval);
+
+
             if (!res.ok) {
+
+
                 const err = await res.json().catch(() => ({ error: 'Erro desconhecido.' }));
+
+
                 throw new Error(err.error || `HTTP ${res.status}`);
+
+
             }
+
+
             const data = await res.json();
+
+
             localStorage.setItem('bussola_current', JSON.stringify(data));
+
+
             renderBussola(data);
+
+
             showState('state-bussola');
+
+
         } catch (err) {
+
+
             clearInterval(timerInterval);
-            alert('Erro ao gerar BÃºssola: ' + err.message);
+
+
+            alert('Erro ao gerar Bússola: ' + err.message);
+
+
             showState('state-generate');
+
+
         }
+
+
     };
 
+
+
+
+
     // â”€â”€ renderBussola â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
     function renderBussola(b) {
+
+
         const score = b.resumo_executivo?.score || {};
-        const handle = b.username ? `@${b.username} Â· ` : (nutriNome ? `@${nutriNome} Â· ` : '');
+
+
+        const handle = b.username ? `@${b.username} · ` : (nutriNome ? `@${nutriNome} · ` : '');
+
+
         const dateStr = b.gerado_em ? new Date(b.gerado_em).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }) : ppiDate;
 
-        document.getElementById('bussola-meta').innerHTML = `${handle}Ãšltima anÃ¡lise: <strong>${dateStr}</strong>`;
+
+
+
+
+        document.getElementById('bussola-meta').innerHTML = `${handle}Última análise: <strong>${dateStr}</strong>`;
+
+
+
+
 
         // â”€â”€ Status banner â”€â”€
+
+
         const banner = document.getElementById('bussola-status-banner');
+
+
         banner.innerHTML = `
+
+
             <div>
+
+
               <div class="status-score">
+
+
                 <span class="status-score-num">${score.criticos || 0}</span><span class="status-score-total">/8</span>
+
+
               </div>
-              <div class="status-score-label">DimensÃµes crÃ­ticas</div>
+
+
+              <div class="status-score-label">Dimensões críticas</div>
+
+
             </div>
+
+
             <div style="width:1px;height:42px;background:var(--border)"></div>
+
+
             <div class="status-bar">
+
+
               <div class="status-pills">
-                ${score.criticos  ? `<span class="pill crit">${score.criticos} crÃ­tico${score.criticos !== 1 ? 's' : ''}</span>` : ''}
+
+
+                ${score.criticos  ? `<span class="pill crit">${score.criticos} crítico${score.criticos !== 1 ? 's' : ''}</span>` : ''}
+
+
                 ${score.parciais  ? `<span class="pill par">${score.parciais} parcial${score.parciais !== 1 ? 'is' : ''}</span>` : ''}
+
+
                 ${score.alinhados ? `<span class="pill al">${score.alinhados} alinhado${score.alinhados !== 1 ? 's' : ''}</span>` : ''}
+
+
                 ${score.destaques ? `<span class="pill str">${score.destaques} destaque${score.destaques !== 1 ? 's' : ''}</span>` : ''}
+
+
               </div>
+
+
               <div class="status-bar-text">${(b.resumo_executivo?.pontos_principais?.[0] || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+
+
             </div>`;
 
+
+
+
+
         // â”€â”€ Bullets executivos â”€â”€
+
+
         const bullets = b.resumo_executivo?.pontos_principais || [];
+
+
         document.getElementById('bussola-exec-bullets').innerHTML = bullets.map((p, i) =>
+
+
             `<div class="exec-bullet">
+
+
               <div class="exec-bullet-num">${i + 1}</div>
+
+
               <div class="exec-bullet-text">${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+
+
             </div>`
+
+
         ).join('');
 
+
+
+
+
         // â”€â”€ Radar â”€â”€
+
+
         const radarAtual = b.resumo_executivo?.radar_atual || [2,2,2,2,2];
+
+
         if (window._radarChart) { window._radarChart.destroy(); }
+
+
         window._radarChart = new Chart(document.getElementById('radar').getContext('2d'), {
+
+
             type: 'radar',
+
+
             data: {
-                labels: ['Promessa', 'ConteÃºdo', 'AudiÃªncia', 'CTA', 'Identidade'],
+
+
+                labels: ['Promessa', 'Conteúdo', 'Audiência', 'CTA', 'Identidade'],
+
+
                 datasets: [
+
+
                     { label: 'Ideal', data: [5,5,5,5,5], fill: true, backgroundColor: 'rgba(115,115,115,0.08)', borderColor: 'rgba(115,115,115,0.5)', borderWidth: 1, pointRadius: 0 },
+
+
                     { label: 'Atual', data: radarAtual, fill: true, backgroundColor: 'rgba(37,99,235,0.18)', borderColor: '#2563EB', borderWidth: 2, pointBackgroundColor: '#2563EB', pointRadius: 3 }
+
+
                 ]
+
+
             },
+
+
             options: {
+
+
                 responsive: true, maintainAspectRatio: false,
+
+
                 plugins: { legend: { display: false } },
+
+
                 scales: { r: { beginAtZero: true, max: 5, ticks: { display: false }, pointLabels: { font: { size: 11, family: 'Inter' }, color: '#404040' }, grid: { color: '#E7E5E0' }, angleLines: { color: '#E7E5E0' } } }
+
+
             }
+
+
         });
 
-        // â”€â”€ DimensÃµes â”€â”€
+
+
+
+
+        // â”€â”€ Dimensões â”€â”€
+
+
         const dimsEl = document.getElementById('bussola-dimensoes');
+
+
         dimsEl.innerHTML = '';
 
+
+
+
+
         const dimDefs = [
+
+
             { key: 'dimensao_01_promessa',  num: '01', nome: 'Promessa & Diferencial',       render: renderDimSide },
+
+
             { key: 'dimensao_02_bio',       num: '02', nome: 'Bio & Links',                  render: renderDimScorecards },
-            { key: 'dimensao_03_pilares',   num: '03', nome: 'Pilares & IntenÃ§Ã£o',            render: renderDimPilares },
-            { key: 'dimensao_04_audiencia', num: '04', nome: 'AudiÃªncia real vs PPI alvo',    render: renderDimAudiencia },
-            { key: 'dimensao_05_cadencia',  num: '05', nome: 'CadÃªncia & Formato',            render: renderDimCadencia },
+
+
+            { key: 'dimensao_03_pilares',   num: '03', nome: 'Pilares & Intenção',            render: renderDimPilares },
+
+
+            { key: 'dimensao_04_audiencia', num: '04', nome: 'Audiência real vs PPI alvo',    render: renderDimAudiencia },
+
+
+            { key: 'dimensao_05_cadencia',  num: '05', nome: 'Cadência & Formato',            render: renderDimCadencia },
+
+
             { key: 'dimensao_06_cta',       num: '06', nome: 'CTA & Resposta',                render: renderDimCTA },
+
+
             { key: 'dimensao_07_tom',       num: '07', nome: 'Tom & Narrativa',               render: renderDimScorecards },
-            { key: 'dimensao_08_performance', num: '08', nome: 'O que funciona & o que nÃ£o', render: renderDimPerformance }
+
+
+            { key: 'dimensao_08_performance', num: '08', nome: 'O que funciona & o que não', render: renderDimPerformance }
+
+
         ];
 
+
+
+
+
         dimDefs.forEach(def => {
+
+
             const dim = b[def.key];
+
+
             if (!dim) return;
+
+
             const wrapper = document.createElement('div');
+
+
             wrapper.className = 'dim';
+
+
             wrapper.id = `dim${def.num}`;
+
+
             wrapper.innerHTML = `
+
+
                 <div class="dim-head">
+
+
                   <span class="dim-num">${def.num}</span>
+
+
                   <span class="dim-name">${def.nome}</span>
+
+
                   <span class="${pillClass(dim.status)}" style="margin-left:auto">${pillLabel(dim.status)}</span>
+
+
                 </div>
+
+
                 <h3 class="dim-headline">${dim.headline || ''}</h3>
+
+
                 <div class="dim-body"></div>
+
+
                 ${renderSugestao(dim.sugestao)}`;
+
+
             const body = wrapper.querySelector('.dim-body');
+
+
             def.render(body, dim);
+
+
             dimsEl.appendChild(wrapper);
+
+
         });
 
-        // â”€â”€ Plano de aÃ§Ã£o â”€â”€
+
+
+
+
+        // â”€â”€ Plano de ação â”€â”€
+
+
         const plano = b.plano_de_acao || {};
+
+
         const planoEl = document.getElementById('bussola-plano');
+
+
         planoEl.innerHTML = `
-            ${renderPlanoCol('crit', 'CrÃ­tico', 'FaÃ§a essa semana', plano.critico || [])}
-            ${renderPlanoCol('med', 'MÃ©dio', 'PrÃ³ximas 2â€“4 semanas', plano.medio || [])}
+
+
+            ${renderPlanoCol('crit', 'Crítico', 'Faça essa semana', plano.critico || [])}
+
+
+            ${renderPlanoCol('med', 'Médio', 'Próximas 2–4 semanas', plano.medio || [])}
+
+
             ${renderPlanoCol('pol', 'Polimento', 'Quando der', plano.polimento || [])}`;
+
+
     }
 
-    // â”€â”€ helpers de renderizaÃ§Ã£o por dimensÃ£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
+
+
+    // â”€â”€ helpers de renderização por dimensão â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+
+
+
 
     function pillClass(status) {
+
+
         return { critico: 'pill crit', parcial: 'pill par', alinhado: 'pill al', destaque: 'pill str' }[status] || 'pill par';
+
+
     }
+
+
     function pillLabel(status) {
-        return { critico: 'crÃ­tico', parcial: 'parcial', alinhado: 'alinhado', destaque: 'destaque' }[status] || status;
+
+
+        return { critico: 'crítico', parcial: 'parcial', alinhado: 'alinhado', destaque: 'destaque' }[status] || status;
+
+
     }
+
+
+
+
 
     function renderSugestao(sug) {
+
+
         if (!sug) return '';
+
+
         return `<div class="dim-sug">
-          <div class="dim-sug-label">â†’ ${sug.label || 'SugestÃ£o'}</div>
+
+
+          <div class="dim-sug-label">→ ${sug.label || 'Sugestão'}</div>
+
+
           <div class="dim-sug-text">${(sug.texto || '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
+
+
           ${sug.exemplo ? `<div class="dim-sug-example">${sug.exemplo}</div>` : ''}
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderDimSide(el, dim) {
+
+
         if (!dim.atual && !dim.sugerido) return;
+
+
         el.innerHTML = `<div class="dim-side">
+
+
           <div class="dim-side-col atual">
+
+
             <div class="dim-side-label">Hoje o perfil diz</div>
-            <div class="dim-side-text">${dim.atual || 'â€”'}</div>
+
+
+            <div class="dim-side-text">${dim.atual || '—'}</div>
+
+
           </div>
+
+
           <div class="dim-side-col sugerido">
+
+
             <div class="dim-side-label">PPI pede que diga</div>
-            <div class="dim-side-text">${dim.sugerido || 'â€”'}</div>
+
+
+            <div class="dim-side-text">${dim.sugerido || '—'}</div>
+
+
           </div>
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderDimScorecards(el, dim) {
+
+
         const cards = dim.scorecards || [];
+
+
         el.innerHTML = cards.map(c => `
+
+
             <div class="scorecard">
+
+
               <span class="scorecard-letter ${(c.letra||'').toLowerCase()}">${c.letra}</span>
+
+
               <span class="scorecard-text">${c.texto}</span>
+
+
             </div>`).join('');
+
+
     }
+
+
+
+
 
     function renderDimPilares(el, dim) {
+
+
         const atual = dim.distribuicao_atual || {};
+
+
         const ideal = dim.distribuicao_ideal || {};
-        const labels = { conexao: 'ConexÃ£o', quebra_objecao: 'Quebra de objeÃ§Ã£o', autoridade: 'Autoridade', prova_social: 'Prova social', educacao_aplicada: 'EducaÃ§Ã£o aplicada' };
+
+
+        const labels = { conexao: 'Conexão', quebra_objecao: 'Quebra de objeção', autoridade: 'Autoridade', prova_social: 'Prova social', educacao_aplicada: 'Educação aplicada' };
+
+
         const color = { critico: 'var(--critical)', parcial: 'var(--partial)', alinhado: 'var(--primary)', destaque: 'var(--aligned)' };
+
+
         const barColor = color[dim.status] || 'var(--primary)';
 
+
+
+
+
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">DistribuiÃ§Ã£o por intenÃ§Ã£o Â· atual vs ideal pro PPI</div>
+
+
+          <div class="dim-chart-h">Distribuição por intenção · atual vs ideal pro PPI</div>
+
+
           <div class="stacked-bar-wrap">
+
+
             ${Object.keys(labels).map(k => {
+
+
                 const a = atual[k] || 0;
+
+
                 const d = ideal[k] || 0;
+
+
                 const gap = Math.abs(a - d);
+
+
                 const bc = gap > 20 ? 'var(--critical)' : barColor;
+
+
                 return `<div class="stacked-bar-row">
+
+
                   <span class="label">${labels[k]}</span>
+
+
                   <div class="track">
+
+
                     <div class="actual-fill" style="width:${a}%;background:${bc}"></div>
+
+
                     <div class="ideal-marker" style="left:${d}%"></div>
+
+
                   </div>
+
+
                   <span class="pct">${a}% / ${d}%</span>
+
+
                 </div>`;
+
+
             }).join('')}
+
+
           </div>
+
+
           <div style="font-size:10.5px;color:var(--text-soft);margin-top:6px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:2px;height:10px;background:var(--text)"></span>marca = ideal pro PPI</div>
+
+
           ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">â“˜ ${dim.nota_metodologica}</div>` : ''}
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderDimAudiencia(el, dim) {
+
+
         let html = '';
+
+
         if (dim.match_descricao) {
+
+
             html += `<div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:14px;padding:14px 16px;background:var(--surface-soft);border-radius:8px;border:1px solid var(--border)">${dim.match_descricao}</div>`;
+
+
         }
+
+
         if (dim.quote) {
+
+
             html += `<div class="dim-quote">${dim.quote}</div>`;
+
+
         }
+
+
         el.innerHTML = html;
+
+
     }
+
+
+
+
 
     function renderDimCadencia(el, dim) {
+
+
         const dias = dim.dias_ativos || {};
+
+
         const ordem = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
-        const labels = { segunda: 'Seg', terca: 'Ter', quarta: 'Qua', quinta: 'Qui', sexta: 'Sex', sabado: 'SÃ¡b', domingo: 'Dom' };
+
+
+        const labels = { segunda: 'Seg', terca: 'Ter', quarta: 'Qua', quinta: 'Qui', sexta: 'Sex', sabado: 'Sáb', domingo: 'Dom' };
+
+
         const maxVal = Math.max(...Object.values(dias), 1);
 
+
+
+
+
         const mixAtual = dim.mix_formatos_atual || {};
+
+
         const mixIdeal = dim.mix_formatos_ideal || {};
 
+
+
+
+
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">FrequÃªncia: <strong>${dim.frequencia_atual || 'â€”'}/sem atual</strong> Â· ideal: ${dim.frequencia_ideal || 'â€”'}/sem</div>
+
+
+          <div class="dim-chart-h">Frequência: <strong>${dim.frequencia_atual || '—'}/sem atual</strong> · ideal: ${dim.frequencia_ideal || '—'}/sem</div>
+
+
           <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px">
+
+
             ${ordem.map(d => {
+
+
                 const v = dias[d] || 0;
+
+
                 const h = Math.round((v / maxVal) * 40);
+
+
                 return `<div style="text-align:center">
+
+
                   <div style="height:44px;display:flex;align-items:flex-end;justify-content:center">
+
+
                     <div style="width:100%;max-width:28px;height:${h}px;background:var(--primary);border-radius:2px;min-height:${v > 0 ? 3 : 0}px"></div>
+
+
                   </div>
+
+
                   <div style="font-size:10px;color:var(--text-muted);margin-top:3px">${labels[d]}</div>
+
+
                   <div style="font-size:10px;color:var(--text-soft)">${v}</div>
+
+
                 </div>`;
+
+
             }).join('')}
+
+
           </div>
+
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-top:8px">
+
+
             <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;margin-bottom:4px">Mix atual</div>${Object.entries(mixAtual).map(([k,v]) => `<span style="margin-right:8px">${k}: <strong>${v}</strong></span>`).join('')}</div>
+
+
             <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;margin-bottom:4px">Mix ideal</div>${Object.entries(mixIdeal).map(([k,v]) => `<span style="margin-right:8px">${k}: <strong>${v}</strong></span>`).join('')}</div>
+
+
           </div>
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderDimCTA(el, dim) {
+
+
         const atuais = dim.ctas_atuais_estimados || {};
+
+
         const ideal  = dim.ctas_ideais || {};
+
+
         const ctaLabels = { sem_cta: 'Sem CTA', salve: 'Salve / curta', comente: 'Comente', dm: 'Manda DM', link_bio: 'Link na bio', agendar: 'Agendar' };
+
+
         const ctaColors = { sem_cta: 'var(--critical)', salve: 'var(--partial)', comente: 'var(--primary)', dm: 'var(--primary)', link_bio: 'var(--aligned)', agendar: 'var(--strength)' };
 
-        const respAtual = dim.taxa_resposta_atual != null ? `${dim.taxa_resposta_atual}%` : 'â€”';
+
+
+
+
+        const respAtual = dim.taxa_resposta_atual != null ? `${dim.taxa_resposta_atual}%` : '—';
+
+
         const respIdeal = dim.taxa_resposta_ideal != null ? `${dim.taxa_resposta_ideal}%` : '100%';
 
+
+
+
+
         el.innerHTML = `<div class="dim-chart">
-          <div class="dim-chart-h">DistribuiÃ§Ã£o de CTA Â· estimativa nos Ãºltimos posts</div>
+
+
+          <div class="dim-chart-h">Distribuição de CTA · estimativa nos últimos posts</div>
+
+
           <div class="funnel-wrap">
+
+
             ${Object.keys(ctaLabels).filter(k => atuais[k] != null).map(k =>
+
+
                 `<div class="funnel-row">
+
+
                   <span class="funnel-stage">${ctaLabels[k]}</span>
+
+
                   <div class="funnel-bar" style="width:${atuais[k]}%;background:${ctaColors[k]}"></div>
+
+
                   <span class="funnel-pct">${atuais[k]}%</span>
+
+
                 </div>`
+
+
             ).join('')}
+
+
           </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Taxa de resposta nos comentÃ¡rios: <strong>${respAtual}</strong> Â· ideal: <strong>${respIdeal}</strong></div>
+
+
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Taxa de resposta nos comentários: <strong>${respAtual}</strong> · ideal: <strong>${respIdeal}</strong></div>
+
+
           ${dim.nota_metodologica ? `<div style="font-size:11px;color:var(--text-soft);margin-top:6px;font-style:italic">â“˜ ${dim.nota_metodologica}</div>` : ''}
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderDimPerformance(el, dim) {
+
+
         el.innerHTML = `<div class="dim-side">
+
+
           <div class="dim-side-col sugerido">
+
+
             <div class="dim-side-label">Top reels</div>
-            <div class="dim-side-text">${dim.top_reels_resumo || 'â€”'}</div>
+
+
+            <div class="dim-side-text">${dim.top_reels_resumo || '—'}</div>
+
+
           </div>
+
+
           <div class="dim-side-col atual">
+
+
             <div class="dim-side-label">Bottom reels</div>
-            <div class="dim-side-text">${dim.bottom_reels_resumo || 'â€”'}</div>
+
+
+            <div class="dim-side-text">${dim.bottom_reels_resumo || '—'}</div>
+
+
           </div>
+
+
         </div>`;
+
+
     }
+
+
+
+
 
     function renderPlanoCol(cssClass, titulo, quando, itens) {
+
+
         if (!itens.length) return `<div class="plano-col ${cssClass}">
+
+
           <div class="plano-col-h"><span class="plano-col-h-text">${titulo}</span><span class="plano-col-h-count">0</span></div>
+
+
           <div class="plano-col-when">${quando}</div>
-          <div style="font-size:12px;color:var(--text-soft);padding:8px 0">Sem aÃ§Ãµes neste nÃ­vel.</div>
+
+
+          <div style="font-size:12px;color:var(--text-soft);padding:8px 0">Sem ações neste nível.</div>
+
+
         </div>`;
+
+
         return `<div class="plano-col ${cssClass}">
+
+
           <div class="plano-col-h">
+
+
             <span class="plano-col-h-text">${titulo}</span>
+
+
             <span class="plano-col-h-count">${itens.length}</span>
+
+
           </div>
+
+
           <div class="plano-col-when">${quando}</div>
+
+
           ${itens.map(it => `<div class="plano-item">
+
+
             <div class="plano-item-title">${it.titulo}</div>
+
+
             <div class="plano-item-why">${it.motivo}</div>
+
+
           </div>`).join('')}
+
+
         </div>`;
+
+
     }
 
+
+
+
+
 })();
+
+
 </script>
 
+
+
+
+
 </body>
+
+
 </html>
+
+

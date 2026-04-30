@@ -26,8 +26,8 @@ async function scrapeInstagram(username) {
         }),
         apify.actor(ACTOR_REELS).call({
             username: [handle],
-            resultsLimit: 30,
-            commentsPerReel: 10
+            resultsLimit: 12,
+            commentsPerReel: 5
         })
     ]);
 
