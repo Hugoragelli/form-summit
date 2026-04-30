@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { supabase, openai, deepseek } = require('../lib/clients');
+const { supabase, openai, deepseek, callDeepSeekR1 } = require('../lib/clients');
 const { scrapeAndSave } = require('./instagram');
 
 const router = Router();
@@ -189,29 +189,37 @@ async function generatePPI(formData) {
     const provider = providerRes.data?.prompt || 'openai';
     const fullPrompt = promptRes.data.prompt.replace('{{form_respostas}}', JSON.stringify(formData, null, 2));
 
-    let response;
-    if (provider === 'deepseek') {
-        console.log('[PPI] Enviando para DeepSeek...');
-        response = await deepseek.chat.completions.create({
-            model: 'deepseek-v4-pro',
-            temperature: 0.4,
-            messages: [
-                { role: 'system', content: 'Você é um assistente especializado. Responda sempre em JSON válido sem texto adicional.' },
-                { role: 'user', content: fullPrompt }
-            ],
-            response_format: { type: 'json_object' }
-        });
+    let ppi;
+    if (provider === 'deepseek-r1') {
+        console.log('[PPI] Enviando para DeepSeek R1 (thinking)...');
+        ppi = await callDeepSeekR1([
+            { role: 'system', content: 'Você é um assistente especializado. Responda sempre em JSON válido sem texto adicional.' },
+            { role: 'user', content: fullPrompt }
+        ], 'PPI');
     } else {
-        console.log('[PPI] Enviando para OpenAI...');
-        response = await openai.chat.completions.create({
-            model: 'gpt-5.1',
-            temperature: 0.4,
-            messages: [{ role: 'user', content: fullPrompt }],
-            response_format: { type: 'json_object' }
-        });
+        let response;
+        if (provider === 'deepseek') {
+            console.log('[PPI] Enviando para DeepSeek...');
+            response = await deepseek.chat.completions.create({
+                model: 'deepseek-v4-pro',
+                temperature: 0.4,
+                messages: [
+                    { role: 'system', content: 'Você é um assistente especializado. Responda sempre em JSON válido sem texto adicional.' },
+                    { role: 'user', content: fullPrompt }
+                ],
+                response_format: { type: 'json_object' }
+            });
+        } else {
+            console.log('[PPI] Enviando para OpenAI...');
+            response = await openai.chat.completions.create({
+                model: 'gpt-5.1',
+                temperature: 0.4,
+                messages: [{ role: 'user', content: fullPrompt }],
+                response_format: { type: 'json_object' }
+            });
+        }
+        ppi = JSON.parse(response.choices[0].message.content);
     }
-
-    const ppi = JSON.parse(response.choices[0].message.content);
     console.log(`[PPI] Gerado com sucesso via ${provider}.`);
     return ppi;
 }

@@ -229,23 +229,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:24px">Nenhum cliente ainda.</td></tr>';
                 return;
             }
-            allClients.forEach((c, index) => {
-                const raw = c.diagnostico_final;
-                const isNewFormat = raw && raw.trimStart().startsWith('{');
-                let actionCell;
-                if (isNewFormat) {
-                    actionCell = `<button class="btn btn-secondary btn-sm" onclick="viewClientPPI(${index})">Ver PPI</button>`;
-                } else if (raw) {
-                    actionCell = `<span style="color:var(--text-soft);font-size:12px" title="Gerado com sistema anterior — abrir no novo visualizador não é possível">Formato legado</span>`;
-                } else {
-                    actionCell = `<span style="color:var(--text-soft);font-size:12px">Sem PPI</span>`;
-                }
+            allClients.forEach((c) => {
+                const id = c.id;
+                const hasPPI = c.diagnostico_final && c.diagnostico_final.trimStart().startsWith('{');
+
+                const pages = [
+                    { label: 'PPI',        url: `perfil-de-paciente-ideal.html?cliente=${id}`, enabled: hasPPI },
+                    { label: 'Personas',   url: `3-personas.html?cliente=${id}`,               enabled: hasPPI },
+                    { label: 'Bússola',    url: `bussola-do-perfil.html?cliente=${id}`,        enabled: hasPPI },
+                    { label: 'Scraping',   url: `scraping-instagram.html?cliente=${id}`,       enabled: true   },
+                    { label: 'Análise IG', url: `analise-instagram.html?cliente=${id}`,        enabled: true   },
+                    { label: 'MCS',        url: `modelo-de-comunicacao.html?cliente=${id}`,    enabled: hasPPI },
+                ];
+
+                const buttons = pages.map(p =>
+                    p.enabled
+                        ? `<a href="${p.url}" class="client-nav-btn">${p.label}</a>`
+                        : `<span class="client-nav-btn" style="opacity:0.35;cursor:default" title="PPI ainda não gerado">${p.label}</span>`
+                ).join('');
+
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:500">${c.nome || '—'}</td>
                         <td style="color:var(--text-muted)">${c.email || '—'}</td>
-                        <td style="color:var(--text-muted)">${c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—'}</td>
-                        <td>${actionCell}</td>
+                        <td style="color:var(--text-muted);white-space:nowrap">${c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR') : '—'}</td>
+                        <td><div class="client-actions">${buttons}</div></td>
                     </tr>
                 `;
             });
@@ -264,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('ppi_date', client.created_at
                 ? new Date(client.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' })
                 : '');
-            window.location.href = 'perfil-de-paciente-ideal.html';
+            window.location.href = `perfil-de-paciente-ideal.html?cliente=${client.id}`;
         } catch (_) {
             alert('Erro ao carregar PPI deste cliente.');
         }

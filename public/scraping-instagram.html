@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Scraping do Instagram — BC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-soft: #F5F5F5;
+  --sidebar-bg: #FAFAF9;
+  --sidebar-active: #FFFFFF;
+  --text: #0A0A0A;
+  --text-medium: #404040;
+  --text-muted: #737373;
+  --text-soft: #A3A3A3;
+  --border: #E7E5E0;
+  --border-strong: #D4D4D4;
+  --primary: #2563EB;
+  --primary-soft: #EFF6FF;
+  --nsf-dark: #0A0A0A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+
+/* === BC CHROME === */
+.bc-app { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+.bc-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 14px 10px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.bc-sidebar-brand { padding: 4px 10px 16px; display: flex; align-items: center; gap: 8px; }
+.bc-sidebar-brand-mark { width: 24px; height: 24px; background: var(--nsf-dark); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 800; }
+.bc-sidebar-brand-text { font-weight: 700; font-size: 13px; letter-spacing: -0.01em; }
+.bc-sidebar-section { color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5px; font-weight: 700; padding: 12px 10px 4px; }
+.bc-sidebar-item { padding: 7px 10px; color: var(--text-medium); display: flex; align-items: center; gap: 9px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 120ms ease; }
+.bc-sidebar-item:hover { background: rgba(0,0,0,0.04); }
+.bc-sidebar-item.active { background: var(--sidebar-active); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+a.bc-sidebar-item { text-decoration: none; color: inherit; }
+.bc-sidebar-icon { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; }
+.bc-sidebar-item.active .bc-sidebar-icon { opacity: 1; }
+
+.bc-content-wrap { display: flex; flex-direction: column; min-width: 0; }
+.bc-topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+.bc-topbar-crumbs { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.bc-topbar-crumbs strong { color: var(--text); font-weight: 600; }
+.bc-topbar-search { flex: 1; max-width: 320px; margin: 0 24px; position: relative; }
+.bc-topbar-search input { width: 100%; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface-soft); color: var(--text); }
+.bc-topbar-search::before { content: '⌕'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: 13px; }
+.bc-topbar-actions { display: flex; gap: 6px; align-items: center; }
+.bc-topbar-btn { padding: 6px 10px; font-size: 12px; color: var(--text-medium); border-radius: 6px; cursor: pointer; }
+.bc-banner { background: var(--nsf-dark); color: white; padding: 10px 32px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.bc-banner-text { font-weight: 500; }
+.bc-banner-text em { color: #FCD34D; font-style: normal; }
+
+/* === PAGE === */
+.page { padding: 24px 32px 80px; }
+.page-inner { max-width: 860px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.page-eyebrow { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px; }
+.page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.15; }
+.page-meta { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.page-meta strong { color: var(--text-medium); font-weight: 600; }
+.page-actions { display: flex; gap: 8px; align-items: center; }
+.btn { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 0; transition: all 120ms ease; }
+.btn-primary { background: var(--text); color: white; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
+/* === EMPTY STATE === */
+.empty-state { text-align: center; padding: 60px 24px; background: var(--surface); border: 1px dashed var(--border); border-radius: 12px; }
+.empty-state-icon { font-size: 32px; margin-bottom: 12px; }
+.empty-state-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.empty-state-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* === INFO CARD === */
+.info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; }
+.info-card-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.info-card-body { flex: 1; }
+.info-card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.info-card-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+/* === JSON PANEL === */
+.json-wrap { background: #0A0A0A; border-radius: 10px; overflow: hidden; }
+.json-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid #262626; }
+.json-label { font-size: 11px; font-weight: 700; color: #737373; text-transform: uppercase; letter-spacing: 0.08em; }
+.json-copy-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; background: #262626; color: #E5E5E5; border: 1px solid #404040; border-radius: 5px; cursor: pointer; }
+.json-content { margin: 0; padding: 16px; font-size: 11.5px; line-height: 1.6; color: #86EFAC; font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace; overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 600px; overflow-y: auto; }
+
+/* === STATUS BADGE === */
+.status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.status-ok { background: #DCFCE7; color: #15803D; }
+.status-missing { background: #FEF3C7; color: #B45309; }
+</style>
+</head>
+<body>
+
+<div class="bc-app">
+
+  <!-- ============== SIDEBAR ============== -->
+  <aside class="bc-sidebar">
+    <div class="bc-sidebar-brand">
+      <div class="bc-sidebar-brand-mark">BC</div>
+      <div class="bc-sidebar-brand-text">Business Compass</div>
+    </div>
+
+    <div class="bc-sidebar-section">Operação</div>
+    <a href="index.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>Formulário</a>
+    <a href="index.html#clientes" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M2 13c0-2.5 1.8-4 4-4s4 1.5 4 4"/><circle cx="12" cy="5" r="2"/><path d="M14 13c0-1.5-.8-3-2-3"/></svg>Clientes</a>
+
+    <div class="bc-sidebar-section">Estratégia</div>
+    <a href="perfil-de-paciente-ideal.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2"/></svg>Perfil de Paciente Ideal</a>
+    <a href="3-personas.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="6" r="2.5"/><circle cx="11" cy="6" r="2.5"/><path d="M2 14c0-2 1.5-3.5 3.5-3.5M14 14c0-2-1.5-3.5-3.5-3.5"/></svg>3 Personas</a>
+    <a href="bussola-do-perfil.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
+
+    <div class="bc-sidebar-section">Instagram</div>
+    <a href="scraping-instagram.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.5"/><circle cx="11.5" cy="4.5" r="0.75" fill="currentColor" stroke="none"/></svg>Scraping</a>
+    <a href="analise-instagram.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,12 5,8 8,10 11,5 14,3"/></svg>Análise do Instagram</a>
+
+    <div class="bc-sidebar-section">Comunicação</div>
+    <a href="modelo-de-comunicacao.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 3H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/></svg>Modelo de Comunicação</a>
+
+    <div class="bc-sidebar-section">Configurações</div>
+    <a href="index.html#config" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Agente IA</a>
+  </aside>
+
+  <!-- ============== CONTENT ============== -->
+  <div class="bc-content-wrap">
+
+    <header class="bc-topbar">
+      <div class="bc-topbar-crumbs">Instagram · <strong>Scraping</strong></div>
+      <div class="bc-topbar-search"><input placeholder="Buscar..."/></div>
+      <div class="bc-topbar-actions"><span class="bc-topbar-btn">🔔</span></div>
+    </header>
+
+    <div class="bc-banner">
+      <div class="bc-banner-text">Dados brutos do Instagram via <em>Apify</em></div>
+      <div style="font-size:11px;color:#A3A3A3">Sprint Summit NSF</div>
+    </div>
+
+    <div class="page">
+      <div class="page-inner">
+
+        <!-- Page header -->
+        <div class="page-header">
+          <div>
+            <div class="page-eyebrow">Coleta de dados do Instagram</div>
+            <h1 class="page-title">Scraping do Instagram</h1>
+            <div class="page-meta">
+              Perfil: <strong id="meta-handle">—</strong> ·
+              Coletado em: <strong id="meta-date">—</strong> ·
+              <span id="meta-status" class="status-badge status-missing">Sem dados</span>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary" onclick="toggleJson()" id="btn-json">{ }</button>
+            <button class="btn btn-primary" id="btn-regerar" onclick="regerarScraping()">Regerar</button>
+          </div>
+        </div>
+
+        <!-- Info card -->
+        <div class="info-card">
+          <div class="info-card-icon">⚠️</div>
+          <div class="info-card-body">
+            <div class="info-card-title">Custo de execução</div>
+            <div class="info-card-desc">Cada execução consome créditos Apify (~$0.70–0.90). Use "Regerar" apenas quando necessário. Os dados salvos permanecem disponíveis entre sessões.</div>
+          </div>
+        </div>
+
+        <!-- JSON output -->
+        <div id="json-wrap" class="json-wrap" style="display:none">
+          <div class="json-header">
+            <span class="json-label">JSON · Scraping atual</span>
+            <button class="json-copy-btn" onclick="copyJson()" id="btn-copy">Copiar</button>
+          </div>
+          <pre class="json-content" id="json-content"></pre>
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="empty-state">
+          <div class="empty-state-icon">📷</div>
+          <div class="empty-state-title">Nenhum scraping disponível</div>
+          <div class="empty-state-desc">Clique em "Regerar" para coletar os dados do Instagram via Apify.<br>O resultado será salvo automaticamente.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'ppi_submission_id';
+
+// Lê ?cliente=ID da URL e define como submissão ativa
+(function () {
+    const clienteId = new URLSearchParams(window.location.search).get('cliente');
+    if (clienteId) localStorage.setItem(STORAGE_KEY, clienteId);
+})();
+
+async function getSubmissionId() {
+  let id = localStorage.getItem(STORAGE_KEY);
+  if (!id) {
+    const res = await fetch('/latest-submission');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Nenhuma submissão encontrada.');
+    id = data.id;
+    localStorage.setItem(STORAGE_KEY, id);
+  }
+  return id;
+}
+
+function showData(data) {
+  document.getElementById('empty-state').style.display = 'none';
+  const wrap = document.getElementById('json-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('json-content').textContent = JSON.stringify(data, null, 2);
+
+  const handle = data.username || '—';
+  const date = data.scraped_at ? new Date(data.scraped_at).toLocaleString('pt-BR') : '—';
+  document.getElementById('meta-handle').textContent = '@' + handle;
+  document.getElementById('meta-date').textContent = date;
+
+  const badge = document.getElementById('meta-status');
+  badge.textContent = 'Dados disponíveis';
+  badge.className = 'status-badge status-ok';
+}
+
+async function loadExisting() {
+  try {
+    const id = await getSubmissionId();
+    const res = await fetch(`/scrape-instagram/${id}`);
+    const result = await res.json();
+    if (res.ok && result.data) showData(result.data);
+  } catch (_) { /* sem dados ainda */ }
+}
+
+async function regerarScraping() {
+  const btn = document.getElementById('btn-regerar');
+  const orig = btn.textContent;
+  btn.disabled = true;
+
+  try {
+    btn.textContent = 'Buscando submissão...';
+    const id = await getSubmissionId();
+
+    btn.textContent = 'Coletando dados...';
+    const res = await fetch('/scrape-instagram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ submission_id: id })
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Erro no servidor');
+
+    showData(result.data);
+  } catch (err) {
+    alert('Erro ao regerar: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = orig;
+  } finally {
+    if (!btn.disabled) return;
+    btn.disabled = false;
+    btn.textContent = orig;
+  }
+}
+
+function toggleJson() {
+  const wrap = document.getElementById('json-wrap');
+  const isEmpty = document.getElementById('json-content').textContent === '';
+  if (isEmpty) { alert('Nenhum dado disponível.'); return; }
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+async function copyJson() {
+  const text = document.getElementById('json-content').textContent;
+  const btn = document.getElementById('btn-copy');
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copiado!';
+    btn.style.color = '#86EFAC';
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.style.color = ''; }, 2000);
+  } catch (_) {
+    btn.textContent = 'Erro';
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+  }
+}
+
+loadExisting();
+</script>
+
+</body>
+</html>

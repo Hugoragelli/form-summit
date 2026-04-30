@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { supabase, openai, deepseek } = require('../lib/clients');
+const { supabase, openai, deepseek, callDeepSeekR1 } = require('../lib/clients');
 const { calculateAll } = require('../lib/instagram-metrics');
 
 const router = Router();
@@ -186,29 +186,37 @@ async function generateAnaliseInstagram(scrapedData) {
         .replace('{{metricas_pre_calculadas}}', JSON.stringify(metricasPre, null, 2))
         .replace('{{scraped_json}}', JSON.stringify(condensed, null, 2));
 
-    let response;
-    if (provider === 'deepseek') {
-        console.log('[AnaliseInstagram] Enviando para DeepSeek...');
-        response = await deepseek.chat.completions.create({
-            model: 'deepseek-v4-pro',
-            temperature: 0.3,
-            messages: [
-                { role: 'system', content: 'Você é um analista especializado. Responda sempre em JSON válido sem texto adicional.' },
-                { role: 'user', content: fullPrompt }
-            ],
-            response_format: { type: 'json_object' }
-        });
+    let result;
+    if (provider === 'deepseek-r1') {
+        console.log('[AnaliseInstagram] Enviando para DeepSeek R1 (thinking)...');
+        result = await callDeepSeekR1([
+            { role: 'system', content: 'Você é um analista especializado. Responda sempre em JSON válido sem texto adicional.' },
+            { role: 'user', content: fullPrompt }
+        ], 'AnaliseInstagram');
     } else {
-        console.log('[AnaliseInstagram] Enviando para OpenAI...');
-        response = await openai.chat.completions.create({
-            model: 'gpt-5.1',
-            temperature: 0.3,
-            messages: [{ role: 'user', content: fullPrompt }],
-            response_format: { type: 'json_object' }
-        });
+        let response;
+        if (provider === 'deepseek') {
+            console.log('[AnaliseInstagram] Enviando para DeepSeek...');
+            response = await deepseek.chat.completions.create({
+                model: 'deepseek-v4-pro',
+                temperature: 0.3,
+                messages: [
+                    { role: 'system', content: 'Você é um analista especializado. Responda sempre em JSON válido sem texto adicional.' },
+                    { role: 'user', content: fullPrompt }
+                ],
+                response_format: { type: 'json_object' }
+            });
+        } else {
+            console.log('[AnaliseInstagram] Enviando para OpenAI...');
+            response = await openai.chat.completions.create({
+                model: 'gpt-5.1',
+                temperature: 0.3,
+                messages: [{ role: 'user', content: fullPrompt }],
+                response_format: { type: 'json_object' }
+            });
+        }
+        result = JSON.parse(response.choices[0].message.content);
     }
-
-    const result = JSON.parse(response.choices[0].message.content);
     console.log(`[AnaliseInstagram] Gerada com sucesso via ${provider}.`);
     return result;
 }

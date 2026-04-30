@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { supabase, openai, deepseek } = require('../lib/clients');
+const { supabase, openai, deepseek, callDeepSeekR1 } = require('../lib/clients');
 
 const router = Router();
 
@@ -283,29 +283,37 @@ async function generateMCS(submission) {
         .replace('{{personas_json}}',  JSON.stringify(personas || '(não disponível)', null, 2))
         .replace('{{form_respostas}}', JSON.stringify(formContext, null, 2));
 
-    let response;
-    if (provider === 'deepseek') {
-        console.log('[MCS] Enviando para DeepSeek...');
-        response = await deepseek.chat.completions.create({
-            model: 'deepseek-v4-pro',
-            temperature: 0.4,
-            messages: [
-                { role: 'system', content: 'Você é um estrategista especializado. Responda sempre em JSON válido sem texto adicional.' },
-                { role: 'user', content: fullPrompt }
-            ],
-            response_format: { type: 'json_object' }
-        });
+    let result;
+    if (provider === 'deepseek-r1') {
+        console.log('[MCS] Enviando para DeepSeek R1 (thinking)...');
+        result = await callDeepSeekR1([
+            { role: 'system', content: 'Você é um estrategista especializado. Responda sempre em JSON válido sem texto adicional.' },
+            { role: 'user', content: fullPrompt }
+        ], 'MCS');
     } else {
-        console.log('[MCS] Enviando para OpenAI...');
-        response = await openai.chat.completions.create({
-            model: 'gpt-5.1',
-            temperature: 0.3,
-            messages: [{ role: 'user', content: fullPrompt }],
-            response_format: { type: 'json_object' }
-        });
+        let response;
+        if (provider === 'deepseek') {
+            console.log('[MCS] Enviando para DeepSeek...');
+            response = await deepseek.chat.completions.create({
+                model: 'deepseek-v4-pro',
+                temperature: 0.4,
+                messages: [
+                    { role: 'system', content: 'Você é um estrategista especializado. Responda sempre em JSON válido sem texto adicional.' },
+                    { role: 'user', content: fullPrompt }
+                ],
+                response_format: { type: 'json_object' }
+            });
+        } else {
+            console.log('[MCS] Enviando para OpenAI...');
+            response = await openai.chat.completions.create({
+                model: 'gpt-5.1',
+                temperature: 0.3,
+                messages: [{ role: 'user', content: fullPrompt }],
+                response_format: { type: 'json_object' }
+            });
+        }
+        result = JSON.parse(response.choices[0].message.content);
     }
-
-    const result = JSON.parse(response.choices[0].message.content);
     console.log(`[MCS] Gerado com sucesso via ${provider}.`);
     return result;
 }

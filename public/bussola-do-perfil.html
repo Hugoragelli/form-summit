@@ -169,6 +169,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 .bc-sidebar-section { color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5px; font-weight: 700; padding: 12px 10px 4px; }
 
 
+a.bc-sidebar-item { text-decoration: none; color: inherit; }
 .bc-sidebar-item { padding: 7px 10px; color: var(--text-medium); display: flex; align-items: center; gap: 9px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 120ms ease; }
 
 
@@ -774,6 +775,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
     <a href="bussola-do-perfil.html" class="bc-sidebar-item active"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
 
+    <div class="bc-sidebar-section">Instagram</div>
+    <a href="scraping-instagram.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.5"/><circle cx="11.5" cy="4.5" r="0.75" fill="currentColor" stroke="none"/></svg>Scraping</a>
+    <a href="analise-instagram.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,12 5,8 8,10 11,5 14,3"/></svg>Análise do Instagram</a>
+
+    <div class="bc-sidebar-section">Comunicação</div>
+    <a href="modelo-de-comunicacao.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 3H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/></svg>Modelo de Comunicação</a>
+
+
 
 
 
@@ -787,16 +796,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
 
 
-    <div class="bc-sidebar-user">
 
-
-      <div class="bc-sidebar-avatar">JD</div>
-
-
-      <div>Daniel Dias<br><span style="color:var(--text-soft);font-size:11px">@nutridanieldias</span></div>
-
-
-    </div>
 
 
   </aside>
@@ -1187,6 +1187,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', system-u
 
 
 <script>
+// Le ?cliente=ID da URL e define como submissao ativa
+(function () {
+    var clienteId = new URLSearchParams(window.location.search).get("cliente");
+    if (clienteId) localStorage.setItem("ppi_submission_id", clienteId);
+})();
 
 
 (function () {

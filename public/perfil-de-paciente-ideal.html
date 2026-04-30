@@ -372,7 +372,12 @@ a { text-decoration: none; color: inherit; }
 
     <a href="bussola-do-perfil.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 2.5"/></svg>Bússola do Perfil</a>
 
+    <div class="bc-sidebar-section">Instagram</div>
+    <a href="scraping-instagram.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.5"/><circle cx="11.5" cy="4.5" r="0.75" fill="currentColor" stroke="none"/></svg>Scraping</a>
+    <a href="analise-instagram.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,12 5,8 8,10 11,5 14,3"/></svg>Análise do Instagram</a>
 
+    <div class="bc-sidebar-section">Comunicação</div>
+    <a href="modelo-de-comunicacao.html" class="bc-sidebar-item"><svg class="bc-sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 3H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3l2 2 2-2h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/></svg>Modelo de Comunicação</a>
 
     <div class="bc-sidebar-section">Configurações</div>
 
@@ -380,13 +385,7 @@ a { text-decoration: none; color: inherit; }
 
 
 
-    <div class="bc-sidebar-user">
 
-      <div class="bc-sidebar-avatar" id="sidebar-avatar">BC</div>
-
-      <div id="sidebar-user-name">Business Compass<br><span style="color:var(--text-soft);font-size:11px">Sprint Summit NSF</span></div>
-
-    </div>
 
   </aside>
 
@@ -845,6 +844,11 @@ a { text-decoration: none; color: inherit; }
 
 
 <script>
+// Lê ?cliente=ID da URL e define como submissão ativa
+(function () {
+    const clienteId = new URLSearchParams(window.location.search).get('cliente');
+    if (clienteId) localStorage.setItem('ppi_submission_id', clienteId);
+})();
 
 (function () {
 
