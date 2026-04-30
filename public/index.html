@@ -346,6 +346,12 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
 
 .related-link:hover { border-color: var(--primary); color: var(--primary); }
 
+.client-actions { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.client-nav-btn { display: inline-block; padding: 4px 9px; font-size: 11px; font-weight: 500; color: var(--text-medium); background: var(--surface-soft); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; white-space: nowrap; text-decoration: none; transition: border-color 100ms ease, color 100ms ease, background 100ms ease; }
+
+.client-nav-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
 </style>
 
 </head>
@@ -1221,6 +1227,16 @@ input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); }
                 <span style="font-size:13px;font-weight:500">DeepSeek</span>
 
                 <span style="font-size:11px;color:var(--text-soft);margin-left:auto">deepseek-v4-pro</span>
+
+              </label>
+
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1px solid var(--border);border-radius:8px;flex:1;transition:border-color .15s" id="provider-label-deepseek-r1">
+
+                <input type="radio" name="ai_provider" id="provider-deepseek-r1" value="deepseek-r1" style="accent-color:var(--accent)">
+
+                <span style="font-size:13px;font-weight:500">DeepSeek R1</span>
+
+                <span style="font-size:11px;color:var(--text-soft);margin-left:auto">thinking</span>
 
               </label>
 

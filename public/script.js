@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateProviderLabels(provider) {
-        ['openai', 'deepseek'].forEach(p => {
+        ['openai', 'deepseek', 'deepseek-r1'].forEach(p => {
             const lbl = document.getElementById(`provider-label-${p}`);
             if (lbl) lbl.style.borderColor = (p === provider) ? 'var(--accent)' : 'var(--border)';
         });
