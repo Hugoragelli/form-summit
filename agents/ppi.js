@@ -253,7 +253,7 @@ router.post('/ai-config', async (req, res) => {
         const { prompt, provider } = req.body;
         if (!prompt || !prompt.trim()) return res.status(400).json({ error: 'Prompt vazio.' });
 
-        const validProviders = ['openai', 'deepseek'];
+        const validProviders = ['openai', 'deepseek', 'deepseek-r1'];
         const safeProvider = validProviders.includes(provider) ? provider : 'openai';
 
         const [promptRes, providerRes] = await Promise.all([
@@ -277,9 +277,17 @@ router.post('/submit', async (req, res) => {
     try {
         const ppiJson = await generatePPI(req.body);
 
+        const { nome, whatsapp, telefone, email, instagram } = req.body;
         const { data: inserted, error } = await supabase
             .from('form_submissions')
-            .insert([{ ...req.body, diagnostico_final: JSON.stringify(ppiJson) }])
+            .insert([{
+                nome:      nome      || '',
+                email:     email     || '',
+                telefone:  whatsapp  || telefone || '',
+                instagram: instagram || '',
+                form_data: JSON.stringify(req.body),
+                diagnostico_final: JSON.stringify(ppiJson)
+            }])
             .select('id')
             .single();
 
@@ -333,7 +341,16 @@ router.post('/regenerate/:id', async (req, res) => {
             return res.status(404).json({ error: 'Submissão não encontrada.' });
         }
 
-        const { id: _id, created_at, diagnostico_final, personas_json, analise_paciente, analise_profissional, ...formData } = submission;
+        let formData;
+        if (submission.form_data) {
+            try { formData = JSON.parse(submission.form_data); } catch { formData = {}; }
+        } else {
+            // Compatibilidade com registros antigos (colunas individuais)
+            const { id: _id, created_at, diagnostico_final, personas_json,
+                    instagram_scrape_json, analise_instagram_json, mcs_json,
+                    bussola_json, form_data: _fd, ...legacyData } = submission;
+            formData = legacyData;
+        }
         const ppiJson = await generatePPI(formData);
 
         const { error: updateError } = await supabase
@@ -354,6 +371,51 @@ router.post('/regenerate/:id', async (req, res) => {
     } catch (err) {
         console.error('[PPI] Erro no regenerate:', err.message);
         res.status(500).json({ error: err.message });
+    }
+});
+
+// ============================================================
+// GET /submission/:id — retorna form_data para pré-preenchimento
+// ============================================================
+router.get('/submission/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { data: submission, error } = await supabase
+            .from('form_submissions')
+            .select('form_data, nome, email, telefone, instagram')
+            .eq('id', id)
+            .single();
+        if (error || !submission) return res.status(404).json({ error: 'Submissão não encontrada.' });
+        if (submission.form_data) {
+            return res.json(JSON.parse(submission.form_data));
+        }
+        // Fallback para registros sem form_data
+        res.json({ nome: submission.nome, email: submission.email,
+                   telefone: submission.telefone, instagram: submission.instagram });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// ============================================================
+// PUT /submission/:id — atualiza form_data de uma submissão existente
+// ============================================================
+router.put('/submission/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, email, telefone, instagram } = req.body;
+        const { error } = await supabase
+            .from('form_submissions')
+            .update({
+                nome, email, telefone, instagram,
+                form_data: JSON.stringify(req.body)
+            })
+            .eq('id', id);
+        if (error) throw error;
+        console.log('[PPI] form_data atualizado para id:', id);
+        res.json({ message: 'OK' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
     }
 });
 

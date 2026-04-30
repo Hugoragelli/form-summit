@@ -257,26 +257,31 @@ async function generateMCS(submission) {
         }
     }
 
-    // Monta form_context com os campos relevantes
-    const formContext = {
-        p3: {
-            peso_decisao: submission.p3a_peso_decisao,
-            investimento_mensal: submission.p3b_investimento_mensal,
-            ritmo_decisao: submission.p3c_ritmo_decisao
-        },
-        p4: {
-            canais_chegada: submission.p4_canais_chegada,
-            canal_principal: submission.p4_1_canal_principal
-        },
-        p9_frases_comuns: submission.p9_frases_comuns,
-        p10_principal_mudanca: submission.p10_principal_mudanca,
-        p11_diferencial: submission.p11_diferencial,
-        p12: {
-            estilo_comunicacao: submission.p12_estilo_comunicacao,
-            forma_resposta: submission.p12_1_forma_resposta
-        },
-        p13_quem_nao_quer_atender: submission.p13_quem_nao_quer_atender
-    };
+    // Monta form_context: usa form_data (novo) ou fallback colunas individuais (legado)
+    let formContext;
+    if (submission.form_data) {
+        try { formContext = JSON.parse(submission.form_data); } catch { formContext = {}; }
+    } else {
+        formContext = {
+            p3: {
+                peso_decisao: submission.p3a_peso_decisao,
+                investimento_mensal: submission.p3b_investimento_mensal,
+                ritmo_decisao: submission.p3c_ritmo_decisao
+            },
+            p4: {
+                canais_chegada: submission.p4_canais_chegada,
+                canal_principal: submission.p4_1_canal_principal
+            },
+            p9_frases_comuns: submission.p9_frases_comuns,
+            p10_principal_mudanca: submission.p10_principal_mudanca,
+            p11_diferencial: submission.p11_diferencial,
+            p12: {
+                estilo_comunicacao: submission.p12_estilo_comunicacao,
+                forma_resposta: submission.p12_1_forma_resposta
+            },
+            p13_quem_nao_quer_atender: submission.p13_quem_nao_quer_atender
+        };
+    }
 
     const fullPrompt = promptTemplate
         .replace('{{ppi_json}}',       JSON.stringify(ppi, null, 2))

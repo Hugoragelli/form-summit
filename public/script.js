@@ -124,8 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg> Gerando PPI...`;
-        submitBtn.style.background = '#374151';
 
         const formData = new FormData(form);
         const data = {};
@@ -139,6 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 data[key] = value;
             }
         });
+
+        submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 110 12A6 6 0 018 2z" stroke-dasharray="18" stroke-dashoffset="6"/></svg> Gerando PPI...`;
+        submitBtn.style.background = '#374151';
 
         try {
             const response = await fetch('/submit', {
@@ -200,6 +201,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         successView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // --- Navegar para uma seção por ID ---
+    function navigateTo(target) {
+        navItems.forEach(i => i.classList.remove('active'));
+        const navItem = document.querySelector(`.bc-sidebar-item[data-target="${target}"]`);
+        if (navItem) navItem.classList.add('active');
+        sections.forEach(s => s.classList.remove('active'));
+        const sec = document.getElementById(target);
+        if (sec) sec.classList.add('active');
+        const meta = sectionLabels[target];
+        if (meta && topbarCrumbs) topbarCrumbs.innerHTML = `${meta.section} · <strong>${meta.label}</strong>`;
+        if (target === 'section-clientes') loadClients();
     }
 
     window.resetForm = () => {

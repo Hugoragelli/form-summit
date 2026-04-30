@@ -1,0 +1,450 @@
+import React, { useState } from 'react';
+import { 
+  Users, 
+  BrainCircuit, 
+  ActivitySquare, 
+  ShoppingCart, 
+  CheckCircle2, 
+  Target, 
+  User, 
+  Smartphone, 
+  Instagram, 
+  BarChart3, 
+  Megaphone, 
+  Briefcase, 
+  Sparkles, 
+  Info,
+  Send 
+} from 'lucide-react';
+
+// Componente de Cartão de Seleção
+const SelectCard = ({ title, description, selected, onClick, multi = false }) => (
+  <div 
+    onClick={onClick}
+    className={`
+      cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 flex items-start gap-3
+      ${selected 
+        ? 'border-indigo-600 bg-indigo-50 shadow-md' 
+        : 'border-gray-100 bg-white hover:border-indigo-200 hover:bg-gray-50'
+      }
+    `}
+  >
+    <div className="mt-0.5">
+      <div className={`
+        w-5 h-5 flex items-center justify-center border transition-colors
+        ${multi ? 'rounded' : 'rounded-full'}
+        ${selected ? 'bg-indigo-600 border-indigo-600' : 'border-gray-300 bg-white'}
+      `}>
+        {selected && <CheckCircle2 className="w-4 h-4 text-white" />}
+      </div>
+    </div>
+    <div className="flex-1">
+      <p className={`font-medium ${selected ? 'text-indigo-900' : 'text-gray-700'}`}>
+        {title}
+      </p>
+      {description && (
+        <p className={`text-sm mt-1 ${selected ? 'text-indigo-700' : 'text-gray-500'}`}>
+          {description}
+        </p>
+      )}
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [profissaoContexto, setProfissaoContexto] = useState('Nutricionista');
+
+  // Variáveis Dinâmicas de Linguagem
+  const txtCliente = profissaoContexto === 'Treinador' ? 'aluno' : 'paciente';
+  const txtEntrega = profissaoContexto === 'Treinador' ? 'planejamento de treinos' : 'plano alimentar';
+  const txtLocal = profissaoContexto === 'Treinador' ? 'atendimento' : 'consultório';
+
+  const [formData, setFormData] = useState({
+    // Bloco 1 - Profissional
+    nome: '', whatsapp: '', instagram: '',
+    equipe: [], atendimento: '', modelo: '',
+    ticketProfissional: '', faturamento: '',
+    sonho12Meses: '', maiorObstaculo: '',
+    
+    // Bloco 2 - PPI (O Paciente Ideal)
+    ppiDosSonhos: '',
+    atendeQuemGostaria: null,
+    pacienteAtualDescricao: '',
+    maiorDesejoPaciente: '',
+    reclamacoesFrequentes: '',
+    tentativasPassadas: '',
+    motivoAgora: [],
+    detalheMotivo: '',
+    faseMudanca: '',
+    dificuldadesAlimentares: [],
+    adesaoPlano: '',
+    barreirasExternas: [],
+    pesaDecisao: '',
+    investimentoPaciente: '',
+    ritmoDecisao: '',
+    mudancaPercebida: '',
+    diferenciais: '',
+    antiPPI: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelect = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleMultiSelect = (field, value) => {
+    setFormData(prev => {
+      const current = prev[field] || [];
+      if (current.includes(value)) {
+        return { ...prev, [field]: current.filter(item => item !== value) };
+      } else {
+        return { ...prev, [field]: [...current, value] };
+      }
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-sans pb-24">
+      <div className="max-w-4xl mx-auto">
+        
+        {/* SIMULADOR DE CONTEXTO */}
+        <div className="bg-indigo-900 text-white p-4 rounded-xl mb-8 flex items-center justify-between shadow-lg sticky top-4 z-50">
+          <div>
+            <p className="text-sm text-indigo-200 font-bold uppercase tracking-wider italic">Modo de Visualização</p>
+          </div>
+          <div className="flex gap-2 bg-indigo-950 p-1 rounded-lg">
+            <button 
+              onClick={() => setProfissaoContexto('Nutricionista')}
+              className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${profissaoContexto === 'Nutricionista' ? 'bg-indigo-600 text-white shadow-inner' : 'text-indigo-300 hover:text-white'}`}
+            >
+              Nutricionista
+            </button>
+            <button 
+              onClick={() => setProfissaoContexto('Treinador')}
+              className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${profissaoContexto === 'Treinador' ? 'bg-indigo-600 text-white shadow-inner' : 'text-indigo-300 hover:text-white'}`}
+            >
+              Treinador
+            </button>
+          </div>
+        </div>
+
+        {/* Intro */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            Mapeamento Estratégico NSF
+          </h1>
+          <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl border border-indigo-100 shadow-sm flex items-start gap-4 text-left">
+            <div className="bg-indigo-100 p-2 rounded-lg">
+              <Info className="w-6 h-6 text-indigo-600" />
+            </div>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              <strong>Importante:</strong> Quanto mais preciso for o preenchimento, melhor nossa IA conseguirá desenhar seu <strong>Posicionamento e Perfil de Paciente Ideal (PPI)</strong>. Siga as orientações em "Detalhes" para cada campo.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-10">
+          
+          {/* BLOCO 1: O PROFISSIONAL */}
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="bg-indigo-600 p-6 text-white flex items-center gap-3">
+              <Briefcase className="w-6 h-6" />
+              <h2 className="text-xl font-bold italic tracking-wide uppercase">O Profissional</h2>
+            </div>
+            
+            <div className="p-8 space-y-10">
+              {/* Identificação */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Seu Nome</label>
+                  <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl" placeholder="Nome Completo" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">WhatsApp</label>
+                  <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl" placeholder="(00) 00000-0000" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Instagram</label>
+                  <input type="text" name="instagram" value={formData.instagram} onChange={handleChange} className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl" placeholder="@seu.perfil" />
+                </div>
+              </div>
+
+              {/* Equipe e Modelo */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-4">Estrutura de Equipe</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title='Faço tudo sozinho ("Euquipe")' multi={true} selected={formData.equipe.includes('Sozinho')} onClick={() => handleMultiSelect('equipe', 'Sozinho')} />
+                    <SelectCard title="Tenho Secretária(o)" multi={true} selected={formData.equipe.includes('Secretaria')} onClick={() => handleMultiSelect('equipe', 'Secretaria')} />
+                    <SelectCard title="Tenho Estagiária(o)" multi={true} selected={formData.equipe.includes('Estagiaria')} onClick={() => handleMultiSelect('equipe', 'Estagiaria')} />
+                    <SelectCard title="Equipe Estruturada" selected={formData.equipe.includes('Equipe')} onClick={() => handleMultiSelect('equipe', 'Equipe')} />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-4">Modelo de Negócio</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="Consulta Avulsa" selected={formData.modelo === 'Avulso'} onClick={() => handleSelect('modelo', 'Avulso')} />
+                    <SelectCard title="Acompanhamento Premium" selected={formData.modelo === 'Premium'} onClick={() => handleSelect('modelo', 'Premium')} />
+                    <SelectCard title="Consultoria Escalável" selected={formData.modelo === 'Escalavel'} onClick={() => handleSelect('modelo', 'Escalavel')} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Financeiro */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-4">Faturamento Mensal</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Até 5k', '5k a 10k', '10k a 20k', '20k a 40k', '40k a 100k', '100k+'].map(f => (
+                      <SelectCard key={f} title={f} selected={formData.faturamento === f} onClick={() => handleSelect('faturamento', f)} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-4">Ticket Médio Mensal</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    {['Até R$ 200', 'R$ 201 a R$ 400', 'R$ 401 a R$ 700', 'Acima de R$ 700'].map(t => (
+                      <SelectCard key={t} title={t} selected={formData.ticketProfissional === t} onClick={() => handleSelect('ticketProfissional', t)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Visão e Obstáculos */}
+              <div className="space-y-6 pt-4 border-t border-gray-100">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">Qual o seu grande objetivo profissional para os próximos 12 meses?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Foque em faturamento, modelo de entrega (ex: ser 100% online) e liberdade de tempo.</p>
+                  <textarea 
+                    name="sonho12Meses" 
+                    value={formData.sonho12Meses} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none"
+                    placeholder='Ex: "Transicionar do presencial para o 100% online, faturando 30k/mês com uma agenda previsível de acompanhamentos trimestrais..."'
+                  />
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">Qual o maior obstáculo que te trava hoje?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Identifique se o problema é captação, dificuldade em cobrar caro ou excesso de tarefas operacionais.</p>
+                  <textarea 
+                    name="maiorObstaculo" 
+                    value={formData.maiorObstaculo} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none"
+                    placeholder='Ex: "Sinto que sou escravo da agenda, não tenho tempo para fazer marketing e dependo 100% de indicações orgânicas..."'
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BLOCO 2: O PPI */}
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="bg-emerald-600 p-6 text-white flex items-center gap-3">
+              <Sparkles className="w-6 h-6" />
+              <h2 className="text-xl font-bold italic tracking-wide uppercase">Perfil de Paciente Ideal (PPI)</h2>
+            </div>
+
+            <div className="p-8 space-y-12">
+              
+              {/* O Sonho de Atendimento */}
+              <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+                <label className="block text-base font-bold text-emerald-900 mb-2">
+                  1. Se você pudesse atender apenas UM tipo de pessoa para ser 100% feliz no trabalho, quem seria?
+                </label>
+                <p className="text-sm text-emerald-700 mb-4 italic"><strong>Detalhes:</strong> Forneça dados demográficos (idade, renda, cargo), psicográficos (valores, o que admira) e comportamentais (comprometimento).</p>
+                <textarea 
+                  name="ppiDosSonhos" 
+                  value={formData.ppiDosSonhos} 
+                  onChange={handleChange} 
+                  rows="4" 
+                  className="w-full p-4 bg-white border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-500 transition-all resize-none"
+                  placeholder='Ex: "Mulheres entre 35-50 anos, empresárias ou gestoras, que valorizam saúde como pilar de performance, têm renda alta e buscam um método definitivo, sem atalhos..."'
+                />
+              </div>
+
+              {/* Atual vs Ideal */}
+              <div>
+                <label className="block text-base font-bold text-gray-900 mb-4">2. Você está atendendo hoje quem você realmente gostaria?</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <SelectCard title="Sim, meu público atual é o ideal" selected={formData.atendeQuemGostaria === true} onClick={() => handleSelect('atendeQuemGostaria', true)} />
+                  <SelectCard title="Não, quero mudar meu perfil de público" selected={formData.atendeQuemGostaria === false} onClick={() => handleSelect('atendeQuemGostaria', false)} />
+                </div>
+              </div>
+
+              {/* Condicional: Só aparece se a resposta acima for "Não" */}
+              {formData.atendeQuemGostaria === false && (
+                <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+                  <label className="block text-base font-bold text-gray-900 mb-2">3. Quem é o {txtCliente} que MAIS aparece hoje no seu {txtLocal}?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Descreva um caso real recente. Inclua idade, profissão e o nível de comprometimento/dificuldade desse perfil.</p>
+                  <textarea 
+                    name="pacienteAtualDescricao" 
+                    value={formData.pacienteAtualDescricao} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none"
+                    placeholder='Ex: "Aparecem muitas pessoas buscando apenas uma consulta pontual, focadas no menor preço e que desistem do plano após 30 dias..."'
+                  />
+                </div>
+              )}
+
+              {/* Mente do PPI */}
+              <div className="grid grid-cols-1 gap-10 border-t pt-10 border-gray-100">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">4. Qual o maior DESEJO emocional desse {txtCliente} ideal?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Use os "5 porquês". O que a pessoa quer sentir? (Ex: Liberdade, Autoconfiança, Segurança).</p>
+                  <textarea 
+                    name="maiorDesejoPaciente" 
+                    value={formData.maiorDesejoPaciente} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none"
+                    placeholder='Ex: "Mais do que emagrecer 10kg, ela quer se sentir atraente novamente para o marido e ter energia para brincar com os filhos sem cansar..."'
+                  />
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">5. Quais são as reclamações ou dores que você mais ouve dele?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Cite pelo menos três frases reais que você ouve no consultório. Seja específico.</p>
+                  <textarea 
+                    name="reclamacoesFrequentes" 
+                    value={formData.reclamacoesFrequentes} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none" 
+                    placeholder='Ex: "Sinto que meu metabolismo travou", "Não me reconheço mais no espelho", "Trabalho tanto que não tenho tempo de cuidar de mim" ' 
+                  />
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">6. O que ele já tentou antes que não funcionou?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Liste frustrações com dietas restritivas, profissionais anteriores ou falta de suporte.</p>
+                  <textarea 
+                    name="tentativasPassadas" 
+                    value={formData.tentativasPassadas} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none"
+                    placeholder='Ex: "Já tentou todas as dietas da moda (Low Carb, Jejum), mas sempre abandona no primeiro final de semana por falta de acompanhamento..."'
+                  />
+                </div>
+              </div>
+
+              {/* Gatilhos e Comportamento */}
+              <div className="space-y-8">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-3">7. O que fez esse {txtCliente} buscar ajuda AGORA? (Gatilho)</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    {['Exame alterado', 'Evento próximo (Viagem/Festa)', 'Recomendação médica', 'Crise de autoimagem (foto/roupa)', 'Baixa energia/libido', 'Diagnóstico de doença'].map(m => (
+                      <SelectCard key={m} title={m} multi={true} selected={formData.motivoAgora.includes(m)} onClick={() => handleMultiSelect('motivoAgora', m)} />
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-3">8. Nível de Consciência (Modelo Transteórico)</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <SelectCard title="Contemplação" description="Sabe que precisa mudar, mas procrastina a decisão há meses." selected={formData.faseMudanca === 'contemplacao'} onClick={() => handleSelect('faseMudanca', 'contemplacao')} />
+                    <SelectCard title="Preparação/Ação" description="Decidiu mudar agora e está ativamente buscando o melhor método." selected={formData.faseMudanca === 'acao'} onClick={() => handleSelect('faseMudanca', 'acao')} />
+                    <SelectCard title="Manutenção" description="Já tem hábitos básicos, mas busca o próximo nível (performance/estética)." selected={formData.faseMudanca === 'manutencao'} onClick={() => handleSelect('faseMudanca', 'manutencao')} />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-3">9. Como ele lida com o {txtEntrega}?</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <SelectCard title="Focado / Disciplinado" selected={formData.adesaoPlano === 'Focado'} onClick={() => handleSelect('adesaoPlano', 'Focado')} />
+                    <SelectCard title="Oscila bastante" selected={formData.adesaoPlano === 'Oscila'} onClick={() => handleSelect('adesaoPlano', 'Oscila')} />
+                    <SelectCard title="Abandona rápido" selected={formData.adesaoPlano === 'Abandona'} onClick={() => handleSelect('adesaoPlano', 'Abandona')} />
+                    <SelectCard title="Abordagem sem plano fixo" selected={formData.adesaoPlano === 'Diferente'} onClick={() => handleSelect('adesaoPlano', 'Diferente')} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Decisão de Compra */}
+              <div className="bg-gray-50 p-8 rounded-3xl space-y-10 border border-gray-100 shadow-inner">
+                <div className="flex items-center gap-2 mb-2 text-indigo-600 font-bold uppercase">
+                  <ShoppingCart className="w-5 h-5" />
+                  <h3>Comportamento de Compra</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div>
+                    <label className="block text-base font-bold text-gray-900 mb-3">O que mais pesa na decisão dele?</label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {['Preço (Busca o mais barato)', 'Entrega/Método (Busca resultado)', 'Disponibilidade (Busca facilidade)', 'Conexão (Busca o profissional)'].map(p => (
+                        <SelectCard key={p} title={p} selected={formData.pesaDecisao === p} onClick={() => handleSelect('pesaDecisao', p)} />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-base font-bold text-gray-900 mb-3">Investimento Mensal em Saúde/Estética</label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {['Até R$ 200', 'R$ 200 - R$ 700', 'R$ 701 - R$ 1500', 'Acima de R$ 1500'].map(v => (
+                        <SelectCard key={v} title={v} selected={formData.investimentoPaciente === v} onClick={() => handleSelect('investimentoPaciente', v)} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Posicionamento Final */}
+              <div className="space-y-10 pt-6">
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">15. Qual a principal mudança percebida ao trabalhar com você?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Foque na transformação da identidade do paciente, não apenas na balança.</p>
+                  <textarea 
+                    name="mudancaPercebida" 
+                    value={formData.mudancaPercebida} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none" 
+                    placeholder='Ex: "A pessoa deixa de viver em culpa com a comida e passa a ter controle total sobre suas escolhas e sua autoestima..." ' 
+                  />
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">16. Quais os seus diferenciais competitivos?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Evite "atendimento humanizado". Cite ferramentas concretas (ex: check-ins, suporte VIP, método próprio).</p>
+                  <textarea 
+                    name="diferenciais" 
+                    value={formData.diferenciais} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none" 
+                    placeholder='Ex: "Acompanhamento semanal via check-in Wellts, suporte direto no WhatsApp e ajustes de planejamento em tempo real..."'
+                  />
+                </div>
+                <div>
+                  <label className="block text-base font-bold text-gray-900 mb-2">17. (Anti-PPI) Quem você NÃO quer atender de forma alguma?</label>
+                  <p className="text-sm text-gray-500 mb-3 italic"><strong>Detalhes:</strong> Identifique perfis que sugam energia, buscam milagres ou não valorizam seu tempo.</p>
+                  <textarea 
+                    name="antiPPI" 
+                    value={formData.antiPPI} 
+                    onChange={handleChange} 
+                    rows="3" 
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 transition-all resize-none" 
+                    placeholder='Ex: "Pessoas que buscam apenas atalhos/fórmulas mágicas e que não estão dispostas a investir no acompanhamento..." '
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Botão de Envio */}
+          <div className="flex justify-center">
+            <button className="flex items-center gap-3 px-12 py-5 bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold rounded-2xl shadow-xl transition-all transform hover:scale-105">
+              Enviar Mapeamento Completo
+              <Send className="w-6 h-6" />
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
