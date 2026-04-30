@@ -271,27 +271,53 @@ router.post('/ai-config', async (req, res) => {
 });
 
 // ============================================================
-// POST /submit — recebe formulário, gera PPI e salva
+// POST /submit — recebe formulário, salva imediatamente, gera PPI
 // ============================================================
 router.post('/submit', async (req, res) => {
+    const { nome, whatsapp, telefone, email, instagram } = req.body;
+
+    // 1. Salva os dados do formulário NO BANCO ANTES de chamar a IA.
+    //    Isso garante que nada se perde mesmo se a IA demorar ou travar.
+    let inserted = null;
+    const baseInsert = {
+        nome:      nome      || '',
+        email:     email     || '',
+        telefone:  whatsapp  || telefone || '',
+        instagram: instagram || '',
+    };
+
+    // Tenta com form_data; se a coluna não existir, tenta sem ela.
+    const { data: d1, error: e1 } = await supabase
+        .from('form_submissions')
+        .insert([{ ...baseInsert, form_data: JSON.stringify(req.body) }])
+        .select('id')
+        .single();
+
+    if (!e1) {
+        inserted = d1;
+    } else {
+        console.warn('[PPI] Insert com form_data falhou, tentando sem:', e1.message);
+        const { data: d2, error: e2 } = await supabase
+            .from('form_submissions')
+            .insert([baseInsert])
+            .select('id')
+            .single();
+        if (!e2) inserted = d2;
+        else console.warn('[PPI] Insert básico também falhou:', e2.message);
+    }
+
+    // 2. Gera o PPI via IA (pode demorar).
     try {
         const ppiJson = await generatePPI(req.body);
 
-        const { nome, whatsapp, telefone, email, instagram } = req.body;
-        const { data: inserted, error } = await supabase
-            .from('form_submissions')
-            .insert([{
-                nome:      nome      || '',
-                email:     email     || '',
-                telefone:  whatsapp  || telefone || '',
-                instagram: instagram || '',
-                form_data: JSON.stringify(req.body),
-                diagnostico_final: JSON.stringify(ppiJson)
-            }])
-            .select('id')
-            .single();
-
-        if (error) console.warn('[PPI] Supabase insert warning:', error.message);
+        // 3. Atualiza o registro com o resultado da IA.
+        if (inserted?.id) {
+            const { error: upErr } = await supabase
+                .from('form_submissions')
+                .update({ diagnostico_final: JSON.stringify(ppiJson) })
+                .eq('id', inserted.id);
+            if (upErr) console.warn('[PPI] Update diagnostico_final falhou:', upErr.message);
+        }
 
         // Fire-and-forget: scraping roda em background, não bloqueia a resposta
         if (inserted?.id && req.body.instagram) {
@@ -301,8 +327,9 @@ router.post('/submit', async (req, res) => {
 
         res.json({ message: 'OK', ppi: ppiJson, id: inserted?.id });
     } catch (err) {
-        console.error('[PPI] Erro no submit:', err.message);
-        res.status(500).json({ error: err.message });
+        console.error('[PPI] Erro na geração do PPI:', err.message);
+        // Dados já estão salvos; retorna o ID para o cliente saber que salvou
+        res.status(500).json({ error: err.message, id: inserted?.id });
     }
 });
 
