@@ -1128,25 +1128,15 @@ async function regerarPPI() {
 
     try {
 
-        let id = localStorage.getItem('ppi_submission_id');
+        // Sempre busca o último registro do banco — ignora localStorage
 
+        const latestRes = await fetch('/latest-submission');
 
+        const latest = await latestRes.json();
 
-        if (!id) {
+        if (!latestRes.ok) throw new Error(latest.error || 'Nenhuma submissão encontrada.');
 
-            // Fallback: busca a submissão mais recente do banco
-
-            const latestRes = await fetch('/latest-submission');
-
-            const latest = await latestRes.json();
-
-            if (!latestRes.ok) throw new Error(latest.error || 'Nenhuma submissão encontrada.');
-
-            id = latest.id;
-
-            localStorage.setItem('ppi_submission_id', id);
-
-        }
+        const id = latest.id;
 
 
 
