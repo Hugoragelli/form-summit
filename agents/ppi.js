@@ -368,25 +368,21 @@ router.post('/regenerate/:id', async (req, res) => {
             return res.status(404).json({ error: 'Submissão não encontrada.' });
         }
 
-        let formData;
-        if (submission.form_data) {
-            try { formData = JSON.parse(submission.form_data); } catch { formData = {}; }
-        } else {
-            // Compatibilidade com registros antigos (colunas individuais)
-            const { id: _id, created_at, diagnostico_final, personas_json,
-                    instagram_scrape_json, analise_instagram_json, mcs_json,
-                    bussola_json, form_data: _fd, ...legacyData } = submission;
-            formData = legacyData;
+        if (!submission.form_data) {
+            return res.status(422).json({
+                error: 'Os dados do formulário não estão disponíveis para esta submissão. Execute a migração do banco (coluna form_data) e reenvie o formulário.'
+            });
         }
 
-        // Verifica se formData tem conteúdo útil (ao menos uma resposta do formulário)
-        const hasFormContent = formData && Object.keys(formData).some(k =>
-            k.startsWith('p') && formData[k] && String(formData[k]).trim().length > 0
-        );
-        if (!hasFormContent) {
-            return res.status(422).json({
-                error: 'Os dados originais do formulário não estão disponíveis para esta submissão. Não é possível regerar o PPI sem as respostas do formulário.'
-            });
+        let formData;
+        try {
+            formData = JSON.parse(submission.form_data);
+        } catch {
+            return res.status(422).json({ error: 'Os dados do formulário estão corrompidos nesta submissão.' });
+        }
+
+        if (!formData || Object.keys(formData).length === 0) {
+            return res.status(422).json({ error: 'Os dados do formulário estão vazios nesta submissão.' });
         }
 
         const ppiJson = await generatePPI(formData);
