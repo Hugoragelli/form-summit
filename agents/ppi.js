@@ -378,6 +378,17 @@ router.post('/regenerate/:id', async (req, res) => {
                     bussola_json, form_data: _fd, ...legacyData } = submission;
             formData = legacyData;
         }
+
+        // Verifica se formData tem conteúdo útil (ao menos uma resposta do formulário)
+        const hasFormContent = formData && Object.keys(formData).some(k =>
+            k.startsWith('p') && formData[k] && String(formData[k]).trim().length > 0
+        );
+        if (!hasFormContent) {
+            return res.status(422).json({
+                error: 'Os dados originais do formulário não estão disponíveis para esta submissão. Não é possível regerar o PPI sem as respostas do formulário.'
+            });
+        }
+
         const ppiJson = await generatePPI(formData);
 
         const { error: updateError } = await supabase
